@@ -1,0 +1,124 @@
+
+
+
+Public interface functions for QuantityManager:
+------------------------------------------------
+
+Design guide:
+* Stay close to existing "common practise" w.r.t. naming, esp. std::map
+* First function argument is KeyType (if applicable)
+* Second function argument is QuanType (if applicable)
+* Third function argument is StorageBank or vector size (if applicable)
+
+* If argument is supplied as object, then object MUST be used in some way 
+  (in particular: if function clears all data associated with keys of a particular TYPE,
+   it is meaningless to require an object of KeyType)
+* Naming: Use 'release', if acting globally (i.e. all elements, static member functions)
+	  Use 'erase', if acting locally (i.e. only that particular element)
+
+
+Functions: (ordered by functionality, powerfulness)
+
+// Data storage and access:
+
+template <typename KeyType, typename QuanType>
+typename QuanTraits<QuanType>::ResultType retrieveQuantity(KeyType const & key)
+
+template <typename KeyType, typename QuanType>
+bool hasQuantity(KeyType const & key)
+
+template <typename KeyType, typename QuanType>
+void storeQuantity(KeyType const & key, QuanType const & quan)
+
+template <typename KeyType, typename QuanType>
+void reserveQuantity(KeyType const & key, long size = -1)
+
+// Data release and erase:
+
+void releaseAll()
+
+void releaseBank()
+
+template <typename KeyType>
+void releaseKeyAllBanks()
+
+template <typename KeyType>
+void releaseKeyAllBanks(KeyType)
+
+template <typename KeyType>
+void releaseKey()
+
+template <typename KeyType>
+void releaseKey(KeyType)
+
+template <typename KeyType, typename QuanType>
+void releaseQuantityAllBanks()
+
+template <typename KeyType, typename QuanType>
+void releaseQuantityAllBanks(KeyType)
+
+template <typename KeyType, typename QuanType>
+void releaseQuantity()
+
+template <typename KeyType, typename QuanType>
+void releaseQuantity(KeyType)
+
+
+void eraseAll()
+
+void eraseBank()
+
+template <typename KeyType>
+void eraseKeyAllBanks()
+
+template <typename KeyType>
+void eraseKeyAllBanks(KeyType const & key)
+
+template <typename KeyType>
+void eraseKey()
+
+template <typename KeyType>
+void eraseKey(KeyType const & key)
+
+template <typename KeyType, typename QuanType>
+void eraseQuantityAllBanks()
+
+template <typename KeyType, typename QuanType>
+void eraseQuantityAllBanks(KeyType const & key)
+
+template <typename KeyType, typename QuanType>
+void eraseQuantity(KeyType const & key)
+
+template <typename KeyType, typename QuanType>
+void eraseQuantity()
+
+
+// Data transfer:
+
+void copyAllTo(SelfType & other)
+
+void copyBankTo(SelfType & other)
+
+template <typename KeyType, typename QuanType>
+void copyPairAllBanksTo(SelfType & other)
+
+template <typename KeyType, typename QuanType>
+void copyPairTo(SelfType & other)
+
+void transferAllTo(SelfType & other)
+
+void transferBankTo(SelfType & other)
+
+template <typename KeyType, typename QuanType>
+void transferPairAllBanksTo(SelfType & other)
+
+template <typename KeyType, typename QuanType>
+void transferPairTo(SelfType & other)
+
+// Misc:
+
+static void setStorageBank(StorageBankType const & bank)
+
+
+
+
