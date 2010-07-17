@@ -1,26 +1,18 @@
-/***************************************************************************
- *   Copyright (C) 2007 by Karl Rupp   *
- *   elfem@karlrupp.net   *
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- *   This program is distributed in the hope that it will be useful,       *
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
- *   GNU General Public License for more details.                          *
- *                                                                         *
- *   You should have received a copy of the GNU General Public License     *
- *   along with this program; if not, write to the                         *
- *   Free Software Foundation, Inc.,                                       *
- *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+/* =======================================================================
+   Copyright (c) 2010, Institute for Microelectronics, TU Vienna.
+   http://www.iue.tuwien.ac.at
+                             -----------------
+                     ViennaData - The Vienna Data Storage Library
+                             -----------------
+
+   authors:    Karl Rupp                          rupp@iue.tuwien.ac.at
+
+   license:    MIT (X11), see file LICENSE in the ViennaMesh base directory
+======================================================================= */
 
 
-#ifndef ELFEM_QUANTITYMANAGER_GUARD
-#define ELFEM_QUANTITYMANAGER_GUARD
+#ifndef VIENNADATA_QUANTITYMANAGER_GUARD
+#define VIENNADATA_QUANTITYMANAGER_GUARD
 
 #include <map>
 #include <vector>
@@ -30,86 +22,19 @@
 #include <algorithm>
 #include <memory>
 
-//#include "mappingkeytype.h"
-//#include "boundarykeytype.h"
-//#include "domain_header.h"
+#include "forwards.h"
+#include "idhandler.h"
+#include "quanTraits.h"
+#include "QuanKeyPair.h"
+#include "storagebank.h"
 
-namespace Vienna{
 
-  namespace QuantityManager{
+namespace viennadata
+{
 
   //namespace {
-    #include "idhandler.h"
-    #include "quanTraits.h"
-    #include "QuanKeyPair.h"
-
-    //forward declaration for disabling storage banks:
-    struct NoStorageBanks;
-
-
-    //storage policy tag:
-    struct DenseAccessTag {};      //for a property that is accessed on every element *and* is required to be fast
-    struct SparseAccessTag {};     //properties that will be accessed on some elements only. Default policy.
-
-    template <typename KeyType>
-    struct QuantityManagerStorageScheme
-    {
-      typedef SparseAccessTag        ResultType;
-    };
-
-    //////// add further performance-critical keys here ////////
-
-
-    //convenience function: deduces storage scheme from KeyType and IDHandling
-    template <typename KeyType, typename IDHandler>
-    struct QuantityManagerFinalStorageScheme
-    {
-      //default policy: use StorageScheme
-      typedef typename QuantityManagerStorageScheme<KeyType>::ResultType      ResultType;
-    };
-
-    template <typename KeyType>
-    struct QuantityManagerFinalStorageScheme <KeyType, NoID>
-    {
-      //no id: fall back to SpareStorageTag
-      typedef SparseAccessTag         ResultType;
-    };
-
-
-    //key dispatch based on type only
-    struct FullDispatch {};
-    struct TypeBasedDispatch {};
-
-    template <typename T>
-    struct SetKeyDispatch
-    {
-      typedef FullDispatch    ResultType;
-    };
-
-    // partial specialisations of the form
-    // template <>
-    // struct SetKeyDispatch< MyKeyClass >
-    // {
-    //   typedef TypeBasedDispatch    ResultType;
-    // };
-    // to be supplied by user
 
 /********************** Quantity Manager ***********************/
-
-    template <typename ElementType, typename IDHandler, typename StorageBankType>
-    class SingleBankQuantityManager;
-
-    template <typename ElementType,
-              typename IDHandler,
-              typename StorageBankType = NoStorageBanks >
-    class QuantityManager;
-
-
-    template <typename ElementType,
-              typename QuanType,
-              typename KeyType,
-              typename KeyDispatchTag>
-    class QuanMan_data_holder;
 
 
     //use a map for storage of data, i.e. object-based keys
@@ -158,12 +83,6 @@ namespace Vienna{
 
 
 
-    template <typename ElementType,
-              typename QuanType,
-              typename KeyType,
-              typename StorageTag,
-              typename AccessTag >
-    class QuanMan_element_dispatcher;
 
     //dispatch with respect to the type of access (here: type KeyType)
     template <typename ElementType,
@@ -281,8 +200,6 @@ namespace Vienna{
         VecType vec_;
     };
 
-    #include "storagebank.h"
-
 
 
 
@@ -390,7 +307,7 @@ namespace Vienna{
 
           //finally, storage is freed.
           getQuanManSelector<QuanType, KeyType>().eraseQuanMan( StorageBankHolder<ElementType, StorageBankType>::getCurrentBank() );
-        };
+        }
 
         template <typename KeyType>
         void eraseKey()
@@ -469,7 +386,7 @@ namespace Vienna{
           }
 
           setStorageBank(backupBank);
-        };
+        }
 
 
         // transfer
@@ -508,7 +425,7 @@ namespace Vienna{
           }
 
           setStorageBank(backupBank);
-        };
+        }
 
       private:
 
@@ -540,7 +457,7 @@ namespace Vienna{
 
           //std::cout << "Address of QuantityManager: " << &quanMan << std::endl;
           return getQuanManSelector<QuanType, KeyType>().getQuantityManager();
-        };
+        }
 
     };
 
@@ -618,7 +535,7 @@ namespace Vienna{
           //restore previous bank:
           //TODO: Think about else-branch
           BaseType::setStorageBank(oldBank);
-        };
+        }
 
         //erase a particular quantity identified by key:
         template <typename QuanType, typename KeyType>    //note: reversed template argument order necessary here!
@@ -800,8 +717,6 @@ namespace Vienna{
             BaseType::transferBankTo(other);
         }
     };
-
-  } //namespace QuantityManager
 
 } //namespace Vienna
 

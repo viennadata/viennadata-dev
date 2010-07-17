@@ -10,15 +10,17 @@
 //
 //
 
+#include "viennadata/quantitymanager.h"
 
-using Vienna::QuantityManager::QuanKeyPair;
-using Vienna::QuantityManager::NoStorageBanks;
-using Vienna::QuantityManager::QuantityManager;
-using Vienna::QuantityManager::NoID;
-using Vienna::QuantityManager::ProvideID;
-using Vienna::QuantityManager::SetKeyDispatch;
-using Vienna::QuantityManager::KeyWrapper;
-using Vienna::QuantityManager::KeyInterface;
+
+using viennadata::QuanKeyPair;
+using viennadata::NoStorageBanks;
+using viennadata::QuantityManager;
+using viennadata::NoID;
+using viennadata::ProvideID;
+using viennadata::SetKeyDispatch;
+using viennadata::KeyWrapper;
+using viennadata::KeyInterface;
 
 class TestClassWithLongBanks 
   : public QuantityManager< TestClassWithLongBanks, NoID, long>
@@ -92,14 +94,12 @@ struct KeyClass
    static void print() { std::cout << "TestKeyClass"; }
 };
 
-namespace Vienna{
-  namespace QuantityManager{
-    template <>
-    struct SetKeyDispatch< KeyClass >
-    {
-      typedef TypeBasedDispatch    ResultType;
-    };
-  }
+namespace viennadata{
+  template <>
+  struct SetKeyDispatch< KeyClass >
+  {
+    typedef TypeBasedDispatch    ResultType;
+  };
 }
 
 

@@ -1,14 +1,30 @@
-//
-// C++ Interface: quanTraits
-//
-// Description: 
-//
-//
-// Author:  <>, (C) 2009
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/* =======================================================================
+   Copyright (c) 2010, Institute for Microelectronics, TU Vienna.
+   http://www.iue.tuwien.ac.at
+                             -----------------
+                     ViennaData - The Vienna Data Storage Library
+                             -----------------
+
+   authors:    Karl Rupp                          rupp@iue.tuwien.ac.at
+
+   license:    MIT (X11), see file LICENSE in the ViennaMesh base directory
+======================================================================= */
+
+#ifndef VIENNADATA_QUANTRAITS_GUARD
+#define VIENNADATA_QUANTRAITS_GUARD
+
+#include <map>
+#include <vector>
+#include <list>
+#include <set>
+#include <iostream>
+#include <algorithm>
+#include <memory>
+
+#include "forwards.h"
+
+namespace viennadata
+{
 
 
     template <typename QuanType>
@@ -85,3 +101,7 @@
     {
       static void apply() { std::cout << "std::string"; }
     };
+    
+} //namespace 
+
+#endif

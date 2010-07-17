@@ -1,15 +1,30 @@
-//
-// C++ Interface: virtualID
-//
-// Description: 
-//
-//
-// Author:  <>, (C) 2009
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
+/* =======================================================================
+   Copyright (c) 2010, Institute for Microelectronics, TU Vienna.
+   http://www.iue.tuwien.ac.at
+                             -----------------
+                     ViennaData - The Vienna Data Storage Library
+                             -----------------
 
+   authors:    Karl Rupp                          rupp@iue.tuwien.ac.at
+
+   license:    MIT (X11), see file LICENSE in the ViennaMesh base directory
+======================================================================= */
+
+#ifndef VIENNADATA_QUANKEYPAIR_GUARD
+#define VIENNADATA_QUANKEYPAIR_GUARD
+
+#include <map>
+#include <vector>
+#include <list>
+#include <set>
+#include <iostream>
+#include <algorithm>
+#include <memory>
+
+#include "forwards.h"
+
+namespace viennadata
+{
 
   //purpose: type erase so that a particular QuantityManager is able to delete all quantities associated with a particular object
   //concepts used: type erasure, cf. Alexandrescu
@@ -121,7 +136,7 @@
 
       template <typename QuanType, typename KeyType>
       QuanKeyPair(QuanType const & qt, KeyType const & kt) : pQuanInterface(new QuanKeyPairWrapper<QuanManType, QuanType, KeyType>()),
-                                                             isOwner(true) {};
+                                                             isOwner(true) {}
 
       //copy ctor:
       QuanKeyPair(const QuanKeyPair & other)
@@ -164,3 +179,8 @@
       QuanKeyPairInterface<QuanManType> * pQuanInterface;
       mutable bool isOwner;
   };
+  
+} //namespace
+
+#endif
+
