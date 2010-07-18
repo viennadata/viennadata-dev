@@ -36,7 +36,7 @@ namespace viennadata
         typedef StorageBankHolder<ElementType, StorageBankType>    BaseType;
 
       public:
-        typedef std::list< QuanKeyPair<QuanMan> > ContainerType;
+        typedef std::list< key_data_pair<QuanMan> > ContainerType;
 
         void removeStorageBank(StorageBankType & bank)
         {
@@ -63,7 +63,7 @@ namespace viennadata
     };
 
     template <typename QuanMan, typename ElementType, typename StorageScheme>
-    std::list< QuanKeyPair<QuanMan> > StorageBankInterface<QuanMan, ElementType, StorageScheme>::quankeylist = std::list< QuanKeyPair<QuanMan> > ();
+    std::list< key_data_pair<QuanMan> > StorageBankInterface<QuanMan, ElementType, StorageScheme>::quankeylist = std::list< key_data_pair<QuanMan> > ();
 
     //default case: Quantity-Manager is working on a storage bank basis:
     template <  typename ElementType,
@@ -81,8 +81,8 @@ namespace viennadata
         typedef QuanMan_element_dispatcher<SingleBankQMType,
                                            QuanType,
                                            KeyType,
-                                           typename SetKeyDispatch<KeyType>::ResultType,
-                                           typename QuantityManagerFinalStorageScheme<KeyType, IDHandler>::ResultType
+                                           typename SetKeyDispatch<KeyType>::result_type,
+                                           typename QuantityManagerFinalStorageScheme<KeyType, IDHandler>::result_type
                                           >                            QuanManType;
 
         typedef typename std::map < StorageBankType *, QuanManType >::iterator   StorageBankIterator;
@@ -184,18 +184,18 @@ namespace viennadata
                 typename IDHandler,
                 typename QuanType, 
                 typename KeyType    >
-    class QuantityManagerSelector <ElementType, IDHandler, NoStorageBanks, QuanType, KeyType>
+    class QuantityManagerSelector <ElementType, IDHandler, no_storage_bank_tag, QuanType, KeyType>
     {
         typedef SingleBankQuantityManager<  ElementType,
                                             IDHandler, 
-                                            NoStorageBanks >         SingleBankQMType;
+                                            no_storage_bank_tag >         SingleBankQMType;
 
       public:
         typedef QuanMan_element_dispatcher<SingleBankQMType,
                                            QuanType,
                                            KeyType,
-                                           typename SetKeyDispatch<KeyType>::ResultType,
-                                           typename QuantityManagerFinalStorageScheme<KeyType, IDHandler>::ResultType
+                                           typename SetKeyDispatch<KeyType>::result_type,
+                                           typename QuantityManagerFinalStorageScheme<KeyType, IDHandler>::result_type
                                           >                            QuanManType;
 
         QuanManType & getQuantityManager()
@@ -203,7 +203,7 @@ namespace viennadata
           return qm;
         }
 
-        void eraseQuanMan(NoStorageBanks const & dummy)
+        void eraseQuanMan(no_storage_bank_tag const & dummy)
         {
           //do nothing, because there is only one qm
         }

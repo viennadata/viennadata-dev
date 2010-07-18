@@ -27,25 +27,25 @@
 namespace viennadata
 {
 
-  struct NoID
+  struct no_id
   {
-    NoID() {};
+    no_id() {};
     //NoID(long id) {};
 
     //for compatibility:
-    void setID(long id) { };
-    const NoID * getID() const { return this; };
+    void vdata_id(long id_) { };
+    const no_id * vdata_id() const { return this; };
 
   };
 
-  class ProvideID
+  class has_id
   {
     public:
-      ProvideID() : id_(-1) {};
+      has_id() : id_(-1) {};
       //ProvideID(long id): id_(id) {}
 
-      long getID() const { return id_; };
-      void setID(long id) { id_ = id; };
+      long vdata_id() const { return id_; };
+      void vdata_id(long id) { id_ = id; };
 
     protected:
       long id_;

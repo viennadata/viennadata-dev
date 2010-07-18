@@ -31,17 +31,17 @@ namespace viennadata
   
     ////////////////////// tags ////////////////////////
         //forward declaration for disabling storage banks:
-    struct NoStorageBanks;
+    struct no_storage_bank_tag;
 
 
     //storage policy tag:
-    struct DenseAccessTag {};      //for a property that is accessed on every element *and* is required to be fast
-    struct SparseAccessTag {};     //properties that will be accessed on some elements only. Default policy.
+    struct dense_data_tag {};      //for a property that is accessed on every element *and* is required to be fast
+    struct sparse_data_tag {};     //properties that will be accessed on some elements only. Default policy.
 
     
     //key dispatch based on type only
-    struct FullDispatch {};
-    struct TypeBasedDispatch {};
+    struct full_key_dispatch_tag {};
+    struct type_key_dispatch_tag {};
 
     
     // add further performance-critical keys here
@@ -49,16 +49,21 @@ namespace viennadata
 
     /////////////////// forward declarations ////////////////////
 
-    struct NoID;
-    
-    struct ProvideID;
+    struct no_id;
+    struct has_id;
+
+    template <typename QuanManType>
+    class key_data_pair;
+
+    template <typename QuanManType, typename QuanType, typename KeyType>
+    struct key_data_wrapper;
 
     template <typename ElementType, typename IDHandler, typename StorageBankType>
     class SingleBankQuantityManager;
 
     template <typename ElementType,
               typename IDHandler,
-              typename StorageBankType = NoStorageBanks >
+              typename StorageBankType = no_storage_bank_tag >
     class QuantityManager;
 
 
@@ -86,7 +91,7 @@ namespace viennadata
     template <typename KeyType>
     struct QuantityManagerStorageScheme
     {
-      typedef SparseAccessTag        ResultType;
+      typedef sparse_data_tag        result_type;
     };
 
 
@@ -95,28 +100,28 @@ namespace viennadata
     struct QuantityManagerFinalStorageScheme
     {
       //default policy: use StorageScheme
-      typedef typename QuantityManagerStorageScheme<KeyType>::ResultType      ResultType;
+      typedef typename QuantityManagerStorageScheme<KeyType>::result_type      result_type;
     };
 
     template <typename KeyType>
-    struct QuantityManagerFinalStorageScheme <KeyType, NoID>
+    struct QuantityManagerFinalStorageScheme <KeyType, no_id>
     {
       //no id: fall back to SpareStorageTag
-      typedef SparseAccessTag         ResultType;
+      typedef sparse_data_tag         result_type;
     };
 
 
     template <typename T>
     struct SetKeyDispatch
     {
-      typedef FullDispatch    ResultType;
+      typedef full_key_dispatch_tag    result_type;
     };
 
     // partial specialisations of the form
     // template <>
     // struct SetKeyDispatch< MyKeyClass >
     // {
-    //   typedef TypeBasedDispatch    ResultType;
+    //   typedef TypeBasedDispatch    result_type;
     // };
     // to be supplied by user
   

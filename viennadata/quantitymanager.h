@@ -22,11 +22,11 @@
 #include <algorithm>
 #include <memory>
 
-#include "forwards.h"
-#include "idhandler.h"
-#include "quanTraits.h"
-#include "QuanKeyPair.h"
-#include "storagebank.h"
+#include "viennadata/forwards.h"
+#include "viennadata/id_handler.hpp"
+#include "viennadata/util.hpp"
+#include "viennadata/key_data_pair.hpp"
+#include "viennadata/storagebank.hpp"
 
 
 namespace viennadata
@@ -41,7 +41,7 @@ namespace viennadata
     template <typename ElementType,
               typename QuanType,
               typename KeyType>
-    class QuanMan_data_holder <ElementType, QuanType, KeyType, FullDispatch>
+    class QuanMan_data_holder <ElementType, QuanType, KeyType, full_key_dispatch_tag>
     {
       public:
         QuanMan_data_holder() {};
@@ -49,7 +49,7 @@ namespace viennadata
 
         void operator=(QuanMan_data_holder const & other) { quan_map = other.quan_map; }
 
-        typename QuanTraits<QuanType>::ResultType getQuantity(KeyType const & key) { return quan_map[key]; }
+        typename QuanTraits<QuanType>::result_type getQuantity(KeyType const & key) { return quan_map[key]; }
 
         void       setQuantity(QuanType const & quan, KeyType const & key) { quan_map[key] = quan; }
 
@@ -64,14 +64,14 @@ namespace viennadata
     template <typename ElementType,
               typename QuanType,
               typename KeyType>
-    class QuanMan_data_holder <ElementType, QuanType, KeyType, TypeBasedDispatch>
+    class QuanMan_data_holder <ElementType, QuanType, KeyType, type_key_dispatch_tag>
     {
       public:
         QuanMan_data_holder() {};
         QuanMan_data_holder( QuanMan_data_holder const & other ) : quan(other.quan) {};
         void operator=(QuanMan_data_holder const & other) { quan = other.quan; }
 
-        typename QuanTraits<QuanType>::ResultType getQuantity(KeyType const & key) const { return quan; }
+        typename QuanTraits<QuanType>::result_type getQuantity(KeyType const & key) const { return quan; }
         void       setQuantity(QuanType const & quan_, KeyType const & key) { quan = quan_; }
 
         void erase(KeyType const & key) { /* do nothing */ }
@@ -93,20 +93,20 @@ namespace viennadata
                                       QuanType, 
                                       KeyType,
                                       StorageTag,
-                                      SparseAccessTag   >
+                                      sparse_data_tag   >
     {
       typedef QuanMan_data_holder <ElementType, QuanType, KeyType, StorageTag>    MapDataType;
       typedef std::map<ElementType *, MapDataType >                               MapType;
 
       public:
-        typename QuanTraits<QuanType>::ResultType getQuantity(ElementType * el, KeyType const & key) { return map_[el].getQuantity(key); }
+        typename QuanTraits<QuanType>::result_type getQuantity(ElementType * el, KeyType const & key) { return map_[el].getQuantity(key); }
 
         void setQuantity(ElementType *el, QuanType const & quan, KeyType const & key) { map_[el].setQuantity(quan, key); }
 
         void reserveQuantity(KeyType const & key, long size) { /*do nothing */ }
 
         void eraseQuantity(ElementType *el, KeyType const & key) { map_[el].erase(key); }
-        void clearQuanKeyPair(ElementType *el) { map_.erase(el); }
+        void clearkey_data_pair(ElementType *el) { map_.erase(el); }
 
         bool hasQuantity(ElementType * el, KeyType const & key) { return ( map_.find(el) != map_.end() ); }
 
@@ -149,13 +149,13 @@ namespace viennadata
                                       QuanType, 
                                       KeyType,
                                       StorageTag,
-                                      DenseAccessTag   >
+                                      dense_data_tag   >
     {
       typedef QuanMan_data_holder <ElementType, QuanType, KeyType, StorageTag>    VectorDataType;
       typedef std::vector< VectorDataType >                                       VecType;
 
       public:
-        typename QuanTraits<QuanType>::ResultType getQuantity(ElementType * el, KeyType const & key) { return vec_[el->getID()].getQuantity(key); }
+        typename QuanTraits<QuanType>::result_type getQuantity(ElementType * el, KeyType const & key) { return vec_[el->getID()].getQuantity(key); }
 
         void setQuantity(ElementType *el, QuanType const & quan, KeyType const & key) { vec_[el->getID()].setQuantity(quan, key); }
 
@@ -168,7 +168,7 @@ namespace viennadata
         }
 
         void eraseQuantity(ElementType *el, KeyType const & key) { /* do nothing */ }
-        void clearQuanKeyPair(ElementType *el) { /* do nothing */ }
+        void clearkey_data_pair(ElementType *el) { /* do nothing */ }
 
         //for compatibility reasons:
         bool hasQuantity(ElementType * el, KeyType const & key) { return vec_.size() > 0; }
@@ -212,11 +212,11 @@ namespace viennadata
     {
         typedef SingleBankQuantityManager<  ElementType,
                                             IDHandler, 
-                                            StorageBankType >         SelfType;
+                                            StorageBankType >         self_type;
 
         typedef QuantityManager<ElementType, IDHandler, StorageBankType>        QuantityManagerType;
 
-        typedef StorageBankInterface< SelfType,
+        typedef StorageBankInterface< self_type,
                                       ElementType,
                                       StorageBankType >     StorageBank;
 
@@ -224,7 +224,7 @@ namespace viennadata
 
         /////////////////// Data handling member functions ///////////////////////////
         template <typename QuanType, typename KeyType>
-        typename QuanTraits<QuanType>::ResultType retrieveQuantity(KeyType const & key)
+        typename QuanTraits<QuanType>::result_type retrieveQuantity(KeyType const & key)
         {
           //std::cout << "retrieveQuantity using object " << this << std::endl;
           return getManager<QuanType, KeyType>().getQuantity(this, key);
@@ -251,7 +251,7 @@ namespace viennadata
         void reserveQuantity(KeyType const & key, long size = -1)
         {
           //std::cout << "Creating new ID" << std::endl;
-          QuanKeyPair<SelfType> qkp(QuanType(), key);
+          key_data_pair<self_type> qkp(QuanType(), key);
           //std::cout << "ID-address: " << &qkp << std::endl;
 
           //std::cout << "Searching for existing pair" << std::endl;
@@ -287,7 +287,7 @@ namespace viennadata
         {
           typedef typename StorageBank::ContainerType::iterator      ListIterator;
 
-          KeyInterface * pKI = new KeyWrapper<KeyType>();
+          key_interface * pKI = new key_wrapper<KeyType>();
 
           for (ListIterator lit = StorageBank::quankeylist.begin();
                 lit != StorageBank::quankeylist.end();
@@ -303,7 +303,7 @@ namespace viennadata
         template <typename KeyType, typename QuanType>
         void releaseQuantity()
         {
-          getManager<QuanType, KeyType>().clearQuanKeyPair(this);
+          getManager<QuanType, KeyType>().clearkey_data_pair(this);
 
           //finally, storage is freed.
           getQuanManSelector<QuanType, KeyType>().eraseQuanMan( StorageBankHolder<ElementType, StorageBankType>::getCurrentBank() );
@@ -314,7 +314,7 @@ namespace viennadata
         {
           typedef typename StorageBank::ContainerType::iterator      ListIterator;
 
-          KeyInterface * pKI = new KeyWrapper<KeyType>();
+          key_interface * pKI = new key_wrapper<KeyType>();
 
           for (ListIterator lit = StorageBank::quankeylist.begin();
                 lit != StorageBank::quankeylist.end();
@@ -335,7 +335,7 @@ namespace viennadata
         template <typename KeyType, typename QuanType>
         void eraseQuantity()
         {
-          getManager<QuanType, KeyType>().clearQuanKeyPair(this);
+          getManager<QuanType, KeyType>().clearkey_data_pair(this);
         }
 
         //erase a particular quantity identified by key:
@@ -352,7 +352,7 @@ namespace viennadata
 
 
         ////////// Member functions for data transfer ////////////////////////////
-        void copyBankTo(SelfType & other)
+        void copyBankTo(self_type & other)
         {
           typedef typename StorageBank::ContainerType::iterator      ListIterator;
 
@@ -366,7 +366,7 @@ namespace viennadata
         }
 
         template <typename KeyType, typename QuanType>
-        void copyPairTo(SelfType & other)
+        void copyPairTo(self_type & other)
         {
           //std::cout << "QuanMan copies pair <"; 
           //TypeNamePrinter<QuanType>::apply(); std::cout << ","; TypeNamePrinter<KeyType>::apply();
@@ -390,9 +390,9 @@ namespace viennadata
 
 
         // transfer
-        void transferBankTo(SelfType & other)
+        void transferBankTo(self_type & other)
         {
-          typedef typename std::list< QuanKeyPair<SelfType> >::iterator      ListIterator;
+          typedef typename std::list< key_data_pair<self_type> >::iterator      ListIterator;
 
           for (ListIterator lit = StorageBank::quankeylist.begin();
                 lit != StorageBank::quankeylist.end();
@@ -404,7 +404,7 @@ namespace viennadata
         }
 
         template <typename KeyType, typename QuanType>
-        void transferPairTo(SelfType & other)
+        void transferPairTo(self_type & other)
         {
           //std::cout << "QuanMan transfers pair <"; 
           //TypeNamePrinter<QuanType>::apply(); std::cout << ","; TypeNamePrinter<KeyType>::apply();
@@ -467,9 +467,9 @@ namespace viennadata
     class QuantityManager 
          : public SingleBankQuantityManager<ElementType, IDHandler, StorageBankType>
     {
-        typedef SingleBankQuantityManager<ElementType, IDHandler, StorageBankType>        BaseType;
-        typedef QuantityManager<ElementType, IDHandler, StorageBankType>                  SelfType;
-        typedef StorageBankInterface< SelfType, ElementType, StorageBankType >            StorageBank;
+        typedef SingleBankQuantityManager<ElementType, IDHandler, StorageBankType>        base_type;
+        typedef QuantityManager<ElementType, IDHandler, StorageBankType>                  self_type;
+        typedef StorageBankInterface< self_type, ElementType, StorageBankType >            StorageBank;
 
       public:
         ~QuantityManager()
@@ -488,8 +488,8 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::releaseBank();
+            base_type::setStorageBank(*sbi);
+            base_type::releaseBank();
           }
 
           //TODO: Which storage bank is NOW in use?
@@ -510,10 +510,10 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::template releaseKey<KeyType>();
+            base_type::setStorageBank(*sbi);
+            base_type::template releaseKey<KeyType>();
           }
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
         template <typename KeyType, typename QuanType>
@@ -528,13 +528,13 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::template releasePair<KeyType, QuanType>();
+            base_type::setStorageBank(*sbi);
+            base_type::template releasePair<KeyType, QuanType>();
           }
 
           //restore previous bank:
           //TODO: Think about else-branch
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
         //erase a particular quantity identified by key:
@@ -550,12 +550,12 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::template eraseQuantity<KeyType>();
+            base_type::setStorageBank(*sbi);
+            base_type::template eraseQuantity<KeyType>();
           }
 
           //restore previous bank:
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
         template <typename QuanType, typename KeyType>    //note: reversed template argument order necessary here!
@@ -570,12 +570,12 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::template eraseQuantity<KeyType>(key);
+            base_type::setStorageBank(*sbi);
+            base_type::template eraseQuantity<KeyType>(key);
           }
 
           //restore previous bank:
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
         template <typename KeyType>
@@ -590,12 +590,12 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::template eraseKey<KeyType>();
+            base_type::setStorageBank(*sbi);
+            base_type::template eraseKey<KeyType>();
           }
 
           //restore previous bank:
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
         template <typename KeyType>
@@ -610,12 +610,12 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::template eraseKey<KeyType>(key);
+            base_type::setStorageBank(*sbi);
+            base_type::template eraseKey<KeyType>(key);
           }
 
           //restore previous bank:
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
         void eraseAll()
@@ -629,17 +629,17 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::template eraseBank();
+            base_type::setStorageBank(*sbi);
+            base_type::template eraseBank();
           }
 
           //restore previous bank:
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
 
         // copy
-        void copyAllTo(SelfType & other)
+        void copyAllTo(self_type & other)
         {
           typedef typename StorageBankHolder<ElementType, StorageBankType>::iterator    StorageBankIterator;
 
@@ -650,16 +650,16 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::copyBankTo(other);
+            base_type::setStorageBank(*sbi);
+            base_type::copyBankTo(other);
           }
 
           //restore previous bank:
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
 
         // transfer:
-        void transferAllTo(SelfType & other)
+        void transferAllTo(self_type & other)
         {
           typedef typename StorageBankHolder<ElementType, StorageBankType>::iterator    StorageBankIterator;
 
@@ -670,22 +670,22 @@ namespace viennadata
                                   sbi != StorageBankHolder<ElementType, StorageBankType>::end();
                                   ++sbi)
           {
-            BaseType::setStorageBank(*sbi);
-            BaseType::transferBankTo(other);
+            base_type::setStorageBank(*sbi);
+            base_type::transferBankTo(other);
           }
 
           //restore previous bank:
-          BaseType::setStorageBank(oldBank);
+          base_type::setStorageBank(oldBank);
         }
     };
 
     //exterior interface: special case: no storage banks are required
     template <typename ElementType, typename IDHandler>
-    class QuantityManager<ElementType, IDHandler, NoStorageBanks>
-         : public SingleBankQuantityManager<ElementType, IDHandler, NoStorageBanks>
+    class QuantityManager<ElementType, IDHandler, no_storage_bank_tag>
+         : public SingleBankQuantityManager<ElementType, IDHandler, no_storage_bank_tag>
     {
-        typedef SingleBankQuantityManager<ElementType, IDHandler, NoStorageBanks>        BaseType;
-        typedef QuantityManager<ElementType, IDHandler, NoStorageBanks>                  SelfType;
+        typedef SingleBankQuantityManager<ElementType, IDHandler, no_storage_bank_tag>        base_type;
+        typedef QuantityManager<ElementType, IDHandler, no_storage_bank_tag>                  self_type;
 
       public:
         ~QuantityManager()
@@ -697,24 +697,24 @@ namespace viennadata
         //remove all quantities from this object
         void releaseAll()
         {
-            BaseType::releaseBank();
+            base_type::releaseBank();
         }
 
         void eraseAll()
         {
-            BaseType::eraseBank();
+            base_type::eraseBank();
         }
 
         // copy
-        void copyAllTo(SelfType & other)
+        void copyAllTo(self_type & other)
         {
-            BaseType::copyBankTo(other);
+            base_type::copyBankTo(other);
         }
 
         // transfer:
-        void transferAllTo(SelfType & other)
+        void transferAllTo(self_type & other)
         {
-            BaseType::transferBankTo(other);
+            base_type::transferBankTo(other);
         }
     };
 

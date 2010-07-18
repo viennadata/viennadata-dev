@@ -13,17 +13,17 @@
 #include "viennadata/quantitymanager.h"
 
 
-using viennadata::QuanKeyPair;
-using viennadata::NoStorageBanks;
+using viennadata::key_data_pair;
+using viennadata::no_storage_bank_tag;
 using viennadata::QuantityManager;
-using viennadata::NoID;
-using viennadata::ProvideID;
+using viennadata::no_id;
+using viennadata::has_id;
 using viennadata::SetKeyDispatch;
-using viennadata::KeyWrapper;
-using viennadata::KeyInterface;
+using viennadata::key_wrapper;
+using viennadata::key_interface;
 
 class TestClassWithLongBanks 
-  : public QuantityManager< TestClassWithLongBanks, NoID, long>
+  : public QuantityManager< TestClassWithLongBanks, no_id, long>
 {
   public:
     TestClassWithLongBanks(long member_ = 0) : member(member_) {};
@@ -36,7 +36,7 @@ class TestClassWithLongBanks
 };
 
 class AnotherClassWithLongBanks 
-  : public QuantityManager< AnotherClassWithLongBanks, NoID, long>
+  : public QuantityManager< AnotherClassWithLongBanks, no_id, long>
 {
   public:
     AnotherClassWithLongBanks(long member_ = 0) : member(member_) {};
@@ -49,7 +49,7 @@ class AnotherClassWithLongBanks
 };
 
 class TestClassWithDoubleBanks 
-  : public QuantityManager< TestClassWithDoubleBanks, NoID, double>
+  : public QuantityManager< TestClassWithDoubleBanks, no_id, double>
 {
   public:
     TestClassWithDoubleBanks(long member_ = 0) : member(member_) {};
@@ -62,7 +62,7 @@ class TestClassWithDoubleBanks
 };
 
 class TestWithoutBanks 
-  : public QuantityManager< TestWithoutBanks, ProvideID, NoStorageBanks >
+  : public QuantityManager< TestWithoutBanks, has_id, no_storage_bank_tag >
 {
   public:
     TestWithoutBanks(long member_ = 0) : member(member_) {};
@@ -94,11 +94,12 @@ struct KeyClass
    static void print() { std::cout << "TestKeyClass"; }
 };
 
-namespace viennadata{
+namespace viennadata
+{
   template <>
   struct SetKeyDispatch< KeyClass >
   {
-    typedef TypeBasedDispatch    ResultType;
+    typedef type_key_dispatch_tag    result_type;
   };
 }
 
@@ -347,9 +348,9 @@ void testBasicOperations()
   fillBank_1_impl(test_doublebank_2, &double_bank_2, &double_bank_1);
   fillBank_1_impl(test_doublebank_3, &double_bank_1, &double_bank_2);
 
-  fillBank_1_impl<TestWithoutBanks, NoStorageBanks>(test_nobank_1, NULL, NULL);
-  fillBank_1_impl<TestWithoutBanks, NoStorageBanks>(test_nobank_2, NULL, NULL);
-  fillBank_1_impl<TestWithoutBanks, NoStorageBanks>(test_nobank_3, NULL, NULL);
+  fillBank_1_impl<TestWithoutBanks, no_storage_bank_tag>(test_nobank_1, NULL, NULL);
+  fillBank_1_impl<TestWithoutBanks, no_storage_bank_tag>(test_nobank_2, NULL, NULL);
+  fillBank_1_impl<TestWithoutBanks, no_storage_bank_tag>(test_nobank_3, NULL, NULL);
 
   std::cout << "Testing test_longbank_1..." << std::endl;
   checkBank_1_impl(test_longbank_1, &long_bank_1, &long_bank_2);
@@ -368,11 +369,11 @@ void testBasicOperations()
   checkBank_1_impl(test_doublebank_3, &double_bank_1, &double_bank_2);
 
   std::cout << "Testing test_nobank_1..." << std::endl;
-  checkBank_1_impl<TestWithoutBanks, NoStorageBanks>(test_nobank_1, NULL, NULL);
+  checkBank_1_impl<TestWithoutBanks, no_storage_bank_tag>(test_nobank_1, NULL, NULL);
   std::cout << "Testing test_nobank_2..." << std::endl;
-  checkBank_1_impl<TestWithoutBanks, NoStorageBanks>(test_nobank_2, NULL, NULL);
+  checkBank_1_impl<TestWithoutBanks, no_storage_bank_tag>(test_nobank_2, NULL, NULL);
   std::cout << "Testing test_nobank_3..." << std::endl;
-  checkBank_1_impl<TestWithoutBanks, NoStorageBanks>(test_nobank_3, NULL, NULL);
+  checkBank_1_impl<TestWithoutBanks, no_storage_bank_tag>(test_nobank_3, NULL, NULL);
 
 
   //transfer checks:
@@ -420,7 +421,7 @@ class DummyQuanMan
 
 
 
-void testStorageKeyWrappers()
+void testStoragekey_wrappers()
 {
   DummyQuanMan dqm;
   long quan1 = 3;
@@ -431,15 +432,15 @@ void testStorageKeyWrappers()
   char key2 = '0';
   long key3 = 0;
 
-  QuanKeyPair<DummyQuanMan> qkp11(quan1, key1);
-  QuanKeyPair<DummyQuanMan> qkp12(quan1, key2);
-  QuanKeyPair<DummyQuanMan> qkp13(quan1, key3);
-  QuanKeyPair<DummyQuanMan> qkp21(quan2, key1);
-  QuanKeyPair<DummyQuanMan> qkp22(quan2, key2);
-  QuanKeyPair<DummyQuanMan> qkp23(quan2, key3);
-  QuanKeyPair<DummyQuanMan> qkp31(quan3, key1);
-  QuanKeyPair<DummyQuanMan> qkp32(quan3, key2);
-  QuanKeyPair<DummyQuanMan> qkp33(quan3, key3);
+  key_data_pair<DummyQuanMan> qkp11(quan1, key1);
+  key_data_pair<DummyQuanMan> qkp12(quan1, key2);
+  key_data_pair<DummyQuanMan> qkp13(quan1, key3);
+  key_data_pair<DummyQuanMan> qkp21(quan2, key1);
+  key_data_pair<DummyQuanMan> qkp22(quan2, key2);
+  key_data_pair<DummyQuanMan> qkp23(quan2, key3);
+  key_data_pair<DummyQuanMan> qkp31(quan3, key1);
+  key_data_pair<DummyQuanMan> qkp32(quan3, key2);
+  key_data_pair<DummyQuanMan> qkp33(quan3, key3);
 
   std::cout << "<quan1, key1>: " << (qkp11 == qkp11) << " " << (qkp11 == qkp12) << " " << (qkp11 == qkp13) << " "
                                  << (qkp11 == qkp21) << " " << (qkp11 == qkp22) << " " << (qkp11 == qkp23) << " "
@@ -483,8 +484,8 @@ void testStorageKeyWrappers()
 
 
   std::cout << "Testing for key key1:" << std::endl;
-  //KeyWrapper<double> kw1();
-  KeyInterface * pKI = new KeyWrapper<double>();
+  //key_wrapper<double> kw1();
+  key_interface * pKI = new key_wrapper<double>();
 
   std::cout << "<quan1, key1>: " << qkp11.sameKey(*pKI) << std::endl;
   std::cout << "<quan1, key2>: " << qkp12.sameKey(*pKI) << std::endl;
@@ -501,8 +502,8 @@ void testStorageKeyWrappers()
 
 
   std::cout << "Testing for key key2:" << std::endl;
-  //KeyWrapper<double> kw1();
-  pKI = new KeyWrapper<char>();
+  //key_wrapper<double> kw1();
+  pKI = new key_wrapper<char>();
 
   std::cout << "<quan1, key1>: " << qkp11.sameKey(*pKI) << std::endl;
   std::cout << "<quan1, key2>: " << qkp12.sameKey(*pKI) << std::endl;
@@ -519,8 +520,8 @@ void testStorageKeyWrappers()
 
 
   std::cout << "Testing for key key3:" << std::endl;
-  //KeyWrapper<double> kw1();
-  pKI = new KeyWrapper<long>();
+  //key_wrapper<double> kw1();
+  pKI = new key_wrapper<long>();
 
   std::cout << "<quan1, key1>: " << qkp11.sameKey(*pKI) << std::endl;
   std::cout << "<quan1, key2>: " << qkp12.sameKey(*pKI) << std::endl;

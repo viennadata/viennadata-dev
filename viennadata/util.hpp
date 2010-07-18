@@ -30,44 +30,44 @@ namespace viennadata
     template <typename QuanType>
     struct QuanTraits
     {
-      typedef QuanType const &    ResultType;
+      typedef QuanType const &    result_type;
     };
 
     //do not use references for primitives:
     template <>
     struct QuanTraits<bool>
     {
-      typedef bool   ResultType;
+      typedef bool   result_type;
     };
 
     template <>
     struct QuanTraits<char>
     {
-      typedef char   ResultType;
+      typedef char   result_type;
     };
 
     template <>
     struct QuanTraits<long>
     {
-      typedef long   ResultType;
+      typedef long   result_type;
     };
 
     template <>
     struct QuanTraits<int>
     {
-      typedef int   ResultType;
+      typedef int   result_type;
     };
 
     template <>
     struct QuanTraits<float>
     {
-      typedef float   ResultType;
+      typedef float   result_type;
     };
 
     template <>
     struct QuanTraits<double>
     {
-      typedef double   ResultType;
+      typedef double   result_type;
     };
 
 
