@@ -21,6 +21,31 @@ transfer<all,      value_type>()(obj_src, obj_dest);
 transfer<all,      all       >()(obj_src, obj_dest);
 */
 
+
+#include "viennadata/interface.hpp"
+
+struct my_class {};
+
+void new_interface()
+{
+  int key1 = 3;
+  double value1 = 3.1415;
+  char key2 = 4;
+  double * value2 = 0;
+  
+  my_class obj;
+  
+  viennadata::data<int, double>(key1)(obj) = value1;
+  
+  
+}
+
+
+
+
+
+
+
 int main(int argc, char *argv[])
 {
 
