@@ -56,17 +56,20 @@ int main(int argc, char *argv[])
 
   char key_char_1 = 'c';
   char key_char_2 = 'd';
+  long key_long_1 = 42;
 
   SomeClass obj;
 
-  std::cout << "Setting 1 and 2" << std::endl;
+  std::cout << "Setting some sample values:" << std::endl;
   viennadata::access<char, double>(key_char_1)(obj) = 1.0;
   viennadata::access<char, double>(key_char_2)(obj) = 2.0;
+  viennadata::access<long, std::string>(key_long_1)(obj) = "Hello World!";
 
 
   std::cout << "Output:" << std::endl;
   std::cout << viennadata::access<char, double>(key_char_1)(obj) << std::endl;
   std::cout << viennadata::access<char, double>(key_char_2)(obj) << std::endl;
+  std::cout << viennadata::access<long, std::string>(key_long_1)(obj) << std::endl;
 
   return EXIT_SUCCESS;
 }
