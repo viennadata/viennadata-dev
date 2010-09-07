@@ -5,9 +5,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 //#include "QuantityManager/quantitymanager.h"
-#include "testbench.h"
+//#include "testbench.h"
 
 /*
 remove  <key_type, value_type>(key)(obj);
@@ -24,6 +25,7 @@ transfer<all,      all       >()(obj_src, obj_dest);
 
 #include "viennadata/interface.hpp"
 
+/*
 struct my_class {};
 
 void new_interface()
@@ -39,9 +41,9 @@ void new_interface()
   
   
 }
+*/
 
-
-
+class SomeClass {};
 
 
 
@@ -49,8 +51,22 @@ void new_interface()
 int main(int argc, char *argv[])
 {
 
-  testBasicOperations();
+  //testBasicOperations();
   //testStorageKeyWrappers();
+
+  char key_char_1 = 'c';
+  char key_char_2 = 'd';
+
+  SomeClass obj;
+
+  std::cout << "Setting 1 and 2" << std::endl;
+  viennadata::access<char, double>(key_char_1)(obj) = 1.0;
+  viennadata::access<char, double>(key_char_2)(obj) = 2.0;
+
+
+  std::cout << "Output:" << std::endl;
+  std::cout << viennadata::access<char, double>(key_char_1)(obj) << std::endl;
+  std::cout << viennadata::access<char, double>(key_char_2)(obj) << std::endl;
 
   return EXIT_SUCCESS;
 }

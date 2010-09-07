@@ -22,178 +22,6 @@ using viennadata::SetKeyDispatch;
 using viennadata::key_wrapper;
 using viennadata::key_interface;
 
-class TestClassWithLongBanks 
-  : public QuantityManager< TestClassWithLongBanks, no_id, long>
-{
-  public:
-    TestClassWithLongBanks(long member_ = 0) : member(member_) {};
-
-    long getMember() { return member; }
-
-  private:
-    long member;
-
-};
-
-class AnotherClassWithLongBanks 
-  : public QuantityManager< AnotherClassWithLongBanks, no_id, long>
-{
-  public:
-    AnotherClassWithLongBanks(long member_ = 0) : member(member_) {};
-
-    long getMember() { return member; }
-
-  private:
-    long member;
-
-};
-
-class TestClassWithDoubleBanks 
-  : public QuantityManager< TestClassWithDoubleBanks, no_id, double>
-{
-  public:
-    TestClassWithDoubleBanks(long member_ = 0) : member(member_) {};
-
-    long getMember() { return member; }
-
-  private:
-    long member;
-
-};
-
-class TestWithoutBanks 
-  : public QuantityManager< TestWithoutBanks, has_id, no_storage_bank_tag >
-{
-  public:
-    TestWithoutBanks(long member_ = 0) : member(member_) {};
-
-    long getMember() { return member; }
-
-  private:
-    long member;
-
-};
-
-
-
-
-
-struct TestClass1
-{
-  static void print() { std::cout << "TestClass1"; }
-};
-
-struct TestClass2
-{
-  static void print() { std::cout << "TestClass2"; }
-};
-
-
-struct KeyClass
-{
-   static void print() { std::cout << "TestKeyClass"; }
-};
-
-namespace viennadata
-{
-  template <>
-  struct SetKeyDispatch< KeyClass >
-  {
-    typedef type_key_dispatch_tag    result_type;
-  };
-}
-
-
-template <typename TestClassType, typename BankType>
-void fillBank_1_impl(TestClassType & test_bank, BankType const * bank_1, BankType const * bank_2)
-{
-
-  //keys:
-  char key_char_1 = 'c';
-  char key_char_2 = 'd';
-  long key_long_1 = 1;
-//  long key_long_2 = 2;
-
-  std::string key_string_1 = "key1";
-  std::string key_string_2 = "key2";
-
-  KeyClass key_keyclass_1;
-  KeyClass key_keyclass_2;
-
-  //data:
-  double data_double_1 = 100.0;
-  double data_double_2 = 200.0;
-  double data_double_3 = 300.0;
-
-  std::string data_string_1 = "data1";
-  std::string data_string_2 = "data2";
-
-  test_bank.template reserveQuantity<double>( key_char_1 );
-  test_bank.template reserveQuantity<std::string>( key_char_1 );
-  test_bank.template reserveQuantity<double>( key_char_2 );
-  test_bank.template reserveQuantity<std::string>( key_char_2 );
-  test_bank.template reserveQuantity<double>( key_long_1 );
-  test_bank.template reserveQuantity<std::string>( key_long_1 );
-  test_bank.template reserveQuantity<double>( key_string_2 );
-  test_bank.template reserveQuantity<std::string>( key_string_2 );
-  test_bank.template reserveQuantity<double>( key_keyclass_1 );
-  test_bank.template reserveQuantity<std::string>( key_keyclass_2 );
-
-  if (bank_1 != NULL)
-    test_bank.setStorageBank( *bank_1 );
-
-  //fill test_bank:
-  test_bank.storeQuantity(key_char_1, data_double_1);
-  test_bank.storeQuantity(key_char_1, data_string_2);
-  test_bank.storeQuantity(key_char_2, data_double_3);
-  test_bank.storeQuantity(key_char_2, data_string_1);
-  test_bank.storeQuantity(key_long_1, data_double_2);
-  test_bank.storeQuantity(key_long_1, data_string_2);
-  test_bank.storeQuantity(key_string_2, data_double_3);
-  test_bank.storeQuantity(key_string_2, data_string_1);
-  test_bank.storeQuantity(key_keyclass_1, data_double_3);
-  test_bank.storeQuantity(key_keyclass_2, data_string_1);
-
-  //intentional overwrites of existing quantities:
-  test_bank.storeQuantity(key_char_1, data_double_3);
-  test_bank.storeQuantity(key_char_1, data_string_1);
-  test_bank.storeQuantity(key_char_2, data_double_2);
-  test_bank.storeQuantity(key_char_2, data_string_2);
-  test_bank.storeQuantity(key_long_1, data_double_3);
-  test_bank.storeQuantity(key_long_1, data_string_1);
-  test_bank.storeQuantity(key_string_2, data_double_1);
-  test_bank.storeQuantity(key_string_2, data_string_2);
-  test_bank.storeQuantity(key_keyclass_1, data_double_1);
-  test_bank.storeQuantity(key_keyclass_2, data_string_2);
-
-  //switch storage bank
-  if (bank_2 != NULL)
-    test_bank.setStorageBank( *bank_2 );
-
-  //fill test_longbank_1:
-  test_bank.storeQuantity(key_char_1, data_double_3);
-  test_bank.storeQuantity(key_char_1, data_string_1);
-  test_bank.storeQuantity(key_char_2, data_double_2);
-  test_bank.storeQuantity(key_char_2, data_string_2);
-  test_bank.storeQuantity(key_long_1, data_double_3);
-  test_bank.storeQuantity(key_long_1, data_string_1);
-  test_bank.storeQuantity(key_string_2, data_double_1);
-  test_bank.storeQuantity(key_string_2, data_string_2);
-  test_bank.storeQuantity(key_keyclass_1, data_double_1);
-  test_bank.storeQuantity(key_keyclass_2, data_string_2);
-
-  //intentional overwrites of existing quantities:
-  test_bank.storeQuantity(key_char_1, data_double_1);
-  test_bank.storeQuantity(key_char_1, data_string_2);
-  test_bank.storeQuantity(key_char_2, data_double_3);
-  test_bank.storeQuantity(key_char_2, data_string_1);
-  test_bank.storeQuantity(key_long_1, data_double_2);
-  test_bank.storeQuantity(key_long_1, data_string_2);
-  test_bank.storeQuantity(key_string_2, data_double_3);
-  test_bank.storeQuantity(key_string_2, data_string_1);
-  test_bank.storeQuantity(key_keyclass_1, data_double_3);
-  test_bank.storeQuantity(key_keyclass_2, data_string_1);
-}
 
 template <typename TestClassType, typename BankType>
 void checkBank_1_impl(TestClassType & test_bank, BankType const * bank_1, BankType const * bank_2)
@@ -224,17 +52,27 @@ void checkBank_1_impl(TestClassType & test_bank, BankType const * bank_1, BankTy
   //bank 1
   if (bank_1 != NULL)
   {
-    test_bank.setStorageBank( *bank_1 );
-    if (test_bank.template retrieveQuantity<double>     (key_char_1) != data_double_3) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<std::string>(key_char_1) != data_string_1) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<double>     (key_char_2) != data_double_2) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<std::string>(key_char_2) != data_string_2) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<double>     (key_long_1) != data_double_3) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<std::string>(key_long_1) != data_string_1) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<double>     (key_string_2) != data_double_1) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<std::string>(key_string_2) != data_string_2) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<double>     (key_keyclass_1) != data_double_1) ++errors_test_bank;
-    if (test_bank.template retrieveQuantity<std::string>(key_keyclass_2) != data_string_2) ++errors_test_bank;
+    //test_bank.setStorageBank( *bank_1 );
+    //if (test_bank.template retrieveQuantity<double>     (key_char_1) != data_double_3) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<std::string>(key_char_1) != data_string_1) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<double>     (key_char_2) != data_double_2) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<std::string>(key_char_2) != data_string_2) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<double>     (key_long_1) != data_double_3) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<std::string>(key_long_1) != data_string_1) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<double>     (key_string_2) != data_double_1) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<std::string>(key_string_2) != data_string_2) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<double>     (key_keyclass_1) != data_double_1) ++errors_test_bank;
+    //if (test_bank.template retrieveQuantity<std::string>(key_keyclass_2) != data_string_2) ++errors_test_bank;
+    if (data<char, double>            (key_char_1)    (test_bank) != data_double_3) ++errors_test_bank;
+    if (data<char, std::string>       (key_char_1)    (test_bank) != data_string_1) ++errors_test_bank;
+    if (data<char, double>            (key_char_2)    (test_bank) != data_double_2) ++errors_test_bank;
+    if (data<char, std::string>       (key_char_2)    (test_bank) != data_string_2) ++errors_test_bank;
+    if (data<long, double>            (key_long_1)    (test_bank) != data_double_3) ++errors_test_bank;
+    if (data<long, std::string>       (key_long_1)    (test_bank) != data_string_1) ++errors_test_bank;
+    if (data<std::string, double>     (key_string_2)  (test_bank) != data_double_1) ++errors_test_bank;
+    if (data<std::string, std::string>(key_string_2)  (test_bank) != data_string_2) ++errors_test_bank;
+    if (data<KeyClass, double>        (key_keyclass_1)(test_bank) != data_double_1) ++errors_test_bank;
+    if (data<KeyClass, std::string>   (key_keyclass_2)(test_bank) != data_string_2) ++errors_test_bank;
   }
 
   if (bank_2 != NULL)
@@ -540,14 +378,3 @@ void testStoragekey_wrappers()
 }
 
 
-
-void testCopyTransfer()
-{
-
-
-
-
-
-
-
-}
