@@ -25,7 +25,6 @@ namespace viennadata
   };
 
   //add here some custom element identifier
-
 } //namespace viennadata
 
 

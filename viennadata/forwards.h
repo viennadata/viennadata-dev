@@ -30,11 +30,12 @@ namespace viennadata
 {
   
     ////////////////////// tags ////////////////////////
-        //forward declaration for disabling storage banks:
+    //forward declaration for disabling storage banks:
     struct no_storage_bank_tag;
 
     //element identification:
-    struct pointer_based_id {};  //use object address as ID
+    struct pointer_based_id {};      //use object address as ID
+    struct element_provided_id {};   //object provides some ID with values in 0...N
 
 
     //storage policy tag:

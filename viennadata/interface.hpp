@@ -18,33 +18,64 @@
 namespace viennadata
 {
 
-  
+  //////////// data access ////////////////////
   template <typename key_type, typename value_type>
-  class data_getter
+  class data_accessor_with_key
   {
     public:
-      data_getter(key_type const & key) : key_(key) {}
+      data_accessor_with_key(key_type const & key) : key_(key) {}
       
       template <typename element_type>
       value_type & operator()(element_type const & el)
       {
         //std::cout << "Get data from element" << std::endl;
-        return data_container<key_type, value_type, element_type>::instance()(el, key_);
+        return data_container<key_type, value_type, element_type>::instance().access(el, key_);
       }
       
     private:
-      key_type const & key_;
-    
+      key_type const & key_;    
+  };
+
+  template <typename key_type, typename value_type>
+  class data_accessor_no_key
+  {
+    public:
+      data_accessor_no_key() {}
+      
+      template <typename element_type>
+      value_type & operator()(element_type const & el)
+      {
+        //std::cout << "Get data from element" << std::endl;
+        return data_container<key_type, value_type, element_type>::instance().access(el);
+      }
   };
   
   
   // data getter and setter:
   template <typename key_type, typename value_type>
-  data_getter<key_type, value_type> access(key_type const & key)
+  data_accessor_with_key<key_type, value_type> access(key_type const & key)
   {
-    return data_getter<key_type, value_type>(key);
+    return data_accessor_with_key<key_type, value_type>(key);
+  }
+
+  template <typename key_type, typename value_type>
+  data_accessor_no_key<key_type, value_type> access()
+  {
+    return data_accessor_no_key<key_type, value_type>();
   }
   
+
+
+
+
+
+  //////////// memory allocation for data ////////////////////
+
+  template <typename key_type, typename value_type, typename element_type>
+  void reserve(long num)
+  {
+    data_container<key_type, value_type, element_type>::instance().reserve(num);
+  }
     
   
 } //namespace viennadata
