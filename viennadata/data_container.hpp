@@ -62,6 +62,19 @@ namespace viennadata
         return container_traits<key_type, value_type, element_type>::access(container, el);
       }
 
+
+      // erase data associated with a key
+      void erase(element_type const & el, key_type const & key)
+      {
+        container_traits<key_type, value_type, element_type>::erase(container, el, key);
+      }
+
+      // erase data associated with all keys of key_type
+      void erase(element_type const & el)
+      {
+        container_traits<key_type, value_type, element_type>::erase(container, el);
+      }
+
       // reserve memory if a vector type is used
       void reserve(long num)
       {

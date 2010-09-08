@@ -65,8 +65,46 @@ namespace viennadata
   }
   
 
+  //////////// erase data ////////////////////
+  template <typename key_type, typename value_type>
+  class data_erasor_with_key
+  {
+    public:
+      data_erasor_with_key(key_type const & k) : key(k) {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el)
+      {
+        data_container<key_type, value_type, element_type>::instance().erase(el, key);
+      }
+    private:
+      key_type const & key;
+  };
 
+  template <typename key_type, typename value_type>
+  class data_erasor_no_key
+  {
+    public:
+      data_erasor_no_key() {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el)
+      {
+        data_container<key_type, value_type, element_type>::instance().erase(el);
+      }
+  };
 
+  template <typename key_type, typename value_type>
+  data_erasor_with_key<key_type, value_type> erase(key_type const & key)
+  {
+    return data_erasor_with_key<key_type, value_type>(key);
+  }
+
+  template <typename key_type, typename value_type>
+  data_erasor_no_key<key_type, value_type> erase()
+  {
+    return data_erasor_no_key<key_type, value_type>();
+  }
 
 
   //////////// memory allocation for data ////////////////////

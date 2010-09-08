@@ -42,7 +42,7 @@ namespace viennadata
     // the accessors:
     static value_type & access(container_type & cont, element_type const & element, key_type const & key)
     {
-       std::cout << "Accessing sparse data by pointer" << std::endl;
+       //std::cout << "Accessing sparse data by pointer" << std::endl;
        return cont[&element][key];
     }
 
@@ -52,7 +52,20 @@ namespace viennadata
       typedef typename container_type::ERROR_ACCESS_WITHOUT_KEY_ARGUMENT_SUPPLIED   error_type;
     }
 
+    // resizing:
     static void resize(container_type & cont, long num) {}
+
+    // erase data for a particular key:
+    static void erase(container_type & cont, element_type const & element, key_type const & key)
+    {
+      cont[&element].erase(key);
+    }
+
+    // erase data for all keys of that type
+    static void erase(container_type & cont, element_type const & element)
+    {
+      cont[&element].clear();
+    }
 
   };
 
@@ -74,7 +87,7 @@ namespace viennadata
     // the accessors:
     static value_type & access(container_type & cont, element_type const & element, key_type const & key)
     {
-       std::cout << "Accessing sparse data by pointer, key per type" << std::endl;
+       //std::cout << "Accessing sparse data by pointer, key per type" << std::endl;
        return cont[&element];
     }
 
@@ -84,6 +97,18 @@ namespace viennadata
     }
 
     static void resize(container_type & cont, long num) {}
+
+    // erase data for a particular key:
+    static void erase(container_type & cont, element_type const & element, key_type const & key)
+    {
+      cont.erase(&element);
+    }
+
+    // erase data for all keys of that type
+    static void erase(container_type & cont, element_type const & element)
+    {
+      cont.erase(&element);
+    }
 
   };
 
@@ -105,7 +130,7 @@ namespace viennadata
     static value_type & access(container_type & cont, element_type const & element, key_type const & key)
     {
        //std::cout << "Accessing index " << element_identifier<element_type>::id(element) << "/" << cont.size() << std::endl;
-       std::cout << "Accessing dense data by ID" << std::endl;
+       //std::cout << "Accessing dense data by ID" << std::endl;
        return cont[element_identifier<element_type>::id(element)][key];
     }
 
@@ -116,6 +141,18 @@ namespace viennadata
     }
 
     static void resize(container_type & cont, long num) { cont.resize(num); }
+
+    // erase data for a particular key:
+    static void erase(container_type & cont, element_type const & element, key_type const & key)
+    {
+      cont[element_identifier<element_type>::id(element)].erase(key);
+    }
+
+    // erase data for all keys of that type
+    static void erase(container_type & cont, element_type const & element)
+    {
+      cont[element_identifier<element_type>::id(element)].clear();
+    }
 
   };
 
@@ -135,7 +172,7 @@ namespace viennadata
     // the accessors:
     static value_type & access(container_type & cont, element_type const & element, key_type const & key)
     {
-       std::cout << "Accessing dense data by ID, key per type" << std::endl;
+       //std::cout << "Accessing dense data by ID, key per type" << std::endl;
        return cont[element_identifier<element_type>::id(element)];
     }
 
@@ -145,6 +182,18 @@ namespace viennadata
     }
 
     static void resize(container_type & cont, long num) { cont.resize(num); }
+
+    // erase data for a particular key:
+    static void erase(container_type & cont, element_type const & element, key_type const & key)
+    {
+      cont[element_identifier<element_type>::id(element)] = value_type();
+    }
+
+    // erase data for all keys of that type
+    static void erase(container_type & cont, element_type const & element)
+    {
+      cont[element_identifier<element_type>::id(element)] = value_type();
+    }
 
   };
 
