@@ -108,13 +108,30 @@ namespace viennadata
 
 
   //////////// memory allocation for data ////////////////////
-
-  template <typename key_type, typename value_type, typename element_type>
-  void reserve(long num)
+  
+  template <typename key_type, typename value_type>
+  class reservation_proxy
   {
-    data_container<key_type, value_type, element_type>::instance().reserve(num);
-  }
+    public:
+      reservation_proxy(long num) : num_(num) {}
+      
+      template <typename element_type>
+      void operator()(element_type const & e)
+      {
+        data_container<key_type, value_type, element_type>::instance().reserve(num_);
+      }
     
+    private:
+      long num_;
+  };
+  
+
+  template <typename key_type, typename value_type>
+  reservation_proxy<key_type, value_type> reserve(long num)
+  {
+    return reservation_proxy<key_type, value_type>(num);
+  }
+  
   
 } //namespace viennadata
 

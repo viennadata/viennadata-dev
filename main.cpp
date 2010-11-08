@@ -24,7 +24,7 @@ transfer<all,      all       >()(obj_src, obj_dest);
 
 
 #include "viennadata/interface.hpp"
-#include "testbench.h"
+#include "tests/testbench.h"
 
 
 int main(int argc, char *argv[])

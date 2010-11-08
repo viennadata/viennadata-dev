@@ -98,19 +98,19 @@ void check_data_access()
     ClassWithID    id_obj2(42);
 
     //reserve data:
-    viennadata::reserve<char,     double,      StandardClass>(123);
-    viennadata::reserve<char,     std::string, StandardClass>(123);
-    viennadata::reserve<SomeKey,  double,      StandardClass>(123);
-    viennadata::reserve<SomeKey,  std::string, StandardClass>(123);
-    viennadata::reserve<QuickKey, double,      StandardClass>(123);
-    viennadata::reserve<QuickKey, std::string, StandardClass>(123);
+    viennadata::reserve<char,     double     >(123)(StandardClass());
+    viennadata::reserve<char,     std::string>(123)(StandardClass());
+    viennadata::reserve<SomeKey,  double     >(123)(StandardClass());
+    viennadata::reserve<SomeKey,  std::string>(123)(StandardClass());
+    viennadata::reserve<QuickKey, double     >(123)(StandardClass());
+    viennadata::reserve<QuickKey, std::string>(123)(StandardClass());
 
-    viennadata::reserve<char,     double,      ClassWithID>(123);
-    viennadata::reserve<char,     std::string, ClassWithID>(123);
-    viennadata::reserve<SomeKey,  double,      ClassWithID>(123);
-    viennadata::reserve<SomeKey,  std::string, ClassWithID>(123);
-    viennadata::reserve<QuickKey, double,      ClassWithID>(123);
-    viennadata::reserve<QuickKey, std::string, ClassWithID>(123);
+    viennadata::reserve<char,     double     >(123)(ClassWithID(1));
+    viennadata::reserve<char,     std::string>(123)(ClassWithID(2));
+    viennadata::reserve<SomeKey,  double     >(123)(ClassWithID(3));
+    viennadata::reserve<SomeKey,  std::string>(123)(ClassWithID(4));
+    viennadata::reserve<QuickKey, double     >(123)(ClassWithID(5));
+    viennadata::reserve<QuickKey, std::string>(123)(ClassWithID(6));
 
     //write data:
     viennadata::access<char,double>('c')(std_obj1) = 23.45;
