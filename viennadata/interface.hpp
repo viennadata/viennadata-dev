@@ -133,6 +133,29 @@ namespace viennadata
   }
   
   
+  /////////// find sparse data /////////////
+  template <typename key_type, typename value_type>
+  class find_proxy
+  {
+    public:
+      find_proxy(key_type const & key) : key_(key) {}
+      
+      template <typename element_type>
+      value_type * operator()(element_type const & el)
+      {
+        return data_container<key_type, value_type, element_type>::instance().find(el, key_);
+      }
+    
+    private:
+      key_type const & key_;
+  };
+
+  template <typename key_type, typename value_type>
+  find_proxy<key_type, value_type> find(key_type const & key)
+  {
+    return find_proxy<key_type, value_type>(key);
+  }
+  
 } //namespace viennadata
 
 #endif 

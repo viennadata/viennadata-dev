@@ -27,19 +27,6 @@ class ClassWithID
     long id;
 };
 
-// make ID of ClassWithID known to ViennaData:
-namespace viennadata
-{
-  template <>
-  struct element_identifier<ClassWithID>
-  {
-    typedef element_provided_id    tag;
-
-    static long id(ClassWithID const & cwid) { return cwid.get_id(); }
-  };
-}
-
-
 class SomeKey
 {
   public:
@@ -63,20 +50,29 @@ class QuickKey
     long id;
 };
 
-// tell ViennaData to use QuickKey:
+//////// Configuration of ViennaData:
 namespace viennadata
 {
+  // make ID of ClassWithID known to ViennaData:
+  template <>
+  struct element_identifier<ClassWithID>
+  {
+    typedef element_provided_id    tag;
+    typedef long                   id_type;
+
+    static long id(ClassWithID const & cwid) { return cwid.get_id(); }
+  };
+  
+  
+  // tell ViennaData to use QuickKey:
   template <>
   struct dispatch_traits<QuickKey>
   {
     typedef type_key_dispatch_tag    tag;
   };
-}
-
-
-// store doubles on ClassWithID densely:
-namespace viennadata
-{
+  
+  
+  // store doubles on ClassWithID densely:
   template <typename key_type>
   struct storage_traits<key_type, double, ClassWithID>
   {
@@ -178,7 +174,22 @@ void check_data_access()
     if (viennadata::access<QuickKey,std::string>(QuickKey(2))(id_obj2) != "base") ++error_cnt;
 
 
+    
+    std::cout << "Finding <char, double>('c') from id_obj2: " 
+              << viennadata::find<char, double>('c')(id_obj2)
+              << std::endl;
 
+    std::cout << "Finding <char, double>('d') from id_obj2: " 
+              << viennadata::find<char, double>('d')(id_obj2)
+              << std::endl;
+
+    std::cout << "Finding <char, long>('c') from id_obj2: " 
+              << viennadata::find<char, long>('c')(id_obj2)
+              << std::endl;
+    std::cout << "Finding <char, long>('c') from id_obj2: " 
+              << viennadata::find<char, std::string>('c')(id_obj2)
+              << std::endl;
+              
     if (error_cnt == 0)
       std::cout << "Data access check succeeded!" << std::endl;
     else

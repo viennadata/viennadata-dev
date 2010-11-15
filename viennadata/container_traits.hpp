@@ -25,7 +25,6 @@ namespace viennadata
 
   // Case: 
   // This is the default case:
-  // - pointer-based element identification
   // - full key dispatch
   // - sparse storage
   template <typename key_type,
@@ -37,13 +36,15 @@ namespace viennadata
   struct container_traits
   {
     // the datatype:
-    typedef std::map< const element_type *, std::map< key_type, value_type > >  container_type;
+    typedef typename element_identifier<element_type>::id_type     id_type;
+    typedef std::map< id_type, std::map< key_type, value_type > >  container_type;
 
     // the accessors:
     static value_type & access(container_type & cont, element_type const & element, key_type const & key)
     {
        //std::cout << "Accessing sparse data by pointer" << std::endl;
-       return cont[&element][key];
+       return cont[element_identifier<element_type>::id(element)][key];
+       //return cont[&element][key];
     }
 
     static value_type & access(container_type & cont, element_type const & element)
@@ -58,13 +59,23 @@ namespace viennadata
     // erase data for a particular key:
     static void erase(container_type & cont, element_type const & element, key_type const & key)
     {
-      cont[&element].erase(key);
+      cont[element_identifier<element_type>::id(element)].erase(key);
     }
 
     // erase data for all keys of that type
     static void erase(container_type & cont, element_type const & element)
     {
-      cont[&element].clear();
+      cont[element_identifier<element_type>::id(element)].clear();
+    }
+
+    //find
+    static value_type * find(container_type & cont, element_type const & element, key_type const & key)
+    {
+      typename std::map< key_type, value_type >::iterator it = cont[element_identifier<element_type>::id(element)].find(key);
+      if (it == cont[element_identifier<element_type>::id(element)].end())
+        return NULL;
+      
+      return &(it->second);
     }
 
   };
@@ -72,7 +83,6 @@ namespace viennadata
 
 
   // Case: 
-  // - pointer-based element identification
   // - no key dispatch
   // - sparse storage
   template <typename key_type,
@@ -88,12 +98,12 @@ namespace viennadata
     static value_type & access(container_type & cont, element_type const & element, key_type const & key)
     {
        //std::cout << "Accessing sparse data by pointer, key per type" << std::endl;
-       return cont[&element];
+       return cont[element_identifier<element_type>::id(element)];
     }
 
     static value_type & access(container_type & cont, element_type const & element)
     {
-       return cont[&element];
+       return cont[element_identifier<element_type>::id(element)];
     }
 
     static void resize(container_type & cont, long num) {}
@@ -101,20 +111,26 @@ namespace viennadata
     // erase data for a particular key:
     static void erase(container_type & cont, element_type const & element, key_type const & key)
     {
-      cont.erase(&element);
+      cont.erase(element_identifier<element_type>::id(element));
     }
 
     // erase data for all keys of that type
     static void erase(container_type & cont, element_type const & element)
     {
-      cont.erase(&element);
+      cont.erase(element_identifier<element_type>::id(element));
+    }
+
+    //find
+    //find
+    static value_type * find(container_type & cont, element_type const & element, key_type const & key)
+    {
+      typedef typename container_type::ERROR_FIND_IS_NOT_AVAILABLE_WHEN_USING_TYPE_BASED_KEY_DISPATCH   ErrorType;
     }
 
   };
 
 
   // Case: 
-  // - element ID
   // - full key dispatch
   // - dense storage
   template <typename key_type,
@@ -154,10 +170,19 @@ namespace viennadata
       cont[element_identifier<element_type>::id(element)].clear();
     }
 
+    //find
+    static value_type * find(container_type & cont, element_type const & element, key_type const & key)
+    {
+      typename std::map< key_type, value_type >::iterator it = cont[element_identifier<element_type>::id(element)].find(key);
+      if (it == cont[element_identifier<element_type>::id(element)].end())
+        return NULL;
+      
+      return &(it->second);
+    }
+
   };
 
   // Case: 
-  // - element ID
   // - no key dispatch
   // - dense storage
   template <typename key_type,
@@ -193,6 +218,12 @@ namespace viennadata
     static void erase(container_type & cont, element_type const & element)
     {
       cont[element_identifier<element_type>::id(element)] = value_type();
+    }
+
+    //find
+    static value_type * find(container_type & cont, element_type const & element, key_type const & key)
+    {
+      typedef typename container_type::ERROR_FIND_IS_NOT_AVAILABLE_WHEN_USING_TYPE_BASED_KEY_DISPATCH   ErrorType;
     }
 
   };

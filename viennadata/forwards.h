@@ -43,9 +43,9 @@ namespace viennadata
     struct sparse_data_tag {};     //properties that will be accessed on some elements only. Default policy.
 
     
-    //key dispatch based on type only
+    
     struct full_key_dispatch_tag {};
-    struct type_key_dispatch_tag {};
+    struct type_key_dispatch_tag {};  //key dispatch based on type only
 
     
     // add further performance-critical keys here

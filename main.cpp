@@ -19,8 +19,7 @@ transfer<key_type, value_type>()(obj_src, obj_dest);
 
 transfer<key_type, all       >()(obj_src, obj_dest);
 transfer<all,      value_type>()(obj_src, obj_dest);
-transfer<all,      all       >()(obj_src, obj_dest);
-*/
+transfer<all,      all       >()(obj_src, obj_dest); */
 
 
 #include "viennadata/interface.hpp"

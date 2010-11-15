@@ -25,10 +25,10 @@ The following labels are used in the following:
 
 /******** Data storage and access: ****************/
 // retrieve data:
-value = data<key_type, value_type>(key)(obj);
+value = access<key_type, value_type>(key)(obj);
 
 // store data:
-data<key_type, value_type>(key)(obj) = value;
+access<key_type, value_type>(key)(obj) = value;
 
 /******** Data copy and transfer *****************/
 // use 'move' instead of 'transfer'?

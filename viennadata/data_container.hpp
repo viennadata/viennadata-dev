@@ -81,6 +81,11 @@ namespace viennadata
         //std::cout << "Reserving..." << std::endl;
         container_traits<key_type, value_type, element_type>::resize(container, num);
       }
+      
+      value_type * find(element_type const & el, key_type const & key)
+      {
+        return container_traits<key_type, value_type, element_type>::find(container, el, key);
+      }
 
   };
 

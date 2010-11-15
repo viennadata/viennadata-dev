@@ -21,7 +21,11 @@ namespace viennadata
   template <typename element_type>
   struct element_identifier
   {
-    typedef pointer_based_id    tag;
+    typedef pointer_based_id         tag;
+    typedef const element_type *     id_type;
+    
+    //per default, the element address is the id:
+    static element_type const * id(element_type const & el) { return &el; }
   };
 
   //add here some custom element identifier
