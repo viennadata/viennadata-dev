@@ -49,7 +49,24 @@ namespace viennadata
 
     
     // add further performance-critical keys here
+    
+    
+    
+    //////////////////// function declarations ///////////////////////
+    
+    template <typename key_type, typename value_type>
+    class data_accessor_with_key;
+    
+    template <typename key_type, typename value_type>
+    class data_accessor_no_key;
+    
+    
+    template <typename key_type, typename value_type>
+    data_accessor_with_key<key_type, value_type> access(key_type const & key);
 
+    template <typename key_type, typename value_type>
+    data_accessor_no_key<key_type, value_type> access();
+  
   
 } //namespace
 

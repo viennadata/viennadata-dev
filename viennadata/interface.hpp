@@ -13,6 +13,7 @@
 #ifndef VIENNADATA_INTERFACE_HPP
 #define VIENNADATA_INTERFACE_HPP
 
+#include "forwards.h"
 #include "viennadata/data_container.hpp"
 
 namespace viennadata
@@ -64,7 +65,7 @@ namespace viennadata
     return data_accessor_no_key<key_type, value_type>();
   }
   
-
+  
   //////////// erase data ////////////////////
   template <typename key_type, typename value_type>
   class data_erasor_with_key
@@ -106,6 +107,98 @@ namespace viennadata
     return data_erasor_no_key<key_type, value_type>();
   }
 
+
+  
+  //////////////////////// Move data //////////////////////////////////
+  template <typename key_type, typename value_type>
+  class data_mover_with_key
+  {
+    public:
+      data_mover_with_key(key_type const & key) : key_(key) {}
+      
+      template <typename element_src_type, typename element_dest_type>
+      void operator()(element_src_type const & el_src, element_dest_type const & el_dest)
+      {
+        //std::cout << "Get data from element" << std::endl;
+        access<key_type, value_type>(key_)(el_dest) = access<key_type, value_type>(key_)(el_src);
+        erase<key_type, value_type>(key_)(el_src);
+      }
+    private:
+      key_type const & key_;
+  };
+  
+  
+  template <typename key_type, typename value_type>
+  data_mover_with_key<key_type, value_type> move(key_type const & key)
+  {
+    return data_mover_with_key<key_type, value_type>(key);
+  }
+  
+  
+  template <typename key_type, typename value_type>
+  class data_mover_no_key
+  {
+    public:
+      data_mover_no_key() {}
+      
+      template <typename element_src_type, typename element_dest_type>
+      void operator()(element_src_type const & el_src, element_dest_type const & el_dest)
+      {
+        data_container<key_type, value_type, element_src_type>::instance().move(el_src, el_dest);
+      }
+  };
+  
+  template <typename key_type, typename value_type>
+  data_mover_no_key<key_type, value_type> move()
+  {
+    return data_mover_no_key<key_type, value_type>();
+  }
+  
+  
+  //////////////////////// Copy data //////////////////////////////////
+  template <typename key_type, typename value_type>
+  class data_copy_with_key
+  {
+    public:
+      data_copy_with_key(key_type const & key) : key_(key) {}
+      
+      template <typename element_src_type, typename element_dest_type>
+      void operator()(element_src_type const & el_src, element_dest_type const & el_dest)
+      {
+        access<key_type, value_type>(key_)(el_dest) = access<key_type, value_type>(key_)(el_src);
+      }
+    private:
+      key_type const & key_;
+  };
+  
+  
+  template <typename key_type, typename value_type>
+  data_copy_with_key<key_type, value_type> copy(key_type const & key)
+  {
+    return data_copy_with_key<key_type, value_type>(key);
+  }
+  
+  
+  template <typename key_type, typename value_type>
+  class data_copy_no_key
+  {
+    public:
+      data_copy_no_key() {}
+      
+      template <typename element_src_type, typename element_dest_type>
+      void operator()(element_src_type const & el_src, element_dest_type const & el_dest)
+      {
+        data_container<key_type, value_type, element_src_type>::instance().copy(el_src, el_dest);
+      }
+  };
+  
+  template <typename key_type, typename value_type>
+  data_copy_no_key<key_type, value_type> copy()
+  {
+    return data_copy_no_key<key_type, value_type>();
+  }
+  
+  
 
   //////////// memory allocation for data ////////////////////
   

@@ -22,9 +22,214 @@
 
 namespace viennadata
 {
+  // 8 possibilities in total:
+  // [pointer based|id based] identification
+  // [full key|no key] dispatch
+  // [sparse|dense] storage
+  
+  
+  // helper: check for valid access without key:
+  template <typename key_dispatch_tag>
+  struct IS_ACCESS_WITHOUT_KEY_ALLOWED
+  {
+    typedef typename key_dispatch_tag::ERROR_ACCESS_WITHOUT_KEY_ARGUMENT_SUPPLIED  error_type;
+  };
+  
+  //force error when used without key:
+  template <>
+  struct IS_ACCESS_WITHOUT_KEY_ALLOWED<type_key_dispatch_tag>
+  {
+    typedef void value_type; //some dummy type definition
+  };
+  
+  
+  
+  
+  
+  //helper: reserve memory based on identification mechanism
+  template <typename container_type,
+            typename element_identification_tag,
+            typename storage_tag>
+  struct container_reservation_dispatcher
+  {
+    //by default, do nothing: (some map-based mechanism)
+    static void reserve(container_type & container, long num) {  }
+  };
+  
+  template <typename container_type>
+  struct container_reservation_dispatcher<container_type, element_provided_id, dense_data_tag>
+  {
+    //id based identification:
+    static void reserve(container_type & container, long num) { container.resize(num); }
+  };
+  
+  
+  
+  
+  
+  ////////////////// container_key_value_pair ////////////////////////////
+  template <typename key_type,
+            typename value_type,
+            typename key_dispatch_tag>
+  struct container_key_value_pair
+  {
+    typedef std::map< key_type, value_type >   key_value_type;  // with key object based dispatch    
+    
+    template <typename container_type, typename id_type>
+    static value_type & access(container_type & cont, id_type const & id, key_type const & key)
+    {
+      return cont[id][key];
+    }
+  };
+            
+  template <typename key_type,
+            typename value_type>
+  struct container_key_value_pair <key_type, value_type, type_key_dispatch_tag>
+  {
+    typedef value_type   key_value_type;  // with key object based dispatch    
+    
+    template <typename container_type, typename id_type>
+    static value_type & access(container_type & cont, id_type const & id, key_type const & key)
+    {
+      return cont[id];
+    }
 
-  // Case: 
+    //also allow access without key here, because uniquely defined:
+    template <typename container_type, typename id_type>
+    static value_type & access(container_type & cont, id_type const & id)
+    {
+      return cont[id];
+    }
+  };
+  
+  ///////////////////////// erasure dispatch //////////////////////////
+  
+  //general case: call erase of the underlying map-type
+  template <typename key_type, typename value_type,
+            typename element_identification_tag,
+            typename key_dispatch_tag,
+            typename storage_tag>
+  struct container_erasure_dispatcher
+  {
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id, key_type const & key)
+    {
+      cont[id].erase(key);
+    }
+    
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id)
+    {
+      cont.erase(id);
+    }
+    
+  };
+
+  //using a type-based key dispatch, erase from id-map:
+  template <typename key_type, typename value_type, typename element_identification_tag, typename storage_tag>
+  struct container_erasure_dispatcher < key_type, value_type, element_identification_tag, type_key_dispatch_tag, storage_tag >
+  {
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id, key_type const & key)
+    {
+      cont.erase(id);
+    }
+    
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id)
+    {
+      cont.erase(id);
+    }
+  };  
+
+  //for a dense data storage with vectors, reset element:
+  template <typename key_type, typename value_type, typename key_dispatch_tag>
+  struct container_erasure_dispatcher < key_type, value_type, element_provided_id, key_dispatch_tag, dense_data_tag >
+  {
+    typedef typename container_key_value_pair< key_type,
+                                               value_type,
+                                               key_dispatch_tag >::key_value_type   key_value_type;
+                                               
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id, key_type const & key)
+    {
+      cont[id] = key_value_type();
+    }
+    
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id)
+    {
+      cont[id] = key_value_type();
+    }
+  };
+
+  //resolve ambiguity for above specializations
+  template <typename key_type, typename value_type>
+  struct container_erasure_dispatcher < key_type, value_type, element_provided_id, type_key_dispatch_tag, dense_data_tag >
+  {
+    typedef typename container_key_value_pair< key_type,
+                                               value_type,
+                                               type_key_dispatch_tag >::key_value_type   key_value_type;
+                                               
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id, key_type const & key)
+    {
+      cont[id] = key_value_type();
+    }
+    
+    template <typename container_type, typename id_type>
+    static void erase(container_type & cont, id_type const & id)
+    {
+      cont[id] = key_value_type();
+    }
+  };
+
+  
+  
+  ///////////////////////// storage traits //////////////////////////
+  
+  
+  //helper: deduce correct storage type:  
+  template <typename key_type,
+            typename value_type,
+            typename element_type,
+            typename element_identification_tag,
+            typename key_dispatch_tag,
+            typename storage_tag>
+  struct container_storage_traits
+  {
+    //default case:
+    typedef typename element_identifier<element_type>::id_type     id_type;
+    typedef std::map< id_type,
+                      typename container_key_value_pair< key_type,
+                                                         value_type,
+                                                         key_dispatch_tag >::key_value_type
+                    >                                              container_type;
+                    
+     static void reserve(container_type & cont, long num) { }
+  };
+  
+  //dense storage when providing ID
+  template <typename key_type,
+            typename value_type,
+            typename element_type,
+            typename key_dispatch_tag>
+  struct container_storage_traits <key_type, value_type, element_type,
+                                   element_provided_id, key_dispatch_tag, dense_data_tag>
+  {
+    typedef typename element_identifier<element_type>::id_type     id_type;
+    typedef std::vector< typename container_key_value_pair< key_type,
+                                                            value_type,
+                                                            key_dispatch_tag >::key_value_type
+                       >                                           container_type;
+                       
+     static void reserve(container_type & cont, long num) { cont.resize(num); }                  
+  };
+  
+  
+  // Case 1: 
   // This is the default case:
+  // - pointer based identification
   // - full key dispatch
   // - sparse storage
   template <typename key_type,
@@ -36,36 +241,65 @@ namespace viennadata
   struct container_traits
   {
     // the datatype:
-    typedef typename element_identifier<element_type>::id_type     id_type;
-    typedef std::map< id_type, std::map< key_type, value_type > >  container_type;
+    typedef typename container_storage_traits<key_type, value_type, element_type,
+                                              element_identification_tag,
+                                              key_dispatch_tag,
+                                              storage_tag>::container_type    container_type;
 
     // the accessors:
     static value_type & access(container_type & cont, element_type const & element, key_type const & key)
     {
        //std::cout << "Accessing sparse data by pointer" << std::endl;
-       return cont[element_identifier<element_type>::id(element)][key];
+       return container_key_value_pair <key_type,
+                                        value_type,
+                                        key_dispatch_tag>::access(cont, element_identifier<element_type>::id(element), key);
        //return cont[&element][key];
     }
 
     static value_type & access(container_type & cont, element_type const & element)
     {
-      //not allowed in this case!
-      typedef typename container_type::ERROR_ACCESS_WITHOUT_KEY_ARGUMENT_SUPPLIED   error_type;
+      typedef typename IS_ACCESS_WITHOUT_KEY_ALLOWED<key_dispatch_tag>::value_type   some_type;
+       return container_key_value_pair <key_type,
+                                        value_type,
+                                        key_dispatch_tag>::access(cont, element_identifier<element_type>::id(element));
     }
+
+    //multiple copy (including degenerate case of type based dispatch, where only single data is moved):
+    template <typename container_src_type, typename element_src_type>
+    static void copy(container_src_type & cont_src, element_src_type const & el_src,
+                     container_type & cont_dest, element_type const & el_dest)
+    {
+      //TODO: can be improved if cont_src[id_src] is actually empty, because there is no move necessary then...
+       cont_dest[element_identifier<element_type>::id(el_dest)] = cont_src[element_identifier<element_src_type>::id(el_src)];
+    }
+    
 
     // resizing:
-    static void resize(container_type & cont, long num) {}
+    static void reserve(container_type & cont, long num)
+    {
+       container_storage_traits<key_type, value_type, element_type,
+                                element_identification_tag,
+                                key_dispatch_tag,
+                                storage_tag>::reserve(cont, num);
+    }
 
     // erase data for a particular key:
     static void erase(container_type & cont, element_type const & element, key_type const & key)
     {
-      cont[element_identifier<element_type>::id(element)].erase(key);
+      //cont[element_identifier<element_type>::id(element)].erase(key);
+      container_erasure_dispatcher<key_type, value_type,
+                                       element_identification_tag,
+                                       key_dispatch_tag,
+                                       storage_tag>::erase(cont, element_identifier<element_type>::id(element), key);
     }
 
     // erase data for all keys of that type
     static void erase(container_type & cont, element_type const & element)
     {
-      cont[element_identifier<element_type>::id(element)].clear();
+      container_erasure_dispatcher<key_type, value_type,
+                                       element_identification_tag,
+                                       key_dispatch_tag,
+                                       storage_tag>::erase(cont, element_identifier<element_type>::id(element));
     }
 
     //find
@@ -80,153 +314,6 @@ namespace viennadata
 
   };
 
-
-
-  // Case: 
-  // - no key dispatch
-  // - sparse storage
-  template <typename key_type,
-            typename value_type,
-            typename element_type>
-  struct container_traits <key_type, value_type, element_type,
-                           pointer_based_id, type_key_dispatch_tag, sparse_data_tag>
-  {
-    // the datatype:
-    typedef std::map< const element_type *, value_type >  container_type;
-
-    // the accessors:
-    static value_type & access(container_type & cont, element_type const & element, key_type const & key)
-    {
-       //std::cout << "Accessing sparse data by pointer, key per type" << std::endl;
-       return cont[element_identifier<element_type>::id(element)];
-    }
-
-    static value_type & access(container_type & cont, element_type const & element)
-    {
-       return cont[element_identifier<element_type>::id(element)];
-    }
-
-    static void resize(container_type & cont, long num) {}
-
-    // erase data for a particular key:
-    static void erase(container_type & cont, element_type const & element, key_type const & key)
-    {
-      cont.erase(element_identifier<element_type>::id(element));
-    }
-
-    // erase data for all keys of that type
-    static void erase(container_type & cont, element_type const & element)
-    {
-      cont.erase(element_identifier<element_type>::id(element));
-    }
-
-    //find
-    //find
-    static value_type * find(container_type & cont, element_type const & element, key_type const & key)
-    {
-      typedef typename container_type::ERROR_FIND_IS_NOT_AVAILABLE_WHEN_USING_TYPE_BASED_KEY_DISPATCH   ErrorType;
-    }
-
-  };
-
-
-  // Case: 
-  // - full key dispatch
-  // - dense storage
-  template <typename key_type,
-            typename value_type,
-            typename element_type>
-  struct container_traits <key_type, value_type, element_type,
-                           element_provided_id, full_key_dispatch_tag, dense_data_tag>
-  {
-    // the datatype:
-    typedef std::vector< std::map< key_type, value_type > >  container_type;
-
-    // the accessors:
-    static value_type & access(container_type & cont, element_type const & element, key_type const & key)
-    {
-       //std::cout << "Accessing index " << element_identifier<element_type>::id(element) << "/" << cont.size() << std::endl;
-       //std::cout << "Accessing dense data by ID" << std::endl;
-       return cont[element_identifier<element_type>::id(element)][key];
-    }
-
-    static value_type & access(container_type & cont, element_type const & element)
-    {
-      //not allowed in this case!
-      typedef typename container_type::ERROR_ACCESS_WITHOUT_KEY_ARGUMENT_SUPPLIED   error_type;
-    }
-
-    static void resize(container_type & cont, long num) { cont.resize(num); }
-
-    // erase data for a particular key:
-    static void erase(container_type & cont, element_type const & element, key_type const & key)
-    {
-      cont[element_identifier<element_type>::id(element)].erase(key);
-    }
-
-    // erase data for all keys of that type
-    static void erase(container_type & cont, element_type const & element)
-    {
-      cont[element_identifier<element_type>::id(element)].clear();
-    }
-
-    //find
-    static value_type * find(container_type & cont, element_type const & element, key_type const & key)
-    {
-      typename std::map< key_type, value_type >::iterator it = cont[element_identifier<element_type>::id(element)].find(key);
-      if (it == cont[element_identifier<element_type>::id(element)].end())
-        return NULL;
-      
-      return &(it->second);
-    }
-
-  };
-
-  // Case: 
-  // - no key dispatch
-  // - dense storage
-  template <typename key_type,
-            typename value_type,
-            typename element_type>
-  struct container_traits <key_type, value_type, element_type,
-                           element_provided_id, type_key_dispatch_tag, dense_data_tag>
-  {
-    // the datatype:
-    typedef std::vector< value_type >  container_type;
-
-    // the accessors:
-    static value_type & access(container_type & cont, element_type const & element, key_type const & key)
-    {
-       //std::cout << "Accessing dense data by ID, key per type" << std::endl;
-       return cont[element_identifier<element_type>::id(element)];
-    }
-
-    static value_type & access(container_type & cont, element_type const & element)
-    {
-       return cont[element_identifier<element_type>::id(element)];
-    }
-
-    static void resize(container_type & cont, long num) { cont.resize(num); }
-
-    // erase data for a particular key:
-    static void erase(container_type & cont, element_type const & element, key_type const & key)
-    {
-      cont[element_identifier<element_type>::id(element)] = value_type();
-    }
-
-    // erase data for all keys of that type
-    static void erase(container_type & cont, element_type const & element)
-    {
-      cont[element_identifier<element_type>::id(element)] = value_type();
-    }
-
-    //find
-    static value_type * find(container_type & cont, element_type const & element, key_type const & key)
-    {
-      typedef typename container_type::ERROR_FIND_IS_NOT_AVAILABLE_WHEN_USING_TYPE_BASED_KEY_DISPATCH   ErrorType;
-    }
-
-  };
 
 
 } // namespace viennadata

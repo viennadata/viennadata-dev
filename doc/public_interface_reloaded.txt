@@ -31,12 +31,11 @@ value = access<key_type, value_type>(key)(obj);
 access<key_type, value_type>(key)(obj) = value;
 
 /******** Data copy and transfer *****************/
-// use 'move' instead of 'transfer'?
-transfer<key_type, value_type>(key)(obj_src, obj_dest); // transfer a (key, data) pair from 'obj_src' to 'obj_dest'
-transfer<key_type, value_type>()(obj_src, obj_dest);    // transfer all data of type value_type with a key of type key_type from 'obj_src' to 'obj_dest'
-transfer<key_type, all       >()(obj_src, obj_dest);    // transfer all data associated with a key of type key_type from 'obj_src' to 'obj_dest'
-transfer<all,      value_type>()(obj_src, obj_dest);    // transfer all data of type value_type from 'obj_src' to 'obj_dest'
-transfer<all,      all       >()(obj_src, obj_dest);    // transfer all data from 'obj_src' to 'obj_dest'
+move<key_type, value_type>(key)(obj_src, obj_dest); // transfer a (key, data) pair from 'obj_src' to 'obj_dest'
+move<key_type, value_type>()(obj_src, obj_dest);    // transfer all data of type value_type with a key of type key_type from 'obj_src' to 'obj_dest'
+move<key_type, all       >()(obj_src, obj_dest);    // transfer all data associated with a key of type key_type from 'obj_src' to 'obj_dest'
+move<all,      value_type>()(obj_src, obj_dest);    // transfer all data of type value_type from 'obj_src' to 'obj_dest'
+move<all,      all       >()(obj_src, obj_dest);    // transfer all data from 'obj_src' to 'obj_dest'
 
 copy<key_type, value_type>(key)(obj_src, obj_dest); // copy a (key, data) pair from 'obj_src' to 'obj_dest'
 copy<key_type, value_type>()(obj_src, obj_dest);    // copy all data of type value_type with a key of type key_type from 'obj_src' to 'obj_dest'
@@ -45,11 +44,11 @@ copy<all,      value_type>()(obj_src, obj_dest);    // copy all data of type val
 copy<all,      all       >()(obj_src, obj_dest);    // copy all data from 'obj_src' to 'obj_dest'
 
 /******** Erase data ***************/
-clear<key_type, value_type>(key)(obj); // delete a (key, data) pair associated with 'obj'
-clear<key_type, value_type>()(obj);    // delete all data of type value_type with a key of type key_type associated with 'obj'
-clear<key_type, all       >()(obj);    // delete all data associated with a key of type key_type associated with 'obj'
-clear<all,      value_type>()(obj);    // delete all data of type value_type associated with 'obj'
-clear<all,      all       >()(obj);    // delete all data associated with 'obj'
+erase<key_type, value_type>(key)(obj); // delete a (key, data) pair associated with 'obj'
+erase<key_type, value_type>()(obj);    // delete all data of type value_type with a key of type key_type associated with 'obj'
+erase<key_type, all       >()(obj);    // delete all data associated with a key of type key_type associated with 'obj'
+erase<all,      value_type>()(obj);    // delete all data of type value_type associated with 'obj'
+erase<all,      all       >()(obj);    // delete all data associated with 'obj'
 
 /******** Misc **************/
 reserve<key_type, value_type>(num)(obj);     //reserve memory for 'num' different objects of the same type as 'obj'

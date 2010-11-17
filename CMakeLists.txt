@@ -17,13 +17,10 @@ ELSE()
 ENDIF()
 
 IF(CMAKE_COMPILER_IS_GNUCXX)
-   #ADD_DEFINITIONS(-Wall -O0 -g)
-   ADD_DEFINITIONS(-Wall -pedantic -O3)
+   ADD_DEFINITIONS(-Wall -O0 -g)
+   #ADD_DEFINITIONS(-Wall -pedantic -O3)
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-#list all source files here
-ADD_EXECUTABLE(quantitymanager main.cpp)
 
-#need to link to some other libraries ? just add them here
-#TARGET_LINK_LIBRARIES(quantitymanager png jpeg)
- 
+ADD_EXECUTABLE(test main.cpp)
+

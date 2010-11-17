@@ -62,6 +62,32 @@ namespace viennadata
         return container_traits<key_type, value_type, element_type>::access(container, el);
       }
 
+      //////////////////  copy data: ////////////////////
+      
+      //multiple copy - stage 1: this is the source, forward the request to the destination:
+      template <typename element_dest_type>
+      void copy(element_type const & el_src, element_dest_type const & el_dest)
+      {
+        data_container<key_type, value_type, element_dest_type>::instance().copy(container, el_src, el_dest);
+      }
+      
+      
+      //multiple copy - stage 2: this is the destination: Perform the copy
+      template <typename container_src_type, typename element_src_type>
+      void copy(container_src_type & cont_src, element_src_type const & el_src,
+                element_type const & el_dest)
+      {
+        container_traits<key_type, value_type, element_type>::copy(cont_src, el_src, container, el_dest);
+      }
+
+      //////////////////  move data: ////////////////////
+      //multiple move:
+      template <typename element_dest_type>
+      void move(element_type const & el_src, element_dest_type const & el_dest)
+      {
+        copy(el_src, el_dest);
+        erase(el_src);
+      }
 
       // erase data associated with a key
       void erase(element_type const & el, key_type const & key)
@@ -79,7 +105,7 @@ namespace viennadata
       void reserve(long num)
       {
         //std::cout << "Reserving..." << std::endl;
-        container_traits<key_type, value_type, element_type>::resize(container, num);
+        container_traits<key_type, value_type, element_type>::reserve(container, num);
       }
       
       value_type * find(element_type const & el, key_type const & key)

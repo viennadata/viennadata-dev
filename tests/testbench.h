@@ -124,6 +124,7 @@ void check_data_access()
     viennadata::access<QuickKey,std::string>(QuickKey(2))(std_obj2) = "Sparta!";
 
     viennadata::access<char,double>('c')(id_obj1) = 1.2;
+    viennadata::access<char,double>('d')(id_obj1) = 8.1;
     viennadata::access<char,std::string>('c')(id_obj1) = "foo";
     viennadata::access<SomeKey,double>(SomeKey(2))(id_obj1) = 3.4;
     viennadata::access<SomeKey,std::string>(SomeKey(2))(id_obj1) = "or";
@@ -131,6 +132,7 @@ void check_data_access()
     viennadata::access<QuickKey,std::string>(QuickKey(2))(id_obj1) = "bar";
 
     viennadata::access<char,double>('c')(id_obj2) = 9.8;
+    viennadata::access<char,double>('d')(id_obj2) = 1.1;
     viennadata::access<char,std::string>('c')(id_obj2) = "all";
     viennadata::access<SomeKey,double>(SomeKey(2))(id_obj2) = 7.6;
     viennadata::access<SomeKey,std::string>(SomeKey(2))(id_obj2) = "your";
@@ -171,13 +173,45 @@ void check_data_access()
     if (viennadata::access<SomeKey,double>(SomeKey(2))(id_obj2) != 7.6) ++error_cnt;
     if (viennadata::access<SomeKey,std::string>(SomeKey(2))(id_obj2) != "your") ++error_cnt;
     if (viennadata::access<QuickKey,double>(QuickKey(2))(id_obj2) != 0) ++error_cnt;
-    if (viennadata::access<QuickKey,std::string>(QuickKey(2))(id_obj2) != "base") ++error_cnt;
+    if (viennadata::access<QuickKey,std::string>()(id_obj2) != "base") ++error_cnt;
 
-
-    
+    std::cout << "Finding <char, double>('c') from id_obj1: " 
+              << viennadata::find<char, double>('c')(id_obj1)
+              << std::endl;
+              
     std::cout << "Finding <char, double>('c') from id_obj2: " 
               << viennadata::find<char, double>('c')(id_obj2)
               << std::endl;
+
+    std::cout << "Finding <char, double>('d') from id_obj1: " 
+              << viennadata::find<char, double>('d')(id_obj1)
+              << std::endl;
+              
+    std::cout << "Finding <char, double>('d') from id_obj2: " 
+              << viennadata::find<char, double>('d')(id_obj2)
+              << std::endl;
+              
+    std::cout << "Moving <char, double>() from id_obj2 to id_obj1..." << std::endl;          
+    viennadata::move<char, double>()(id_obj2, std_obj1);
+    if (viennadata::access<char,double>('c')(std_obj1) != 9.8) ++error_cnt;
+    if (viennadata::access<char,double>('d')(std_obj1) != 1.1) ++error_cnt;
+    std::cout << "Finding <char, double>('c') from std_obj1: " 
+              << viennadata::find<char, double>('c')(std_obj1)
+              << std::endl;
+              
+    std::cout << "Finding <char, double>('c') from id_obj2: " 
+              << viennadata::find<char, double>('c')(id_obj2)
+              << std::endl;
+
+    std::cout << "Finding <char, double>('d') from std_obj1: " 
+              << viennadata::find<char, double>('d')(std_obj1)
+              << std::endl;
+              
+    std::cout << "Finding <char, double>('d') from id_obj2: " 
+              << viennadata::find<char, double>('d')(id_obj2)
+              << std::endl;
+              
+    std::cout << "Some other tests follow..." << std::endl;    
 
     std::cout << "Finding <char, double>('d') from id_obj2: " 
               << viennadata::find<char, double>('d')(id_obj2)
@@ -190,6 +224,36 @@ void check_data_access()
               << viennadata::find<char, std::string>('c')(id_obj2)
               << std::endl;
               
+              
+    //a little bit of compilation checks:
+    viennadata::move<char, double>()(id_obj2, std_obj1);
+    viennadata::move<char, std::string>()(id_obj2, std_obj1);
+    viennadata::move<SomeKey, double>()(id_obj2, std_obj1);
+    viennadata::move<SomeKey, std::string>()(id_obj2, std_obj1);
+    viennadata::move<QuickKey, double>()(id_obj2, std_obj1);
+    viennadata::move<QuickKey, std::string>()(id_obj2, std_obj1);
+              
+    viennadata::move<char, double>('c')(id_obj2, std_obj1);
+    viennadata::move<char, std::string>('c')(id_obj2, std_obj1);
+    viennadata::move<SomeKey, double>(SomeKey(2))(id_obj2, std_obj1);
+    viennadata::move<SomeKey, std::string>(SomeKey(2))(id_obj2, std_obj1);
+    viennadata::move<QuickKey, double>(QuickKey(2))(id_obj2, std_obj1);
+    viennadata::move<QuickKey, std::string>()(id_obj2, std_obj1);
+
+    viennadata::copy<char, double>()(id_obj2, id_obj1);
+    viennadata::copy<char, std::string>()(id_obj2, id_obj1);
+    viennadata::copy<SomeKey, double>()(id_obj2, id_obj1);
+    viennadata::copy<SomeKey, std::string>()(id_obj2, id_obj1);
+    viennadata::copy<QuickKey, double>()(id_obj2, id_obj1);
+    viennadata::copy<QuickKey, std::string>()(id_obj2, id_obj1);
+
+    viennadata::copy<char, double>('c')(id_obj2, id_obj1);
+    viennadata::copy<char, std::string>('c')(id_obj2, id_obj1);
+    viennadata::copy<SomeKey, double>(SomeKey(2))(id_obj2, id_obj1);
+    viennadata::copy<SomeKey, std::string>(SomeKey(2))(id_obj2, id_obj1);
+    viennadata::copy<QuickKey, double>(QuickKey(2))(id_obj2, id_obj1);
+    viennadata::copy<QuickKey, std::string>(QuickKey(2))(id_obj2, id_obj1);
+    
     if (error_cnt == 0)
       std::cout << "Data access check succeeded!" << std::endl;
     else
