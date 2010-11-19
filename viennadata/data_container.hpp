@@ -19,6 +19,7 @@
 #include "viennadata/forwards.h"
 #include "viennadata/element_identifier.hpp"
 #include "viennadata/container_traits.hpp"
+#include "viennadata/key_value_registration.hpp"
 
 namespace viennadata
 {
@@ -104,6 +105,8 @@ namespace viennadata
       // reserve memory if a vector type is used
       void reserve(long num)
       {
+        key_value_registration<element_type>::instance().template add<key_type, value_type>();
+        
         //std::cout << "Reserving..." << std::endl;
         container_traits<key_type, value_type, element_type>::reserve(container, num);
       }

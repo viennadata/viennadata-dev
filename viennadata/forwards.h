@@ -67,6 +67,16 @@ namespace viennadata
     template <typename key_type, typename value_type>
     data_accessor_no_key<key_type, value_type> access();
   
+    
+    
+    ////////////////////// other stuff ////////////////////////
+    template <typename key_type,
+              typename value_type,
+              typename element_type>
+    class data_container;
+    
+    struct all {};   //denotes all types
+    
   
 } //namespace
 

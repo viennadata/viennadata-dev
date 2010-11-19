@@ -253,6 +253,10 @@ void check_data_access()
     viennadata::copy<SomeKey, std::string>(SomeKey(2))(id_obj2, id_obj1);
     viennadata::copy<QuickKey, double>(QuickKey(2))(id_obj2, id_obj1);
     viennadata::copy<QuickKey, std::string>(QuickKey(2))(id_obj2, id_obj1);
+
+    
+    //erase all quantities stored using QuickKey:
+    viennadata::erase<QuickKey, viennadata::all>()(id_obj2);
     
     if (error_cnt == 0)
       std::cout << "Data access check succeeded!" << std::endl;

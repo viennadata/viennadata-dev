@@ -95,6 +95,19 @@ namespace viennadata
       }
   };
 
+  template <typename key_type>
+  class data_erasor_no_key <key_type, all>
+  {
+    public:
+      data_erasor_no_key() {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el)
+      {
+        key_value_registration<element_type>::instance().template erase<key_type>(all(), el);
+      }
+  };
+
   template <typename key_type, typename value_type>
   data_erasor_with_key<key_type, value_type> erase(key_type const & key)
   {
