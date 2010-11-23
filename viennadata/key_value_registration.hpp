@@ -25,14 +25,14 @@
 #include <algorithm>
 #include <memory>
 
-#include "viennadata/key_value_erase.hpp"
+#include "viennadata/key_value_manager.hpp"
 
 namespace viennadata
 {
   template <typename element_type>
   class key_value_registration
   {
-      typedef std::vector<key_value_erase<element_type> >       container_type;
+      typedef std::vector<key_value_manager<element_type> >       container_type;
     
     public:
       
@@ -49,7 +49,7 @@ namespace viennadata
       template <typename key_type, typename value_type>
       void add()
       {
-        key_value_erase<element_type> kve;
+        key_value_manager<element_type> kve;
         kve.template add<key_type, value_type>();
         
         //search whether already registered:
@@ -57,29 +57,29 @@ namespace viennadata
           container.push_back(kve);
       }
       
-      template <typename key_type, typename value_type>
+/*      template <typename key_type, typename value_type>
       void remove()
       {
         typedef typename container_type::iterator   ContIter;
         
-        key_value_erase<element_type> kve;
+        key_value_manager<element_type> kve;
         kve.template add<key_type, value_type>();
         
         ContIter ci = std::find(container.begin(), container.end(), kve);
         if (ci != container.end())
           container.erase(ci);
-      }
+      }*/
       
-      
-      
+      //////////////////////// erase ////////////////////////////////////
+      //erase all value types for a particular key:
       template <typename key_type>
-      void erase(all const &, element_type const & el) const
+      void erase_key_all(element_type const & el) const
       {
         typedef typename container_type::const_iterator   ContIter;
         
-        std::cout << "key_value_registration::erase() called!" << std::endl;
+        std::cout << "key_value_registration::erase<key, all> called!" << std::endl;
         
-        key_value_erase<element_type> kve;
+        key_value_manager<element_type> kve;
         kve.template add<key_type, all>();
         
         for (ContIter it = container.begin();
@@ -89,14 +89,121 @@ namespace viennadata
           if (*it == kve)
           {
             std::cout << "FOUND!" << std::endl;
-            kve.erase(el);
+            it->erase(el);
           }
           else
             std::cout << "not found!" << std::endl;
         }
-        
       }
-      
+
+      //erase all key types for a certain value
+      template <typename value_type>
+      void erase_all_value(element_type const & el) const
+      {
+        typedef typename container_type::const_iterator   ContIter;
+        
+        std::cout << "key_value_registration::erase<all, value> called!" << std::endl;
+        
+        key_value_manager<element_type> kve;
+        kve.template add<all, value_type>();
+        
+        for (ContIter it = container.begin();
+             it != container.end();
+             ++it)
+        {
+          if (*it == kve)
+          {
+            std::cout << "FOUND!" << std::endl;
+            it->erase(el);
+          }
+          else
+            std::cout << "not found!" << std::endl;
+        }        
+      }
+
+      //erase all key types and all value types
+      void erase_all_all(element_type const & el) const
+      {
+        typedef typename container_type::const_iterator   ContIter;
+        
+        std::cout << "key_value_registration::erase<all, all> called!" << std::endl;
+        
+        for (ContIter it = container.begin();
+             it != container.end();
+             ++it)
+        {
+            it->erase(el);
+        }        
+      }
+
+
+      //////////////////////// copy ////////////////////////////////////
+      //copy all value types for a particular key:
+      template <typename key_type>
+      void copy_key_all(element_type const & src, element_type const & dest) const
+      {
+        typedef typename container_type::const_iterator   ContIter;
+        
+        std::cout << "key_value_registration::copy<key, all> called!" << std::endl;
+        
+        key_value_manager<element_type> kve;
+        kve.template add<key_type, all>();
+        
+        for (ContIter it = container.begin();
+             it != container.end();
+             ++it)
+        {
+          if (*it == kve)
+          {
+            std::cout << "FOUND!" << std::endl;
+            it->copy(src, dest);
+          }
+          else
+            std::cout << "not found!" << std::endl;
+        }
+      }
+
+      //copy all key types for a certain value
+      template <typename value_type>
+      void copy_all_value(element_type const & src, element_type const & dest) const
+      {
+        typedef typename container_type::const_iterator   ContIter;
+        
+        std::cout << "key_value_registration::copy<all, value> called!" << std::endl;
+        
+        key_value_manager<element_type> kve;
+        kve.template add<all, value_type>();
+        
+        for (ContIter it = container.begin();
+             it != container.end();
+             ++it)
+        {
+          if (*it == kve)
+          {
+            std::cout << "FOUND!" << std::endl;
+            it->copy(src, dest);
+          }
+          else
+            std::cout << "not found!" << std::endl;
+        }        
+      }
+
+      //copy all key types and all value types
+      void copy_all_all(element_type const & src, element_type const & dest) const
+      {
+        typedef typename container_type::const_iterator   ContIter;
+        
+        std::cout << "key_value_registration::copy<all, all> called!" << std::endl;
+        
+        for (ContIter it = container.begin();
+             it != container.end();
+             ++it)
+        {
+            it->copy(src, dest);
+        }        
+      }
+
+
     private:
       container_type container;
   }; 
