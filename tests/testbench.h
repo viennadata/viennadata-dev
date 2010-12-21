@@ -1,5 +1,3 @@
-
-
 /* =======================================================================
    Copyright (c) 2010, Institute for Microelectronics, TU Vienna.
    http://www.iue.tuwien.ac.at
@@ -7,7 +5,8 @@
                      ViennaData - The Vienna Data Storage Library
                              -----------------
 
-   authors:    Karl Rupp                          rupp@iue.tuwien.ac.at
+   authors:    Karl Rupp                             rupp@iue.tuwien.ac.at
+   authors:    Markus Bina (boost.test interface)    bina@iue.tuwien.ac.at
 
    license:    MIT (X11), see file LICENSE in the ViennaData base directory
 ======================================================================= */
@@ -15,13 +14,15 @@
 #ifndef VIENNADATA_TESTBENCH_HPP
 #define VIENNADATA_TESTBENCH_HPP
 
+#include "testconfig.h"
+#include "viennadata/interface.hpp"
 
 struct StandardClass {};
 class ClassWithID
 {
   public:
     ClassWithID(long i) : id(i) {}
-    long get_id() const { return id; } 
+    long get_id() const { return id; }
 
   private:
     long id;
@@ -62,16 +63,16 @@ namespace viennadata
 
     static long id(ClassWithID const & cwid) { return cwid.get_id(); }
   };
-  
-  
+
+
   // tell ViennaData to use QuickKey:
   template <>
   struct dispatch_traits<QuickKey>
   {
     typedef type_key_dispatch_tag    tag;
   };
-  
-  
+
+
   // store doubles on ClassWithID densely:
   template <typename key_type>
   struct storage_traits<key_type, double, ClassWithID>
@@ -82,7 +83,7 @@ namespace viennadata
 
 
 
-
+#if USE_OLD_TESTBENCH
 
 // Checks all data for being stored and retrieved properly.
 void check_data_access()
@@ -175,56 +176,56 @@ void check_data_access()
     if (viennadata::access<QuickKey,double>(QuickKey(2))(id_obj2) != 0) ++error_cnt;
     if (viennadata::access<QuickKey,std::string>()(id_obj2) != "base") ++error_cnt;
 
-    std::cout << "Finding <char, double>('c') from id_obj1: " 
+    std::cout << "Finding <char, double>('c') from id_obj1: "
               << viennadata::find<char, double>('c')(id_obj1)
               << std::endl;
-              
-    std::cout << "Finding <char, double>('c') from id_obj2: " 
+
+    std::cout << "Finding <char, double>('c') from id_obj2: "
               << viennadata::find<char, double>('c')(id_obj2)
               << std::endl;
 
-    std::cout << "Finding <char, double>('d') from id_obj1: " 
+    std::cout << "Finding <char, double>('d') from id_obj1: "
               << viennadata::find<char, double>('d')(id_obj1)
               << std::endl;
-              
-    std::cout << "Finding <char, double>('d') from id_obj2: " 
+
+    std::cout << "Finding <char, double>('d') from id_obj2: "
               << viennadata::find<char, double>('d')(id_obj2)
               << std::endl;
-              
-    std::cout << "Moving <char, double>() from id_obj2 to id_obj1..." << std::endl;          
+
+    std::cout << "Moving <char, double>() from id_obj2 to id_obj1..." << std::endl;
     viennadata::move<char, double>()(id_obj2, std_obj1);
     if (viennadata::access<char,double>('c')(std_obj1) != 9.8) ++error_cnt;
     if (viennadata::access<char,double>('d')(std_obj1) != 1.1) ++error_cnt;
-    std::cout << "Finding <char, double>('c') from std_obj1: " 
+    std::cout << "Finding <char, double>('c') from std_obj1: "
               << viennadata::find<char, double>('c')(std_obj1)
               << std::endl;
-              
-    std::cout << "Finding <char, double>('c') from id_obj2: " 
+
+    std::cout << "Finding <char, double>('c') from id_obj2: "
               << viennadata::find<char, double>('c')(id_obj2)
               << std::endl;
 
-    std::cout << "Finding <char, double>('d') from std_obj1: " 
+    std::cout << "Finding <char, double>('d') from std_obj1: "
               << viennadata::find<char, double>('d')(std_obj1)
               << std::endl;
-              
-    std::cout << "Finding <char, double>('d') from id_obj2: " 
-              << viennadata::find<char, double>('d')(id_obj2)
-              << std::endl;
-              
-    std::cout << "Some other tests follow..." << std::endl;    
 
-    std::cout << "Finding <char, double>('d') from id_obj2: " 
+    std::cout << "Finding <char, double>('d') from id_obj2: "
               << viennadata::find<char, double>('d')(id_obj2)
               << std::endl;
 
-    std::cout << "Finding <char, long>('c') from id_obj2: " 
+    std::cout << "Some other tests follow..." << std::endl;
+
+    std::cout << "Finding <char, double>('d') from id_obj2: "
+              << viennadata::find<char, double>('d')(id_obj2)
+              << std::endl;
+
+    std::cout << "Finding <char, long>('c') from id_obj2: "
               << viennadata::find<char, long>('c')(id_obj2)
               << std::endl;
-    std::cout << "Finding <char, long>('c') from id_obj2: " 
+    std::cout << "Finding <char, long>('c') from id_obj2: "
               << viennadata::find<char, std::string>('c')(id_obj2)
               << std::endl;
-              
-              
+
+
     //a little bit of compilation checks:
     viennadata::move<char, double>()(id_obj2, std_obj1);
     viennadata::move<char, std::string>()(id_obj2, std_obj1);
@@ -232,7 +233,7 @@ void check_data_access()
     viennadata::move<SomeKey, std::string>()(id_obj2, std_obj1);
     viennadata::move<QuickKey, double>()(id_obj2, std_obj1);
     viennadata::move<QuickKey, std::string>()(id_obj2, std_obj1);
-              
+
     viennadata::move<char, double>('c')(id_obj2, std_obj1);
     viennadata::move<char, std::string>('c')(id_obj2, std_obj1);
     viennadata::move<SomeKey, double>(SomeKey(2))(id_obj2, std_obj1);
@@ -254,16 +255,16 @@ void check_data_access()
     viennadata::copy<QuickKey, double>(QuickKey(2))(id_obj2, id_obj1);
     viennadata::copy<QuickKey, std::string>(QuickKey(2))(id_obj2, id_obj1);
 
-    
+
     //erase all quantities stored using QuickKey:
     viennadata::erase<QuickKey, viennadata::all>()(id_obj2);
-    
+
     if (error_cnt == 0)
       std::cout << "Data access check succeeded!" << std::endl;
     else
       std::cout << "Data access check failed with " << error_cnt << " errors!" << std::endl;
 }
-
+#endif
 
 #endif
 

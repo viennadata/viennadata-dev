@@ -9,6 +9,11 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 #specify include and source directory
 INCLUDE_DIRECTORIES(".")
 
+# find needed packages
+FIND_PACKAGE(Boost REQUIRED COMPONENTS unit_test_framework)
+
+aux_source_directory("./tests" TOTAL_SRC)
+
 #add definitions, compiler switches, etc.
 IF(DEFINED CMAKE_BUILD_TYPE)
  SET (CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE})
@@ -21,6 +26,7 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
    #ADD_DEFINITIONS(-Wall -pedantic -O3)
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
+ADD_EXECUTABLE(test ${TOTAL_SRC} testviennadata.cpp)
 
-ADD_EXECUTABLE(test main.cpp)
+TARGET_LINK_LIBRARIES(test ${Boost_LIBRARIES})
 
