@@ -270,7 +270,6 @@ void check_data_access()
     viennadata::copy<viennadata::all, double>()(id_obj1, id_obj2);
     viennadata::copy<viennadata::all, viennadata::all>()(id_obj1, id_obj2);
 
-
     if (error_cnt == 0)
       std::cout << "Data access check succeeded!" << std::endl;
     else
