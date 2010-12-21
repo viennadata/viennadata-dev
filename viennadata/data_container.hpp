@@ -24,7 +24,13 @@
 namespace viennadata
 {
 
-  
+  /** @brief The central container class holding the data
+   * 
+   * @tparam key_type      The type of the key used for access
+   * @tparam value_type    Type of the data that is stored for the element
+   * @tparam element_type  The type of the object the data is associated with
+   * 
+   */
   template <typename key_type,
             typename value_type,
             typename element_type>

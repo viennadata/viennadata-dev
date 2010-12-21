@@ -15,6 +15,7 @@
 
 #include "forwards.h"
 #include "viennadata/data_container.hpp"
+#include "viennadata/key_value_registration.hpp"
 
 namespace viennadata
 {
@@ -81,7 +82,26 @@ namespace viennadata
     private:
       key_type const & key;
   };
+  
+  //prevent messing around with all-type and supplied key:
+  template <typename key_type>
+  class data_erasor_with_key<key_type, all>
+  {
+    typedef typename error_indicator<key_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_ERASE_FUNCTION_WITH_ALL   error_type;
+  };
 
+  template <typename value_type>
+  class data_erasor_with_key<all, value_type>
+  {
+    typedef typename error_indicator<value_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_ERASE_FUNCTION_WITH_ALL   error_type;
+  };
+
+  template <>
+  class data_erasor_with_key<all, all>
+  {
+    //typedef typename key_type::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_ERASE_FUNCTION_WITH_ALL   error_type;
+  };
+  
   template <typename key_type, typename value_type>
   class data_erasor_no_key
   {
@@ -104,10 +124,36 @@ namespace viennadata
       template <typename element_type>
       void operator()(element_type const & el)
       {
-        key_value_registration<element_type>::instance().template erase<key_type>(all(), el);
+        key_value_registration<element_type>::instance().template erase_key_all<key_type>(el);
       }
   };
 
+  template <typename value_type>
+  class data_erasor_no_key <all, value_type>
+  {
+    public:
+      data_erasor_no_key() {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el)
+      {
+        key_value_registration<element_type>::instance().template erase_all_value<value_type>(el);
+      }
+  };
+  
+  template <>
+  class data_erasor_no_key <all, all>
+  {
+    public:
+      data_erasor_no_key() {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el)
+      {
+        key_value_registration<element_type>::instance().erase_all_all(el);
+      }
+  };
+  
   template <typename key_type, typename value_type>
   data_erasor_with_key<key_type, value_type> erase(key_type const & key)
   {
@@ -184,6 +230,24 @@ namespace viennadata
       key_type const & key_;
   };
   
+  //prevent messing around with all-type and supplied key:
+  template <typename key_type>
+  class data_copy_with_key<key_type, all>
+  {
+    typedef typename error_indicator<key_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
+  };
+
+  template <typename value_type>
+  class data_copy_with_key<all, value_type>
+  {
+    typedef typename error_indicator<value_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
+  };
+
+  template <>
+  class data_copy_with_key<all, all>
+  {
+    //typedef typename key_type::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
+  };
   
   template <typename key_type, typename value_type>
   data_copy_with_key<key_type, value_type> copy(key_type const & key)
@@ -204,6 +268,65 @@ namespace viennadata
         data_container<key_type, value_type, element_src_type>::instance().copy(el_src, el_dest);
       }
   };
+  
+  template <typename key_type>
+  class data_copy_no_key <key_type, all>
+  {
+    public:
+      data_copy_no_key() {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el_src, element_type const & el_dest)
+      {
+        key_value_registration<element_type>::instance().template copy_key_all<key_type>(el_src, el_dest);
+      }
+      
+      template <typename element_src_type, typename element_dest_type>
+      void operator()(element_src_type const & el_src, element_dest_type const & el_dest)
+      {
+        typedef typename error_indicator<element_src_type>::ERROR_SOURCE_AND_DESTINATION_MUST_BE_OF_SAME_TYPE_WHEN_USING_COPY_WITH_ALL  error_type;
+      }
+  };
+
+  template <typename value_type>
+  class data_copy_no_key <all, value_type>
+  {
+    public:
+      data_copy_no_key() {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el_src, element_type const & el_dest)
+      {
+        key_value_registration<element_type>::instance().template copy_all_value<value_type>(el_src, el_dest);
+      }
+      
+      template <typename element_src_type, typename element_dest_type>
+      void operator()(element_src_type const & el_src, element_dest_type const & el_dest)
+      {
+        typedef typename error_indicator<element_src_type>::ERROR_SOURCE_AND_DESTINATION_MUST_BE_OF_SAME_TYPE_WHEN_USING_COPY_WITH_ALL  error_type;
+      }
+  };
+  
+  template <>
+  class data_copy_no_key <all, all>
+  {
+    public:
+      data_copy_no_key() {}
+      
+      template <typename element_type>
+      void operator()(element_type const & el_src, element_type const & el_dest)
+      {
+        key_value_registration<element_type>::instance().copy_all_all(el_src, el_dest);
+      }
+      
+      template <typename element_src_type, typename element_dest_type>
+      void operator()(element_src_type const & el_src, element_dest_type const & el_dest)
+      {
+        typedef typename error_indicator<element_src_type>::ERROR_SOURCE_AND_DESTINATION_MUST_BE_OF_SAME_TYPE_WHEN_USING_COPY_WITH_ALL  error_type;
+      }
+  };
+  
+  
   
   template <typename key_type, typename value_type>
   data_copy_no_key<key_type, value_type> copy()

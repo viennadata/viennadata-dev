@@ -77,6 +77,16 @@ namespace viennadata
     
     struct all {};   //denotes all types
     
+    template <typename element_type_src>
+    class key_value_copy_construction;
+    
+    template <typename element_type_src>
+    class key_value_copy_construction_wrapper;
+  
+    template <typename T>
+    struct error_indicator {};
+  
+    
   
 } //namespace
 

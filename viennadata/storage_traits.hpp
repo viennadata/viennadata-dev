@@ -18,6 +18,14 @@
 namespace viennadata
 {
 
+  /** @brief A traits class that specifies for whether data should be stored in a dense (i.e. vector) or a sparse (i.e. map) manner.
+   * 
+   * For dense storage it is required that ViennaData knows how to get ids from the elements (see element_identifier)
+   * 
+   * @tparam key_type      The type of the key used for access
+   * @tparam value_type    Type of the data that is stored for the element
+   * @tparam element_type  The type of the object the data is associated with
+   */
   template <typename key_type,
             typename value_type,
             typename element_type>

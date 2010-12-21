@@ -105,12 +105,24 @@ namespace viennadata
   ///////////////////////// erasure dispatch //////////////////////////
   
   //general case: call erase of the underlying map-type
+  /** @brief A dispatch facility that unwraps type-erasued key-value type pairs
+   * 
+   * Refer to Alexandrescu, "Modern C++ Design" for details on type erasure
+   * 
+   * @tparam key_type      The type of the key used for access
+   * @tparam value_type    Type of the data that is stored for the element
+   * @tparam element_type  The type of the object the data is associated with
+   * @tparam element_identification_tag  Determines the dispatch mechanism for objects the data is associated with. Either 'pointer_based_id' (the default) or 'element_provided_id' (requires suitable overload of 'element_identifier')
+   * @tparam key_dispatch_tag   Determines the method for key dispatch (either full dispatch ('full_key_dispatch_tag', default) or dispatch based on key type 'type_key_dispatch_tag')
+   * @tparam storage_tag   Specifies dense ('dense_data_tag') or sparse ('storage_data_tag', default) storage of data. The former requires element-identification by id, cf. class 'element_identifier'
+   */
   template <typename key_type, typename value_type,
             typename element_identification_tag,
             typename key_dispatch_tag,
             typename storage_tag>
   struct container_erasure_dispatcher
   {
+    
     template <typename container_type, typename id_type>
     static void erase(container_type & cont, id_type const & id, key_type const & key)
     {
