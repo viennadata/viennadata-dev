@@ -11,8 +11,6 @@
 ======================================================================= */
 
 
-  /******************* ID Handling *******************************/
-
 #ifndef VIENNADATA_FORWARDS_H
 #define VIENNADATA_FORWARDS_H
 
@@ -24,70 +22,110 @@
 #include <algorithm>
 #include <memory>
 
+/** @file viennadata/forwards.h
+    @brief This file provides the forward declarations for the main types used within ViennaData
+*/
+
+/**
+ @mainpage Source Code Documentation for ViennaData 1.0.0
+
+ This is the source code documentation of ViennaData. Detailed information about the functions available in ViennaData can be found here.
+ 
+ For a general overview over the types and functionality provided by ViennaData, please refer to the file doc/viennadata.pdf
+
+*/
 
 
 namespace viennadata
 {
   
     ////////////////////// tags ////////////////////////
-    //forward declaration for disabling storage banks:
-    struct no_storage_bank_tag;
 
     //element identification:
+    /** @brief A tag class that indicates that object addresses should be used as identification */
     struct pointer_based_id {};      //use object address as ID
-    struct element_provided_id {};   //object provides some ID with values in 0...N
+    /** @brief A tag class that indicates that the object provides an ID mechanism (must be supplied by overloading object_identifier appropriately)*/
+    struct object_provided_id {};   //object provides some ID with values in 0...N
 
 
     //storage policy tag:
+    /** @brief A tag class for storing data in a dense manner, i.e. most objects of the same type carry the data for a particular key/value pair */
     struct dense_data_tag {};      //for a property that is accessed on every element *and* is required to be fast
+    /** @brief A tag class for storing data in a sparse manner, i.e. only a few objects of the same type carry the data for a particular key/value pair */
     struct sparse_data_tag {};     //properties that will be accessed on some elements only. Default policy.
 
     
-    
+    /** @brief A tag class for specifying that both the key type and the key object are used for data access */
     struct full_key_dispatch_tag {};
+    /** @brief A tag class for specifying that ONLY the key type is used for data access */
     struct type_key_dispatch_tag {};  //key dispatch based on type only
 
-    
-    // add further performance-critical keys here
-    
-    
-    
-    //////////////////// function declarations ///////////////////////
-    
+
+    //forward declarations for access
+    /** @brief A proxy class for accessing data with key type and key object dispatch. Only used internally in ViennaData 
+     *
+     * @tparam key_type       Type of the key
+     * @tparam value_type     Type of the data
+     */
     template <typename key_type, typename value_type>
     class data_accessor_with_key;
     
+    /** @brief A proxy class for accessing data with key type dispatch, but no key object dispatch. Only used internally in ViennaData 
+     *
+     * @tparam key_type       Type of the key
+     * @tparam value_type     Type of the data
+     */
     template <typename key_type, typename value_type>
     class data_accessor_no_key;
     
-    
+    /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using full dispatch (type and object)
+     *
+     * @tparam key_type       Type of the key
+     * @tparam value_type     Type of the data
+     */
     template <typename key_type, typename value_type>
     data_accessor_with_key<key_type, value_type> access(key_type const & key);
 
+    /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using type based dispatch. 
+     *
+     * @tparam key_type       Type of the key
+     * @tparam value_type     Type of the data
+     */
     template <typename key_type, typename value_type>
     data_accessor_no_key<key_type, value_type> access();
   
     
     
     ////////////////////// other stuff ////////////////////////
+    /** @brief The main data storage facility
+     * 
+     * @tparam key_type       Type of the key
+     * @tparam value_type     Type of the data
+     * @tparam object_type    Type of the object the data is associated with
+     */
     template <typename key_type,
               typename value_type,
-              typename element_type>
+              typename object_type>
     class data_container;
     
+    /** @brief A tag class that is used to represent all types of either a particular key type, or a particular value type */
     struct all {};   //denotes all types
     
-    template <typename element_type_src>
+    /** @brief A proxy class used internally to copy data from one object to another */
+    template <typename object_type>
     class key_value_copy_construction;
     
-    template <typename element_type_src>
+    /** @brief A proxy class used internally to copy data from one object to another */
+    template <typename object_type>
     class key_value_copy_construction_wrapper;
   
+    /** @brief A helper class to raise compile time errors */
     template <typename T>
     struct error_indicator {};
   
     
   
 } //namespace
+
 
 #endif

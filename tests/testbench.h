@@ -56,9 +56,9 @@ namespace viennadata
 {
   // make ID of ClassWithID known to ViennaData:
   template <>
-  struct element_identifier<ClassWithID>
+  struct object_identifier<ClassWithID>
   {
-    typedef element_provided_id    tag;
+    typedef object_provided_id    tag;
     typedef long                   id_type;
 
     static long id(ClassWithID const & cwid) { return cwid.get_id(); }

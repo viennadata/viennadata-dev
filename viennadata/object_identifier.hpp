@@ -10,10 +10,15 @@
    license:    MIT (X11), see file LICENSE in the ViennaData base directory
 ======================================================================= */
 
-#ifndef VIENNADATA_ELEMENT_IDENTIFIER_HPP
-#define VIENNADATA_ELEMENT_IDENTIFIER_HPP
+#ifndef VIENNADATA_OBJECT_IDENTIFIER_HPP
+#define VIENNADATA_OBJECT_IDENTIFIER_HPP
 
 #include "viennadata/forwards.h"
+
+/** @file viennadata/object_identifier.hpp
+    @brief This file provides the default object identification mechanism in ViennaData.
+*/
+
 
 namespace viennadata
 {
@@ -22,7 +27,7 @@ namespace viennadata
    * 
    * Custom identification mechanisms can be provided by proper specializations.
    * Requirements:
-   *   - typedef 'tag' provides a tag for the identification mechanism: Either 'pointer_based_id' or 'element_provided_id'
+   *   - typedef 'tag' provides a tag for the identification mechanism: Either 'pointer_based_id' or 'object_provided_id'
    *   - typedef 'id_type' that specifies the data type of the ID (e.g. int)
    *   - static member function id() that provides the ID for the element
    * 
@@ -37,16 +42,16 @@ namespace viennadata
    *   static id_type id(SomeClass const & el) { return el.getID(); }
    * };
   * 
-  * @tparam element_type  The type of the object the data is associated with
+  * @tparam object_type  The type of the object the data is associated with
   */
-  template <typename element_type>
-  struct element_identifier
+  template <typename object_type>
+  struct object_identifier
   {
     typedef pointer_based_id         tag;
-    typedef const element_type *     id_type;
+    typedef const object_type *     id_type;
     
-    //per default, the element address is the id:
-    static id_type id(element_type const & el) { return &el; }
+    /** @brief per default, the element address is the id */
+    static id_type id(object_type const & obj) { return &obj; }
   };
 
   //add here some custom element identifier
