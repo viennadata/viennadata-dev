@@ -25,6 +25,7 @@
 
 #include "viennadata/data_container.hpp"
 #include "viennadata/forwards.h"
+#include "viennadata/vlog.hpp"
 
 /** @file viennadata/key_value_pair.hpp
     @brief Implementation of the compile-time/run-time dispatch needed for (key_type, value_type) pairs in order to support the use of viennadata::all.
@@ -163,14 +164,14 @@ namespace viennadata
       void copy(object_type const & src,
                 object_type const & dest) const
       {
-        //std::cout << "key_value_pair::copy() called!" << std::endl;
+        viennadata::vlog << "key_value_pair::copy() called!" << std::endl;
         key_value->copy(src, dest);
       }
 
       /** @brief Erases data for the wrapped key and value type from the supplied object */
       void erase(object_type const & el) const
       {
-        //std::cout << "key_value_pair::erase() called!" << std::endl;
+        viennadata::vlog << "key_value_pair::erase() called!" << std::endl;
         key_value->erase(el);
       }
 

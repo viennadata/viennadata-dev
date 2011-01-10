@@ -26,6 +26,8 @@
 #include <memory>
 
 #include "viennadata/key_value_pair.hpp"
+#include "viennadata/vlog.hpp"
+
 
 /** @file viennadata/key_value_registration.hpp
     @brief In this file all pairs of (key-type, data-type) are stored in order to support operations using viennadata::all.
@@ -95,7 +97,7 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        //std::cout << "key_value_registration::erase<key, all> called!" << std::endl;
+        viennadata::vlog << "key_value_registration::erase<key, all> called!" << std::endl;
 
         key_value_pair<object_type> kve;
         kve.template add<key_type, all>();
@@ -106,11 +108,11 @@ namespace viennadata
         {
           if (*it == kve)
           {
-            //std::cout << "FOUND!" << std::endl;
+            viennadata::vlog << "FOUND!" << std::endl;
             it->erase(obj);
           }
-          //else
-          //  std::cout << "not found!" << std::endl;
+          else
+            viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -120,7 +122,7 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        //std::cout << "key_value_registration::erase<all, value> called!" << std::endl;
+        viennadata::vlog << "key_value_registration::erase<all, value> called!" << std::endl;
 
         key_value_pair<object_type> kve;
         kve.template add<all, value_type>();
@@ -134,8 +136,8 @@ namespace viennadata
             std::cout << "FOUND!" << std::endl;
             it->erase(obj);
           }
-          //else
-          //  std::cout << "not found!" << std::endl;
+          else
+            viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -144,7 +146,7 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        std::cout << "key_value_registration::erase<all, all> called!" << std::endl;
+        viennadata::vlog << "key_value_registration::erase<all, all> called!" << std::endl;
 
         for (ContIter it = container.begin();
              it != container.end();
@@ -167,7 +169,7 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        //std::cout << "key_value_registration::copy<key, all> called!" << std::endl;
+        viennadata::vlog << "key_value_registration::copy<key, all> called!" << std::endl;
 
         key_value_pair<object_type> kve;
         kve.template add<key_type, all>();
@@ -178,11 +180,11 @@ namespace viennadata
         {
           if (*it == kve)
           {
-            //std::cout << "FOUND!" << std::endl;
+            viennadata::vlog << "FOUND!" << std::endl;
             it->copy(src, dest);
           }
-          //else
-          //  std::cout << "not found!" << std::endl;
+          else
+          viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -197,7 +199,7 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        //std::cout << "key_value_registration::copy<all, value> called!" << std::endl;
+        viennadata::vlog << "key_value_registration::copy<all, value> called!" << std::endl;
 
         key_value_pair<object_type> kve;
         kve.template add<all, value_type>();
@@ -208,11 +210,11 @@ namespace viennadata
         {
           if (*it == kve)
           {
-            //std::cout << "FOUND!" << std::endl;
+            viennadata::vlog << "FOUND!" << std::endl;
             it->copy(src, dest);
           }
-          //else
-          //  std::cout << "not found!" << std::endl;
+          else
+            viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -226,7 +228,7 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        //std::cout << "key_value_registration::copy<all, all> called!" << std::endl;
+        viennadata::vlog << "key_value_registration::copy<all, all> called!" << std::endl;
 
         for (ContIter it = container.begin();
              it != container.end();

@@ -17,7 +17,7 @@
 
 #include "testbench.h"
 #include "viennadata/interface.hpp"
-#include "vlog.h"
+#include "viennadata/vlog.hpp"
 #include <iostream>
 #include <stdexcept>
 
@@ -33,8 +33,8 @@ BOOST_AUTO_TEST_CASE( full_test_of_viennadata )
     ClassWithID    id_obj1(23);
     ClassWithID    id_obj2(42);
 
-    viennalog::vlog << std::endl;
-    viennalog::vlog << "Reserve data ..." << std::endl;
+    viennadata::vlog << std::endl;
+    viennadata::vlog << "Reserve data ..." << std::endl;
 
     BOOST_REQUIRE_NO_THROW(( viennadata::reserve<char,     double     >(123)(StandardClass()) ));
     BOOST_REQUIRE_NO_THROW(( viennadata::reserve<char,     std::string>(123)(StandardClass()) ));
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( full_test_of_viennadata )
     BOOST_REQUIRE_NO_THROW((viennadata::reserve<QuickKey, double     >(123)(ClassWithID(5))));
     BOOST_REQUIRE_NO_THROW((viennadata::reserve<QuickKey, std::string>(123)(ClassWithID(6))));
 
-    viennalog::vlog << "Write data ..." << std::endl;
+    viennadata::vlog << "Write data ..." << std::endl;
     viennadata::access<char,double>('c')(std_obj1) = 23.45;
     viennadata::access<char,std::string>('c')(std_obj1) = "Hello";
     viennadata::access<SomeKey,double>(SomeKey(2))(std_obj1) = 23.456;
@@ -81,12 +81,12 @@ BOOST_AUTO_TEST_CASE( full_test_of_viennadata )
     viennadata::access<QuickKey,double>(QuickKey(2))(id_obj2) = 5.4;
     viennadata::access<QuickKey,std::string>(QuickKey(2))(id_obj2) = "base";
 
-    viennalog::vlog << "Try to modify a little bit of data ..." << std::endl;
+    viennadata::vlog << "Try to modify a little bit of data ..." << std::endl;
     BOOST_REQUIRE_NO_THROW((viennadata::erase<char,double>('c')(std_obj1)));
     BOOST_REQUIRE_NO_THROW((viennadata::erase<SomeKey,double>(SomeKey(2))(std_obj2)));
     BOOST_REQUIRE_NO_THROW((viennadata::erase<QuickKey,double>(QuickKey(2))(id_obj2)));
 
-    viennalog::vlog << "Try to read data ..." << std::endl;
+    viennadata::vlog << "Try to read data ..." << std::endl;
     BOOST_CHECK_EQUAL((viennadata::access<char,double>('c')(std_obj1)), 0 );
     BOOST_CHECK_EQUAL((viennadata::access<char,std::string>('c')(std_obj1)), "Hello");
     BOOST_CHECK_EQUAL((viennadata::access<SomeKey,double>(SomeKey(2))(std_obj1)), 23.456);
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE( full_test_of_viennadata )
     BOOST_CHECK((viennadata::find<char, long>('c')(id_obj2)) == 0);
     BOOST_CHECK_EQUAL((*viennadata::find<char, std::string>('c')(id_obj2)), "all");
 
-    viennalog::vlog << "Running a little bit of compilation checks ..." << std::endl;
+    viennadata::vlog << "Running a little bit of compilation checks ..." << std::endl;
 
     BOOST_REQUIRE_NO_THROW((viennadata::move<char, double>()(id_obj2, std_obj1)));
     BOOST_REQUIRE_NO_THROW((viennadata::move<char, std::string>()(id_obj2, std_obj1)));
@@ -164,7 +164,7 @@ BOOST_AUTO_TEST_CASE( full_test_of_viennadata )
     BOOST_REQUIRE_NO_THROW((viennadata::copy<QuickKey, std::string>(QuickKey(2))(id_obj2, id_obj1)));
 
 
-    viennalog::vlog << "Try to erase all quantities stored using QuickKey ..." << std::endl;
+    viennadata::vlog << "Try to erase all quantities stored using QuickKey ..." << std::endl;
     BOOST_REQUIRE_NO_THROW((viennadata::erase<QuickKey, viennadata::all>()(id_obj2)));
 
 }

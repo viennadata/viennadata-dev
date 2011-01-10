@@ -17,9 +17,9 @@
 #include <ostream>
 
 // define this to enable debug messages on std::clog
-//#define VIENNADATA_DEBUG
+#define VIENNADATA_DEBUG
 
-namespace viennalog
+namespace viennadata
 {
 
   #ifdef VIENNADATA_DEBUG
@@ -38,14 +38,14 @@ namespace viennalog
       nullstream() {}
       
       template <typename T>
-      viennalog::nullstream & operator<< (T something) { return *this; }
+      viennadata::nullstream & operator<< (T something) { return *this; }
       
       //custom version for std::endl:
-      viennalog::nullstream & operator<< ( StandardEndLine something ) { return *this; }
+      viennadata::nullstream & operator<< ( StandardEndLine something ) { return *this; }
       
     };
   
-    static viennalog::nullstream vlog; // debugging OFF
+    static viennadata::nullstream vlog; // debugging OFF
   #endif
 
 
