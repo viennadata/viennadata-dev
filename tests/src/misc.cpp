@@ -21,8 +21,6 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "tests/testbench.h"
-
 
 int main(int argc, char *argv[])
 {
