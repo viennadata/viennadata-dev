@@ -1,8 +1,69 @@
 \chapter{Basic Usage} \label{chap:basic-usage}
-Explains basic functionality in ViennaData
+
+In this Section the fundamental operations in ViennaData are covered in full detail. 
+All functionality is available out of the box. If {\ViennaData} access turns out to be 
+performance critical, ample optimizations can be triggered, which is discussed in Chapter \ref{chap:advanced-usage}.
 
 \section{Access}
-viennadata::access()
+The main function in {\ViennaData} is the \lstinline|access()| function. From a user perspective,
+the call
+\begin{lstlisting}
+ viennadata::access<KeyType, ValueType>(key)(obj) 
+\end{lstlisting}
+returns a reference to the data of type \lstinline|ValueType| stored for an arbitrary object \lstinline|obj| and identified by the \lstinline|key| object of
+type \lstinline|KeyType|. The rest of this section is devoted to the various possible variations.
+
+As an example, to store RGB color information on objects \lstinline|obj1|, \lstinline|obj2| and \lstinline|obj3| using a \lstinline|std::string|, say \lstinline|"color"|, as key,
+the code
+\begin{lstlisting}
+ viennadata::access<string, RGBColor>("color")(obj1) = RGBColor(255,42,0);
+ viennadata::access<string, RGBColor>("color")(obj2) = RGBColor(0,42,255);
+ viennadata::access<string, RGBColor>("color")(obj3) = RGBColor(10,20,33);
+\end{lstlisting}
+Note that \lstinline|obj1|, \lstinline|obj2|, and \lstinline|obj3| can be different type.
+The data can be recovered directly as
+\begin{lstlisting}
+ RGBColor col1 = viennadata::access<string, RGBColor>("color")(obj1);
+ RGBColor col2 = viennadata::access<string, RGBColor>("color")(obj2);
+ RGBColor col3 = viennadata::access<string, RGBColor>("color")(obj3);
+\end{lstlisting}
+ In addition, several different colors can be associated with a single object
+as
+\begin{lstlisting}
+ viennadata::access<string, RGBColor>("front")(obj1) = RGBColor(255,42,0);
+ viennadata::access<string, RGBColor>("back")(obj1) = RGBColor(12,21,255);
+ viennadata::access<string, RGBColor>("side")(obj1) = RGBColor(30,20,10);
+\end{lstlisting}
+and similarly for \lstinline|obj2| and \lstinline|obj3| if desired. Since any type that fulfills the \lstinline|LessThan-Comparable| concept [CITE STL] (i.e.~the \lstinline|operator<| can be used for comparisons) can be used as key type, one can also write
+\begin{lstlisting}
+ viennadata::access<string, RGBColor>("front")(obj1) = RGBColor(255,42,0);
+ viennadata::access<long,   RGBColor>( 12345 )(obj1) = RGBColor(12,21,255);
+ viennadata::access<double, RGBColor>( 42.42 )(obj1) = RGBColor(30,20,10);
+\end{lstlisting}
+If color is to be saved in different color spaces, this could be accomplished by 
+\begin{lstlisting}
+ viennadata::access<string, RGBColor>("front")(obj1) = RGBColor(255,42,0);
+ viennadata::access<long,   HSVColor>( 12345 )(obj1) = HSVColor(12,21,255);
+ viennadata::access<double, CMYKColor>(42.42 )(obj1) = CMYKColor(0,1,2,3);
+\end{lstlisting}
+At this point you may think that the second template argument is somewhat redundant. In that case, please read about the design decision in Chapter \ref{chap:design}.
+
+
+In the last examples, only one key object per key type has been used. As will be shown in 
+Chapter \ref{chap:advanced-usage}, one can completly turn off run-time comparisions of keys,
+so that one can write
+\begin{lstlisting}
+ viennadata::access<front_tag, RGBColor>()(obj1) = RGBColor(255,42,0);
+ viennadata::access<back_tag,  HSVColor>()(obj1) = HSVColor(12,21,255);
+ viennadata::access<side_tag, CMYKColor>()(obj1) = CMYKColor(0,1,2,3);
+\end{lstlisting}
+where \lstinline|front_tag|, \lstinline|back_tag| and \lstinline|side_tag| are empty tag classes [CITE] that are solely used as a key type.
+Again, the stored data can be retained directly by 
+\begin{lstlisting}
+ RGBColor  col1 = viennadata::access<front_tag, RGBColor>()(obj1);
+ HSVColor  col2 = viennadata::access<back_tag,  HSVColor>()(obj1);
+ CMYKColor col3 = viennadata::access<side_tag, CMYKColor>()(obj1);
+\end{lstlisting}
 
 \section{Copy}
 viennadata::copy()

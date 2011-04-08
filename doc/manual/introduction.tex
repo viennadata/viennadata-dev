@@ -4,7 +4,7 @@
 When designing classes in object-oriented programming languages,
 one has to distinguish between intrinsic properties that are inherent to the modelled entity,
 and data that is associated with the entity. For example, a triangle is intrinsically defined
-by three points, while associated data can be color or texture information in graphical applications, or material properties for two-dimensional scientific simulations.
+by three disjoint points, while associated data can be color or texture information in graphical applications, or material properties for two-dimensional scientific simulations.
 
 While associated data depends on the respective application, intrinsic properties do not.
 Therefore, when designing reusable classes, associated data must not be part of the class itself.
@@ -19,12 +19,12 @@ which provides access to its vertices. For objects of this triangle class, color
 The following lines accomplish that for a triangle object \lstinline|tri| using {\ViennaData}:
 \begin{lstlisting}
  //store RGB color information:
- viennadata::access<std::string, Color>("color")(tri) = RGBColor(255,42,0);
+ viennadata::access<string, RGBColor>("color")(tri) = RGBColor(255,42,0);
 
  //get color information at some other point in the application:
- RGBColor col = viennadata::access<std::string, Color>("color")(tri);
+ RGBColor col = viennadata::access<string, Color>("color")(tri);
 \end{lstlisting}
-Data is in {\ViennaData} associated with objects by keys of user-defined type. In the example above,
+In {\ViennaData} data is associated with objects by keys of user-defined type. In the example above,
 the color information is stored using a key \lstinline|"color"| of type \lstinline|std::string|.
 However, the user is free to use any key of any type\footnote{Some technical restrictions apply, see Chapter [MISSING].}.
 Thus, any associated data object \lstinline|data| of a generic type \lstinline|DataType| can be stored and accessed for an object of any type using a key \lstinline|key| of type \lstinline|KeyType|
