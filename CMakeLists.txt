@@ -10,7 +10,7 @@ SET(CMAKE_VERBOSE_MAKEFILE ON)
 INCLUDE_DIRECTORIES(".")
 
 # find needed packages
-FIND_PACKAGE(Boost REQUIRED COMPONENTS unit_test_framework)
+#FIND_PACKAGE(Boost REQUIRED COMPONENTS unit_test_framework)
 
 aux_source_directory("./tests" TOTAL_SRC)
 
@@ -22,11 +22,12 @@ ELSE()
 ENDIF()
 
 IF(CMAKE_COMPILER_IS_GNUCXX)
-   ADD_DEFINITIONS(-Wall -O0 -g)
-   #ADD_DEFINITIONS(-Wall -pedantic -O3)
+   #ADD_DEFINITIONS(-Wall -O0 -g)
+   ADD_DEFINITIONS(-Wall -pedantic -O3)
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-ADD_EXECUTABLE(test ${TOTAL_SRC} testviennadata.cpp)
+#ADD_EXECUTABLE(test ${TOTAL_SRC} testviennadata.cpp)
+ADD_EXECUTABLE(benchmark examples/benchmark.cpp)
 
-TARGET_LINK_LIBRARIES(test ${Boost_LIBRARIES})
+#TARGET_LINK_LIBRARIES(test ${Boost_LIBRARIES})
 
