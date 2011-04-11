@@ -5,7 +5,7 @@ on customizing the library to the user's demands and the particular environment.
 the object identification can be changed, how the internal storage of data can be customized and data
 accesses can be tuned for maximum speed.
 
-\section{Retrieving IDs from Objects}
+\section{Retrieving IDs from Objects} \label{sec:id-retrieval}
 In order to associate data with objects, one has to distinguish between different objects. The only portable identification mechanism
 is the address of an object, thus this is the default identification mechanism {\ViennaData}.
 However, object addresses can be randomly scattered over the address space, which leads to tree-based data structures in order to
@@ -44,7 +44,7 @@ This induces lookup-costs of the order $\log N$, where $N$ denotes the number of
 However, if the range of IDs of objects of a type \lstinline|MyClass| is known to be in the range $0, \ldots, N]$,
 a tree-based layout can be configured to be of type
 \begin{lstlisting}
- std::deque<DataContainer>
+ std::vector<DataContainer>
 \end{lstlisting}
 This requires that a custom identification mechanism is set up as outlined in the previous section. Moreover, the 
 custom \lstinline|id_type| must be compatible with being used as an array index. Since such a storage scheme is only memory efficient
