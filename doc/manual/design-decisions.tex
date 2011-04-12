@@ -2,11 +2,12 @@
 
 Every now and then a programmer is faced with the question ``Why have you implemented it that way?''.
 This is then the chance to outline the various pros and cons of different approaches and assign appropriate weights such that the approach taken turns out to be the best.
-The first question is sometimes followed or replaced by ``Why haven't you done it like this: ....?''.
-In this case, the various pros and cons of different approaches should be outlined again and the taken weights have to be justified - even if it often tends be become a rather emotional debate.
 
-In this chapter the various design considerations are presented and the reasons why {\ViennaData} is the way it is are given.
-Remaining questions or inputs for further improvements should be sent to the mailinglist at
+The first question is sometimes followed or replaced by ``Why haven't you done it like this: ....?''.
+In this case, the various pros and cons of different approaches should be outlined again and the taken weights have to be justified - even if it often tends be become a rather emotional debate instead.
+
+In this chapter the various design considerations are presented and the reasons why the library is the way it is are given.
+Remaining questions or inputs for further improvements should be sent to the mailing list at
 \begin{center}
 \texttt{viennadata-support$@$lists.sourceforge.net} 
 \end{center}
@@ -20,7 +21,7 @@ One could have just used a single pair as follows:
 \begin{lstlisting}
  viennadata::access<long, double>(42, obj) = 360.0;
 \end{lstlisting}
-However, the situation is more delicate with other functions of {\ViennaData}. Consider the alternatives
+However, consider the alternatives for other functions of {\ViennaData}:
 \begin{lstlisting}
  //reserve space for 100 objects, keys of type long:
  viennadata::reserve<long, DataType>(100, obj);
@@ -37,7 +38,8 @@ However, the situation is more delicate with other functions of {\ViennaData}. C
 Even though only three different functions were used, there are four different meanings of the first parameters:
 First, the parameter denotes the number of objects, then it denotes the data, after that the source object, and finally the object for which data is to be erased.
 In particular the last line is not intuitive - it suggests that \lstinline|obj| is erased.
-Compare with the previous snippet with the actual code:
+
+Compare the previous snippet with the actual code:
 \begin{lstlisting}
  viennadata::reserve<long, DataType>(100)(obj);
  viennadata::copy<long,  DataType>(42)(obj1, obj2);
@@ -85,10 +87,13 @@ were legal. However, when changing the type of \lstinline|data| from \lstinline|
 Thus, to unify the interface for access, copy, move, erase and find, the key type and the data type always have to be supplied. 
 The only possible exception has to be explicitly enabled by the user, cf.~Sec.~\ref{sec:default-valuetype}.
 
-\TIP{Always specify the key type and the data type when calling functions from {\ViennaData}}
+\TIP{The key type and the data type always has to be specified when calling functions from {\ViennaData}. The only exception has to be explicitly enabled by the user.}
 
 
-\section{Memory Management for Dense Data Storage}
-Dense data storage is only configured for optimization purposes, thus no runtime penalty acceptable.
-
+% \section{Memory Management for Dense Data Storage}
+% 
+% The main reason for using a dense data storage scheme is presumably performance, cf.~Chap.~\ref{chap:benchmarks}. As a side effect, total memory consumption is reduced
+% considerably if all objects carry associated data.
+% 
+% Explain multi-stage performance: First switch to dense storage, check if code works. Then disable auto-registration, ensure code works. Then disable size-checks, ensure that code works... ;-)
 

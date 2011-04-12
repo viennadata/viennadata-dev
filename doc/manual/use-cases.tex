@@ -1,14 +1,14 @@
 \chapter{Use Case: Scientific Simulation} \label{chap:use-cases}
-In this chapter we discuss the origins of {\ViennaData}, namely the use for scientic simulations.
-More precisely, the use of {\ViennaData} for the solution of partial differential equations by means of discretization methods such as the Finite Element Method or the Finite Volume Method are discussed.
+The potential of {\ViennaData} for scientific simulations is discussed in this chapter.
+More precisely, the use of {\ViennaData} for the solution of partial differential equations by means of discretization methods such as the Finite Element Method or the Finite Volume Method is presented.
 
-In the following it is assumed that the simulation domain, which can be one-, two- or three-dimensional, is decomposed into small elements, say lines, triangles and tetrahedrons respectively. The simulation domains can represent arbitrary objects, for instance buildings, human bones or microelectronic devices, and the physical effects simulated can be displacements, stresses, heat, charge densities, etc. 
+It is assumed in the following that the simulation domain, which can be one-, two- or three-dimensional, is decomposed into small elements, say lines, triangles or tetrahedrons. The simulation domains can represent arbitrary objects, for instance buildings, human bones or microelectronic devices, and the physical effects simulated can be displacements, stresses, heat, charge densities, etc. 
 
 \section{Handling Material Properties}
 Let us consider the classes \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron| that reflect the respective geometric primitives.
 When running a two-dimensional simulation, material properties have to be associated with triangles, thus one might be tempted to add a \lstinline|material| member variable of some type, say, \lstinline|Material| to the \lstinline|Triangle| class. 
 However, reusing the same class for facets of a \lstinline|Tetrahedron| in three-dimensional simulations would result in an unused
-member variable \lstinline|material| in \lstinline|Triangle|, because materials have to be associated with a \lstinline|Tetrahedron| in three dimensions.
+member variable \lstinline|material| in \lstinline|Triangle|, because materials are associated with a \lstinline|Tetrahedron| in three-dimensional simulations.
 Similarly, material information should not be a member of a \lstinline|line|.
 
 In order to preserve reusability of the \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron| classes, {\ViennaData} can be used as follows for the three-dimensional case:
@@ -23,7 +23,7 @@ Then, at any later point, the material for \lstinline|tet| can be conveniently r
 \begin{lstlisting}
  Material tet_mat = viennadata::access<string, Material>("material")(tet); 
 \end{lstlisting}
-Other keys can be used as described in Chapter \ref{chap:basic-usage}. Note that one will typcially have thousands of cells, not just a single one.
+Other keys can be used as described in Chapter \ref{chap:basic-usage}. Note that one will typically have thousands of cells, not just a single one.
 
 In order to allow a uniform material retrieval independent of the spatial dimension used for the simulation, one can provide a \lstinline|typedef| for the respective cell type:
 \begin{lstlisting}
@@ -48,9 +48,7 @@ Moreover, one is not restricted to a particular implementation and can still exc
 
 \section{Use with Discretization Methods}
 The various discretization schemes such as the Finite Volume Method or the Finite Element Method associate unknowns with vertices, lines, facets and/or cells within a mesh.
-A similar reasoning as for the storage of material properties applies to the storage of unknowns (or their identification indices) as well. Moreover, another aspect is
-that different effects are simulated. For instance, one may want to simulate mechanical stresses as well as heat flow in a building. Thus, data for the different simulations
-has to be separated in addition. Such a scenario would be almost impossible to handle if the unknown IDs were members of the respective classes \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron|. However, with {\ViennaData} unknown indices can be stored and retrieved for a point object \lstinline|vertex| as
+A similar reasoning as for the storage of material properties applies to the storage of unknowns (or their identification indices) as well. Moreover, one may not simulate a single effect, but several, which may or may not be coupled. For instance, one may want to simulate mechanical stresses as well as heat flow in a building. Thus, data required for the different simulations may has to be separated. Such a scenario would be almost impossible to handle if the unknown identification indices were members of the respective classes \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron|. However, with {\ViennaData} unknown indices can be stored and retrieved for a point object \lstinline|vertex| as
 \begin{lstlisting}
  //store unknown index id_1 for simulation 1 (long sim_1 = 1;):
  viennadata::access<long, UnknownIndex>(sim_1)(vertex) = id_1; 

@@ -14,7 +14,7 @@
 #ifndef VIENNADATA_TESTBENCH_HPP
 #define VIENNADATA_TESTBENCH_HPP
 
-#include "viennadata/interface.hpp"
+#include "viennadata/api.hpp"
 
 struct StandardClass {};
 class ClassWithID
@@ -53,31 +53,34 @@ class QuickKey
 //////// Configuration of ViennaData:
 namespace viennadata
 {
-  // make ID of ClassWithID known to ViennaData:
-  template <>
-  struct object_identifier<ClassWithID>
+  namespace config
   {
-    typedef object_provided_id    tag;
-    typedef long                   id_type;
+    // make ID of ClassWithID known to ViennaData:
+    template <>
+    struct object_identifier<ClassWithID>
+    {
+      typedef object_provided_id    tag;
+      typedef long                  id_type;
 
-    static long id(ClassWithID const & cwid) { return cwid.get_id(); }
-  };
-
-
-  // tell ViennaData to use QuickKey:
-  template <>
-  struct dispatch_traits<QuickKey>
-  {
-    typedef type_key_dispatch_tag    tag;
-  };
+      static long get(ClassWithID const & cwid) { return cwid.get_id(); }
+    };
 
 
-  // store doubles on ClassWithID densely:
-  template <typename key_type>
-  struct storage_traits<key_type, double, ClassWithID>
-  {
-    typedef dense_data_tag    tag;
-  };
+    // tell ViennaData to use QuickKey:
+    template <>
+    struct key_dispatch<QuickKey>
+    {
+      typedef type_key_dispatch_tag    tag;
+    };
+
+
+    // store doubles on ClassWithID densely:
+    template <typename key_type>
+    struct storage<key_type, double, ClassWithID>
+    {
+      typedef dense_data_tag    tag;
+    };
+  }
 }
 
 

@@ -1,5 +1,5 @@
-#ifndef _BENCHMARK_UTILS_HPP_
-#define _BENCHMARK_UTILS_HPP_
+#ifndef BENCHMARK_UTILS_HPP_
+#define BENCHMARK_UTILS_HPP_
 
 #include <iostream>
 

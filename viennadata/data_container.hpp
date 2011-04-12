@@ -17,8 +17,8 @@
 #include <map>
 
 #include "viennadata/forwards.h"
-#include "viennadata/object_identifier.hpp"
-#include "viennadata/data_container_traits.hpp"
+#include "viennadata/config/object_identifier.hpp"
+#include "viennadata/traits/data_container.hpp"
 #include "viennadata/key_value_registration.hpp"
 
 /** @file viennadata/data_container.hpp
@@ -43,7 +43,7 @@ namespace viennadata
   {
     private:
       /** @brief The type of the data container */
-      typedef typename container_traits<key_type, value_type, object_type>::container_type    container_type;
+      typedef typename traits::container<key_type, value_type, object_type>::container_type    container_type;
 
       container_type container; ///here is the data stored
 
@@ -69,13 +69,13 @@ namespace viennadata
       value_type & access(object_type const & obj,
                           key_type const & key)
       {
-        return container_traits<key_type, value_type, object_type>::access(container, obj, key);
+        return traits::container<key_type, value_type, object_type>::access(container, obj, key);
       }
 
       /** @brief Accesses data for object 'obj' stored at key 'key' using a type based key dispatch. Used internally only, use viennadata::access() instead */
       value_type & access(object_type const & obj)
       {
-        return container_traits<key_type, value_type, object_type>::access(container, obj);
+        return traits::container<key_type, value_type, object_type>::access(container, obj);
       }
 
       //////////////////  copy data: ////////////////////
@@ -107,7 +107,7 @@ namespace viennadata
                 object_src_type const & obj_src,
                 object_type const & obj_dest)
       {
-        container_traits<key_type, value_type, object_type>::copy(cont_src, obj_src, container, obj_dest);
+        traits::container<key_type, value_type, object_type>::copy(cont_src, obj_src, container, obj_dest);
       }
 
       //////////////////  erase data: ////////////////////
@@ -119,7 +119,7 @@ namespace viennadata
       void erase(object_type const & obj,
                  key_type const & key)
       {
-        container_traits<key_type, value_type, object_type>::erase(container, obj, key);
+        traits::container<key_type, value_type, object_type>::erase(container, obj, key);
       }
 
       // erase data associated with all keys of key_type
@@ -129,7 +129,7 @@ namespace viennadata
        */
       void erase(object_type const & obj)
       {
-        container_traits<key_type, value_type, object_type>::erase(container, obj);
+        traits::container<key_type, value_type, object_type>::erase(container, obj);
       }
 
       // reserve memory if a vector type is used
@@ -139,7 +139,7 @@ namespace viennadata
         key_value_registration<object_type>::instance().template add<key_type, value_type>();
         
         //std::cout << "Reserving..." << std::endl;
-        container_traits<key_type, value_type, object_type>::reserve(container, num);
+        traits::container<key_type, value_type, object_type>::reserve(container, num);
       }
       
       /** @brief Checks whether data for a particular object with a particular key is already stored.
@@ -149,7 +149,7 @@ namespace viennadata
       value_type * find(object_type const & obj,
                         key_type const & key)
       {
-        return container_traits<key_type, value_type, object_type>::find(container, obj, key);
+        return traits::container<key_type, value_type, object_type>::find(container, obj, key);
       }
 
   };

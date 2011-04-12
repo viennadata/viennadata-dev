@@ -4,7 +4,7 @@ This chapter shows how {\ViennaData} can be integrated into a project and how
 the examples are built. The necessary steps are outlined for several different
 platforms, but we could not check every possible combination of hardware,
 operating system and compiler. If you experience any trouble, please write to
-the maining list at \\
+the mailing list at \\
 \begin{center}
 \texttt{viennadata-support$@$lists.sourceforge.net} 
 \end{center}
@@ -53,16 +53,15 @@ Tab.~\ref{tab:tutorial-dependencies}.
 \begin{table}[tb]
 \begin{center}
 \begin{tabular}{l|l}
-Tutorial No. & Dependencies\\
+File & Purpose\\
 \hline
-\texttt{tutorial/tut1.cpp}      & {\OpenCL} \\
-\texttt{tutorial/tut2.cpp}      & {\OpenCL}, {\ublas} \\
-\texttt{tutorial/tut3.cpp}      & {\OpenCL}, {\ublas} \\
-\texttt{tutorial/tut4.cpp}      & {\ublas} \\
-\texttt{tutorial/tut5.cpp}      & {\OpenCL} \\
-\texttt{benchmarks/vector.cpp}  & {\OpenCL} \\
-\texttt{benchmarks/sparse.cpp}  & {\OpenCL}, {\ublas} \\
-\texttt{benchmarks/solver.cpp}  & {\OpenCL}, {\ublas} \\
+\texttt{tutorial/access.cpp}    & Shows the use of \lstinline|access| \\
+\texttt{tutorial/erase.cpp}     & Shows the use of \lstinline|erase| \\
+\texttt{tutorial/find.cpp}      & Shows the use of \lstinline|find| \\
+\texttt{tutorial/copy.cpp}      & Shows the use of \lstinline|copy| \\
+\texttt{tutorial/move.cpp}      & Shows the use of \lstinline|move| \\
+\texttt{benchmarks/sparse.cpp}  & Benchmarks for different sparse storage schemes \\
+\texttt{benchmarks/dense.cpp}   & Benchmarks for dense storage schemes \\
 \end{tabular}
 \caption{Dependencies for the examples in the \texttt{examples/} folder}
 \label{tab:tutorial-dependencies}
@@ -85,8 +84,8 @@ to obtain a Makefile and type
 \end{lstlisting}
 to build the examples. If desired, you can build each example separately instead:
 \begin{lstlisting}
- $> make blas1             #builds the blas level 1 tutorial
- $> make vectorbench       #builds vector benchmarks
+ $> make access            #builds the access tutorial
+ $> make dense             #builds dense storage benchmark
 \end{lstlisting}
 
 \TIP{Speed up the building process by using jobs, e.g. \keyword{make -j4}.}
@@ -119,10 +118,6 @@ where they can be opened and compiled with Visual Studio (provided that the
 include and library paths are set correctly, see
 Sec.~\ref{sec:viennacl-installation}).
 \end{itemize}
-
-\TIP{The examples and tutorials should be executed from within the
-\texttt{build/} directory of {\ViennaData}, otherwise the sample data files
-cannot be found.}
 
 
 
