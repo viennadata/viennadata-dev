@@ -1,20 +1,20 @@
 \chapter{Benchmark Results} \label{chap:benchmarks}
 Since {\ViennaData} introduces a layer for handling associated data, it is rather
 natural to ask for any potential runtime overhead. The aim of this
-Chapter is to give a precise answer.
+chapter is to give a precise answer.
 
 \section{ViennaData Storage Models}
 There are the following three different object-to-data models available in {\ViennaData}:
 \begin{itemize}
  \item Object identification via object addresses, sparse storage.
  \item Custom identification via dedicated \lstinline|id()| member, sparse storage.
- \item Custom identification via dedicated \lstinline|id()| member, dense storage (cf.~Sec.~\ref{sec:dense-data}).
+ \item Custom identification via dedicated \lstinline|id()| member, dense storage (cf.~Section \ref{sec:dense-data}).
 \end{itemize}
 In addition, the following data key dispatch mechanisms are compared in the following:
 \begin{itemize}
  \item Key dispatch at run time for keys of type \lstinline|std::string|.
  \item Key dispatch at run time for keys of type \lstinline|long|.
- \item Key dispatch at compile time (cf.~Sec.~\ref{sec:compiletime-keys}).
+ \item Key dispatch at compile time (cf.~Section \ref{sec:compiletime-keys}).
 \end{itemize}
 This results in nine different configurations for the subsequent tests. All comparisons are carried out for objects of the following class:
 \begin{lstlisting}
@@ -50,7 +50,7 @@ Identification       & \lstinline|std::string| & \lstinline|long| & compile time
 \label{tab:benchmark-different-schemes}
 \end{table}
 
-The first test with execution times given in Tab.~\ref{tab:benchmark-different-schemes} compares the execution times of summing up random values
+The first test with execution times given in Table \ref{tab:benchmark-different-schemes} compares the execution times of summing up random values
 stored and retrieved for $1\, 000$ objects of type \lstinline|SlimClass| using \lstinline|viennadata::access<>()|, repeated $1\,000$ times.
 
 Let us first consider the differences among the three rows. As can clearly be seen, a change of the object identification from address-based to using the member function \lstinline|id()| does not change execution speed,
@@ -58,8 +58,8 @@ if the internal storage scheme remains tree-based (\emph{sparse}).
 However, if the \lstinline|id()| member is used for a dense storage scheme as described in Section \ref{sec:dense-data}, execution times are reduced by around $40$ milliseconds 
 irrespective of the key dispatch method employed.
 
-Comparing the different columns in \ref{tab:benchmark-different-schemes}, it can be seen that a string-based dispatch is most expensive as expected. 
-A dispatch based on integers is faster, but the differences only become significant if a dense storage scheme is used. The compile-time dispatch is notably faster than dispatches at run time.
+Comparing the different columns in Table \ref{tab:benchmark-different-schemes}, it can be seen that a string-based dispatch is most expensive as expected. 
+A dispatch based on integers is faster, but the differences only become significant, if a dense storage scheme is used. The compile-time dispatch is notably faster than dispatches at run time.
 In particular, execution times differ by a factor of four and twelve for the dense storage scheme respectively.
 
 
@@ -84,7 +84,7 @@ Identification       & \lstinline|std::string| & \lstinline|long| & compile time
 \end{table}
 
 In a second benchmark, the same procedure is carried out for $1\: 000 \: 000$ objects without repetition. Thus, a naive guess is that execution times should be roughly the same.
-However, as Tab.~\ref{tab:benchmark-different-schemes-2} shows, the logarithmic lookup times in a sparse, tree-based storage layout leads to much higher execution times than for the first test.
+However, as Table \ref{tab:benchmark-different-schemes-2} shows, the logarithmic lookup times in a sparse, tree-based storage layout leads to much higher execution times than for the first test.
 This may be also partly due to less efficient CPU cache use caused by the larger amount of data involved.
 
 Finally, it should be emphasized that in real applications there is typically much less emphasis on data retrieval as compared to our benchmarks. Thus, even though a sparse storage scheme
@@ -101,7 +101,7 @@ The objects for which data is attached using {\ViennaData} are of type \lstinlin
  \item Custom identification via dedicated \lstinline|id()| member, sparse storage, key dispatch at run time for keys of type \lstinline|long|.
  \item Custom identification via dedicated \lstinline|id()| member, dense storage, key dispatch at compile time.
 \end{enumerate}
-Note that the three models represents the diagonals in Tab.~\ref{tab:benchmark-different-schemes} and Tab.~\ref{tab:benchmark-different-schemes-2}.
+Note that the three models represents the diagonals in Table \ref{tab:benchmark-different-schemes} and Table \ref{tab:benchmark-different-schemes-2}.
 
 For the traditional OOP classes, we use the following template class
 \begin{lstlisting}
@@ -142,8 +142,8 @@ OOP, \lstinline|FatClass<1000>| & 2.5 & 11 \\
 \label{tab:benchmark-ViennaData-vs-OOP}
 \end{table}
 
-As can be seen in Tab.~\ref{tab:benchmark-ViennaData-vs-OOP}, access times with dense storage are by a factor of two larger for $1\,000$ objects, but by a factor of two smaller when using $1\,000\,000$ objects.
-Thus, {\ViennaData} allows to achieve even better execution performance than traditional OOP for a large number of objects. This is mostly due to better caching possibilities for the dense storage layout, where similar data for different objects is located on a linear piece of memory.
+As can be seen in Table \ref{tab:benchmark-ViennaData-vs-OOP}, access times with dense storage are by a factor of two larger for $1\,000$ objects, but by a factor of two smaller when using $1\,000\,000$ objects.
+Thus, {\ViennaData} allows to achieve even better execution performance than traditional OOP for a large number of objects. The reason is that the relevant data is located in a contiguous piece of memory when using {\ViennaData} with a dense data layout, thus offering better caching possibilities. On the other hand, with standard OOP the memory layout is such that relevant data for each object is followed by payload data and this pattern is repeated for each object. Thus, relevant data is scattered over a larger memory region, reducing caching possibilities.
 
 The sparse storage layout is not competitive in terms of access times as the number of objects grows. However, data access times are often negligible compared to data manipulation, thus
-the increased data access time may be in many cases still negligible on the overall.
+the increased data access time may be in many cases still small on the overall.

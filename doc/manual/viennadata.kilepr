@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.0.85
-lastDocument=internals.tex
+lastDocument=introduction.tex
 masterDocument=
 name=viennadata
 pkg_extIsRegExp=false
@@ -154,27 +154,27 @@ ReadWrite=true
 
 [item:advanced-usage.tex]
 archive=true
-column=134
+column=16
 encoding=UTF-8
 highlight=LaTeX
-line=129
+line=102
 mode=LaTeX
 open=true
 order=3
 
 [item:basic-usage.tex]
 archive=true
-column=29
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=22
 mode=LaTeX
 open=true
 order=2
 
 [item:benchmarks.tex]
 archive=true
-column=34
+column=63
 encoding=UTF-8
 highlight=LaTeX
 line=148
@@ -214,27 +214,27 @@ order=2
 
 [item:design-decisions.tex]
 archive=true
-column=0
+column=63
 encoding=UTF-8
 highlight=LaTeX
-line=98
+line=89
 mode=LaTeX
 open=true
 order=5
 
 [item:installation.tex]
 archive=true
-column=0
+column=49
 encoding=UTF-8
 highlight=LaTeX
-line=121
+line=97
 mode=LaTeX
-open=false
-order=8
+open=true
+order=10
 
 [item:internals.tex]
 archive=true
-column=400
+column=642
 encoding=UTF-8
 highlight=LaTeX
 line=83
@@ -244,13 +244,13 @@ order=4
 
 [item:introduction.tex]
 archive=true
-column=160
+column=46
 encoding=UTF-8
 highlight=LaTeX
-line=55
+line=24
 mode=LaTeX
-open=false
-order=2
+open=true
+order=9
 
 [item:keywords.tex]
 archive=true
@@ -274,7 +274,7 @@ order=8
 
 [item:pitfalls.tex]
 archive=true
-column=167
+column=99
 encoding=UTF-8
 highlight=LaTeX
 line=31
@@ -294,10 +294,10 @@ order=-1
 
 [item:use-cases.tex]
 archive=true
-column=494
+column=386
 encoding=UTF-8
 highlight=LaTeX
-line=50
+line=68
 mode=LaTeX
 open=true
 order=6
@@ -324,24 +324,24 @@ order=-1
 
 [item:viennadata.tex]
 archive=true
-column=16
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=68
+line=97
 mode=LaTeX
 open=true
 order=0
 
 [view-settings,view=0,item:advanced-usage.tex]
-CursorColumn=134
-CursorLine=129
+CursorColumn=16
+CursorLine=102
 
 [view-settings,view=0,item:basic-usage.tex]
-CursorColumn=29
-CursorLine=0
+CursorColumn=0
+CursorLine=22
 
 [view-settings,view=0,item:benchmarks.tex]
-CursorColumn=34
+CursorColumn=63
 CursorLine=148
 
 [view-settings,view=0,item:changelogs.tex]
@@ -357,20 +357,20 @@ CursorColumn=16
 CursorLine=5
 
 [view-settings,view=0,item:design-decisions.tex]
-CursorColumn=0
-CursorLine=98
+CursorColumn=63
+CursorLine=89
 
 [view-settings,view=0,item:installation.tex]
-CursorColumn=0
-CursorLine=121
+CursorColumn=49
+CursorLine=97
 
 [view-settings,view=0,item:internals.tex]
-CursorColumn=400
+CursorColumn=642
 CursorLine=83
 
 [view-settings,view=0,item:introduction.tex]
-CursorColumn=160
-CursorLine=55
+CursorColumn=46
+CursorLine=24
 
 [view-settings,view=0,item:keywords.tex]
 CursorColumn=0
@@ -381,7 +381,7 @@ CursorColumn=18
 CursorLine=3
 
 [view-settings,view=0,item:pitfalls.tex]
-CursorColumn=167
+CursorColumn=99
 CursorLine=31
 
 [view-settings,view=0,item:setup.tex]
@@ -389,13 +389,13 @@ CursorColumn=0
 CursorLine=0
 
 [view-settings,view=0,item:use-cases.tex]
-CursorColumn=494
-CursorLine=50
+CursorColumn=386
+CursorLine=68
 
 [view-settings,view=0,item:viennadata.bib]
 CursorColumn=6
 CursorLine=44
 
 [view-settings,view=0,item:viennadata.tex]
-CursorColumn=16
-CursorLine=68
+CursorColumn=0
+CursorLine=97

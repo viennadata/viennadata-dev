@@ -3,7 +3,7 @@
 This chapter shows how {\ViennaData} can be integrated into a project and how
 the examples are built. The necessary steps are outlined for several different
 platforms, but we could not check every possible combination of hardware,
-operating system and compiler. If you experience any trouble, please write to
+operating system, and compiler. If you experience any trouble, please write to
 the mailing list at \\
 \begin{center}
 \texttt{viennadata-support$@$lists.sourceforge.net} 
@@ -20,7 +20,7 @@ the mailing list at \\
 \begin{itemize}
  \item A recent C++ compiler (e.g.~{\GCC} version 4.2.x or above and Visual C++
 2008 are known to work)
- \item {\CMake}~\cite{cmake} as build system (optional, but highly recommended
+ \item {\CMake}~\cite{cmake} as build system (optional, but recommended
 for building the examples)
 \end{itemize}
 
@@ -32,8 +32,7 @@ include path. On Unix based systems, this is often \lstinline|/usr/include/| or
 \lstinline|/usr/local/include/|.
 
 On Windows, the situation strongly depends on your development environment. We
-advise users
-to consult the documentation of their compiler on how to set the include
+advise to consult the documentation of the compiler on how to set the include
 path correctly. With Visual Studio this is usually something like
 \texttt{C:$\setminus$Program Files$\setminus$Microsoft Visual Studio
 9.0$\setminus$VC$\setminus$include}
@@ -82,7 +81,7 @@ to obtain a Makefile and type
 \begin{lstlisting}
  $> make 
 \end{lstlisting}
-to build the examples. If desired, you can build each example separately instead:
+to build the examples. If desired, one can build each example separately instead:
 \begin{lstlisting}
  $> make access            #builds the access tutorial
  $> make dense             #builds dense storage benchmark
@@ -96,7 +95,7 @@ The tools mentioned in Section \ref{dependencies} are available on
 Macintosh platforms too. 
 For the {\GCC} compiler the Xcode~\cite{xcode} package has to be installed.
 To install {\CMake}, external portation tools such as
-Fink~\cite{fink}, DarwinPorts~\cite{darwinports} 
+Fink~\cite{fink}, DarwinPorts~\cite{darwinports}, 
 or MacPorts~\cite{macports} have to be used. 
 
 The build process of {\ViennaData} is similar to Linux.

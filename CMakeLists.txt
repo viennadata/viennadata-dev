@@ -27,4 +27,6 @@ ADD_EXECUTABLE(densebench          examples/benchmarks/dense.cpp)
 ADD_EXECUTABLE(sparseaddressbench  examples/benchmarks/sparse-address.cpp)
 ADD_EXECUTABLE(sparsecustombench   examples/benchmarks/sparse-custom.cpp)
 
+ADD_EXECUTABLE(access              examples/tutorials/access.cpp)
+ADD_EXECUTABLE(defaulttype         examples/tutorials/default_data_type.cpp)
 

@@ -1,13 +1,13 @@
 \chapter{Basic Usage} \label{chap:basic-usage}
 
-In this Section the fundamental operations in {\ViennaData} are explained. 
-All functionality is available out of the box and operations are checked in order to detect potential pitfalls during development easily.
- If {\ViennaData} access turns out to be 
+In this section the fundamental operations in {\ViennaData} are explained. 
+All functionality is available out of the box and operations are checked in order to detect potential pitfalls during development.
+If {\ViennaData} access turns out to be 
 performance critical, several optimizations can be triggered, which is discussed in Chapter \ref{chap:advanced-usage}.
 
 In order to use {\ViennaData}, the main header file has to be included in the respective source files:
 \begin{lstlisting}
- #include "viennadata/interface.hpp"
+ #include "viennadata/api.hpp"
 \end{lstlisting}
 No other files from {\ViennaData} need to be included.
 
@@ -21,7 +21,7 @@ returns a reference to the data of type \lstinline|DataType| stored for an arbit
 type \lstinline|KeyType|. At first sight, the offered functionality can be seen as a \lstinline|std::map<KeyType, DataType>| for each object \lstinline|obj|.
 However, the \lstinline|access| function offers a lot more flexibility, which will be discussed in the following.
 
-As a first example, to store RGB color information on objects \lstinline|obj1|, \lstinline|obj2| and \lstinline|obj3| using a \lstinline|std::string|, say \lstinline|"color"|, as key,
+As a first example, to store RGB color information on objects \lstinline|obj1|, \lstinline|obj2|, and \lstinline|obj3| using a \lstinline|std::string|, say \lstinline|"color"|, as key,
 the code
 \begin{lstlisting}
  viennadata::access<string, RGBColor>("color")(obj1) = RGBColor(255,42,0);
@@ -42,8 +42,8 @@ as
  viennadata::access<string, RGBColor>("back")(obj1) = RGBColor(12,21,255);
  viennadata::access<string, RGBColor>("side")(obj1) = RGBColor(30,20,10);
 \end{lstlisting}
-and similarly for \lstinline|obj2| and \lstinline|obj3| if desired.
- Since any type that fulfills the \lstinline|LessThan-Comparable| concept
+and similarly for \lstinline|obj2| and \lstinline|obj3|, if desired.
+ Since any type which fulfills the \lstinline|LessThan-Comparable| concept
 \footnote{\lstinline|operator<| can be used for comparisons} (refer for example to \cite{Austern:GenericProgrammingSTL}) can be used as key type, one can also use keys of different types, e.g.
 \begin{lstlisting}
  viennadata::access<string, RGBColor>("front")(obj1) = RGBColor(255,42,0);
@@ -56,7 +56,7 @@ If color is to be saved in different color spaces, this can be accomplished by a
  viennadata::access<long,   HSVColor>( 12345 )(obj1) = HSVColor(12,21,255);
  viennadata::access<double, CMYKColor>(42.42 )(obj1) = CMYKColor(0,1,2,3);
 \end{lstlisting}
-At this point, the second template argument appears to be somewhat redundant.
+At this point the second template argument appears to be somewhat redundant.
 However, please read about the design decisions in Chapter \ref{chap:design} in order to get more details on why the second template parameter is still required.
 
 
@@ -68,9 +68,9 @@ so that one can write
  viennadata::access<back_color,  HSVColor>()(obj1) = HSVColor(12,21,255);
  viennadata::access<side_color, CMYKColor>()(obj1) = CMYKColor(0,1,2,3);
 \end{lstlisting}
-where \lstinline|front_color|, \lstinline|back_color| and \lstinline|side_color| are empty tag classes \cite{Alexandrescu:ModernCpp,Vandevoorde:CppTemplates} that are solely used as a key type.
+where \lstinline|front_color|, \lstinline|back_color| and \lstinline|side_color| are empty tag classes \cite{Alexandrescu:ModernCpp,Vandevoorde:CppTemplates}, which are solely used as a key type.
 By using the types of the key only, the run time key comparisons are modified to compile time dispatches. This results in considerably faster
-execution, provided that it is already known at compile time which key has to be used.
+execution, provided that it is already known at compile time, which key has to be used.
 
 \NOTE{Compile time dispatches are disabled by default. On details how to enable them, refer to Sec.~\ref{sec:compiletime-keys}}
 
@@ -99,7 +99,7 @@ the \lstinline|copy()| function can be used as follows;
 \begin{lstlisting}
  viennadata::copy<KeyType, DataType>(key)(obj_src, obj_dest);
 \end{lstlisting}
-In this case, only the particular data for the particular key is copied. If the \lstinline|key| argument is omitted, i.e.
+In this case only the particular data for the particular key is copied. If the \lstinline|key| argument is omitted, i.e.
 \begin{lstlisting}
  viennadata::copy<KeyType, DataType>()(obj_src, obj_dest);
 \end{lstlisting}
@@ -136,7 +136,7 @@ it is sufficient to write
  viennadata::copy<viennadata:all, viennadata:all>()(obj_src, obj_dest);
 \end{lstlisting}
 
-\NOTE{For technical reasons, \lstinline|obj_src| and \lstinline|obj_dest| have to be of the same type if the \lstinline|viennadata::all| type is supplied.}
+\NOTE{\lstinline|obj_src| and \lstinline|obj_dest| have to be of the same type if the \lstinline|viennadata::all| type is supplied.}
 
 % \NOTE{In order to have \lstinline|viennadata:all| working correctly, every pair of \lstinline|KeyType| and \lstinline|ValueType| in use must be registered.
 % By default, this is done automatically in the background. 
@@ -148,7 +148,7 @@ the \lstinline|move()| function as follows:
 \begin{lstlisting}
  viennadata::move<KeyType, DataType>(key)(obj_src, obj_dest);
 \end{lstlisting}
-The difference to the \lstinline|copy()| function in the previous section is that the data with \lstinline|move()| the data is then only available for \lstinline|obj_dest|.
+The difference to the \lstinline|copy()| function in the previous section is that with \lstinline|move()| the data is then only available for \lstinline|obj_dest|.
 
 Similar to \lstinline|copy()|, the following variants are available:
 \begin{lstlisting}
@@ -157,9 +157,9 @@ Similar to \lstinline|copy()|, the following variants are available:
  viennadata::move<viennadata:all, DataType>()(obj_src, obj_dest);
  viennadata::move<viennadata:all, viennadata:all>()(obj_src, obj_dest);
 \end{lstlisting}
-Since their use is similar to that of the \lstinline|copy()| variants, the reader is referred to the previous Section.
+Since their use is similar to that of the \lstinline|copy()| variants, the reader is referred to the previous section.
 
-\NOTE{For technical reasons, \lstinline|obj_src| and \lstinline|obj_dest| have to be of the same type if the \lstinline|viennadata::all| type is supplied.}
+\NOTE{\lstinline|obj_src| and \lstinline|obj_dest| have to be of the same type if the \lstinline|viennadata::all| type is supplied.}
 
 \section{Erase}
 In order to delete data of type \lstinline|DataType| stored using a \lstinline|key| of type \lstinline|KeyType| for an object \lstinline|obj|,
@@ -187,5 +187,5 @@ The following code snippets shows how to check for data of type \lstinline|DataT
    /* data not yet available */
 \end{lstlisting}
 
-It is important to emphasize the difference to \lstinline|viennadata::access|: While \lstinline|find()| only checks for data availability, \lstinline|access()| creates default-initialized data if no data has been stored yet. Thus, using \lstinline|viennadata::access| to query for data existence by iterating through all objects would create data of type \lstinline|DataType| for every object. This overhead is avoided with \lstinline|viennadata::find|, thus it is very attractive if there is a large number of objects with only a few carrying data.
+It is important to emphasize the difference to \lstinline|viennadata::access|: While \lstinline|find()| only checks for data availability, \lstinline|access()| creates default-initialized data, if no data has been stored yet. Thus, using \lstinline|viennadata::access| to query for data existence by iterating through all objects would create data of type \lstinline|DataType| for every object. This overhead is avoided with \lstinline|viennadata::find|, thus it is very attractive, if there is a large number of objects with only a few carrying data.
 

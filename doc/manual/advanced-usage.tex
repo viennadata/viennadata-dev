@@ -1,6 +1,6 @@
 \chapter{Advanced Usage} \label{chap:advanced-usage}
 
-While Chapter \ref{chap:basic-usage} outlines the basic usage of {\ViennaData}, this Chapter focuses
+While Chapter \ref{chap:basic-usage} outlines the basic usage of {\ViennaData}, this chapter focuses
 on customizing the library to the user's demands and the particular environment. It is explained how
 the object identification can be changed, how the internal storage of data can be customized and data
 accesses can be tuned for maximum speed.
@@ -12,7 +12,7 @@ However, object addresses can be randomly scattered over the address space, whic
 provide a reasonably fast lookup of data.
 
 However, it can be the case that there are additional means for identification provided.
-Let us consider a class \lstinline|MyClass| equipped with a member function \lstinline|id()| that
+Let us consider a class \lstinline|MyClass| equipped with a member function \lstinline|id()|, which
 is used to identify objects. The following code configures {\ViennaData} to use this member function
 as identification mechanism for all objects
 \begin{lstlisting}
@@ -36,9 +36,9 @@ for each class, containing the following:
 \begin{itemize}
  \item A type definition for a type \lstinline|tag|. This line is identical for all user-provided overloads.
  \item A type definition for a type \lstinline|id_type|. This specifies the type of the ID.
- \item A static member function \lstinline|get| that returns the ID from an object.
+ \item A static member function \lstinline|get|, which returns the ID from an object.
 \end{itemize}
-The specialization can be placed at any point in the source code, provided that the {\ViennaData} header file is included.
+The specialization can be placed at any point in the source code.
 
 \section{Dense Data} \label{sec:dense-data}
 By default, {\ViennaData} internally uses a tree-based layout similar to
@@ -54,7 +54,7 @@ a tree-based layout can be configured to be of type
  std::vector<DataContainer>
 \end{lstlisting}
 This requires that a custom identification mechanism is set up as outlined in the previous section. Moreover, the 
-custom \lstinline|id_type| must be compatible with being used as an array index. Since such a storage scheme is only memory efficient
+custom \lstinline|id_type| must be compatible with being used as an array index. Since such a storage scheme is only memory efficient,
 if the number of objects is comparable to $N$, we refer to this scheme as \emph{dense data storage}.
 To change the default tree-based data storage scheme to the dense storage scheme for objects of type \lstinline|MyClass|, the lines
 \begin{lstlisting}
@@ -72,7 +72,7 @@ namespace viennadata
 \end{lstlisting}
 are sufficient. Due to the template specialization, a fine-grained control over which storage to use for the various types of data and keys is readily provided. Thus, it is possible to use both dense and sparse storage schemes simultaneously for associating data with a particular object.
 
-While tree-based schemes offer automatic memory management, this is not the case for the dense data storage. In this case, 
+While tree-based schemes offer automatic memory management, this is not the case for the dense data storage. In this case 
 the user has to reserve the required memory manually \emph{prior to any other calls} of {\ViennaData} functions.
 To reserve data memory for data of type \lstinline|DataType| with keys of type \lstinline|KeyType| for up to $42$ objects of the same type as \lstinline|obj|,
 one has to write
@@ -81,8 +81,8 @@ one has to write
 \end{lstlisting}
 Similarly, memory for other data, key and object types is reserved.
 
-\NOTE{The dense storage scheme should only be used if either
-memory consumption or data access times turn out to be critical.}
+\NOTE{The dense storage scheme should only be used, if either
+memory consumption or data access times turns out to be critical.}
 
 \section{Register Data} \label{sec:register-data}
 The use of \lstinline|viennadata::all| for the \lstinline|copy()|, \lstinline|move()| and \lstinline|erase()| functions as described in Chapter \ref{chap:basic-usage}
@@ -103,15 +103,15 @@ namespace viennadata
 \end{lstlisting}
 Again, the partial specialization can be adjusted to match a larger class of types.
 
-Once the automatic tracking of types at runtime is disabled, the correct use of \lstinline|viennadata::all| requires that all each triple of key type \lstinline|KeyType|, data type \lstinline|DataType| and object type \lstinline|ObjectType| is registered manually as
+Once the automatic tracking of types at runtime is disabled, the correct use of \lstinline|viennadata::all| requires that each triple of key type \lstinline|KeyType|, data type \lstinline|DataType| and object type \lstinline|ObjectType| is registered manually as
 \begin{lstlisting}
   viennadata::signup<KeyType,DataType>()(obj);
 \end{lstlisting}
-Here, \lstinline|obj| is of type \lstinline|ObjType|. Note that multiple calls of \lstinline|viennadata::signup()| with the same types has the same effect as a single call.
+Here, \lstinline|obj| is of type \lstinline|ObjType|. Note that multiple calls of \lstinline|viennadata::signup()| with the same types have the same effect as a single call.
 However, disabling the automatic registration is discouraged, since it provides almost no additional performance gain.
 
 \section{Type-Based Key Dispatch} \label{sec:compiletime-keys}
-As already shown in the Chapter \ref{chap:basic-usage}, {\ViennaData} can be configured to perform a purely type-based key dispatch for data access.
+As already shown in Chapter \ref{chap:basic-usage}, {\ViennaData} can be configured to perform a purely type-based key dispatch for data access.
 The impact on performance can be considerable, especially when compared to potentially costly string comparisons.
 To enable a compile time dispatch for a key of type \lstinline|SomeKeyType|, the lines
 \begin{lstlisting}
@@ -127,11 +127,11 @@ namespace viennadata
  }
 } 
 \end{lstlisting}
-are sufficient. One may then omit the key parameter for the API functions provided by {\ViennaData}, cf.~Chap.~\ref{chap:basic-usage}.
+are sufficient. One may then omit the key parameter for the API functions provided by {\ViennaData}, cf.~Chapter \ref{chap:basic-usage}.
 
 \section{Default Data Types for Keys} \label{sec:default-valuetype}
 For the cases where only one data type per key type is used, {\ViennaData} can be provided with a default data type for each key type.
-This is especially common when using a type-based key dispatch for data access. Consider for example
+This is especially common, when using a type-based key dispatch for data access. Consider for example
 \begin{lstlisting}
  viennadata::access<front_color, RGBColor>()(obj1) = RGBColor(255,42,0);
  viennadata::access<back_color,  RGBColor>()(obj1) = RGBColor(0,42,255);

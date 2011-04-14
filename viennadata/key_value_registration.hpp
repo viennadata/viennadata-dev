@@ -26,7 +26,6 @@
 #include <memory>
 
 #include "viennadata/key_value_pair.hpp"
-#include "viennadata/vlog.hpp"
 
 
 /** @file viennadata/key_value_registration.hpp
@@ -97,8 +96,6 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        viennadata::vlog << "key_value_registration::erase<key, all> called!" << std::endl;
-
         key_value_pair<object_type> kve;
         kve.template add<key_type, all>();
 
@@ -107,12 +104,7 @@ namespace viennadata
              ++it)
         {
           if (*it == kve)
-          {
-            viennadata::vlog << "FOUND!" << std::endl;
             it->erase(obj);
-          }
-          else
-            viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -122,8 +114,6 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        viennadata::vlog << "key_value_registration::erase<all, value> called!" << std::endl;
-
         key_value_pair<object_type> kve;
         kve.template add<all, value_type>();
 
@@ -132,12 +122,7 @@ namespace viennadata
              ++it)
         {
           if (*it == kve)
-          {
-            std::cout << "FOUND!" << std::endl;
             it->erase(obj);
-          }
-          else
-            viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -145,8 +130,6 @@ namespace viennadata
       void erase_all_all(object_type const & obj) const
       {
         typedef typename container_type::const_iterator   ContIter;
-
-        viennadata::vlog << "key_value_registration::erase<all, all> called!" << std::endl;
 
         for (ContIter it = container.begin();
              it != container.end();
@@ -169,8 +152,6 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        viennadata::vlog << "key_value_registration::copy<key, all> called!" << std::endl;
-
         key_value_pair<object_type> kve;
         kve.template add<key_type, all>();
 
@@ -179,12 +160,7 @@ namespace viennadata
              ++it)
         {
           if (*it == kve)
-          {
-            viennadata::vlog << "FOUND!" << std::endl;
             it->copy(src, dest);
-          }
-          else
-          viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -199,8 +175,6 @@ namespace viennadata
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        viennadata::vlog << "key_value_registration::copy<all, value> called!" << std::endl;
-
         key_value_pair<object_type> kve;
         kve.template add<all, value_type>();
 
@@ -209,12 +183,7 @@ namespace viennadata
              ++it)
         {
           if (*it == kve)
-          {
-            viennadata::vlog << "FOUND!" << std::endl;
             it->copy(src, dest);
-          }
-          else
-            viennadata::vlog << "not found!" << std::endl;
         }
       }
 
@@ -227,8 +196,6 @@ namespace viennadata
                         object_type const & dest) const
       {
         typedef typename container_type::const_iterator   ContIter;
-
-        viennadata::vlog << "key_value_registration::copy<all, all> called!" << std::endl;
 
         for (ContIter it = container.begin();
              it != container.end();

@@ -12,8 +12,8 @@ Remaining questions or inputs for further improvements should be sent to the mai
 \texttt{viennadata-support$@$lists.sourceforge.net} 
 \end{center}
 
-\section{Two Pairs of Parenthesis}
-Probably the most immediate question relates to the two pairs of parenthesis as in
+\section{Two Pairs of Parentheses}
+Probably the most immediate question relates to the two pairs of parentheses as in
 \begin{lstlisting}
  viennadata::access<long, double>(42)(obj) = 360.0;
 \end{lstlisting}
@@ -46,10 +46,10 @@ Compare the previous snippet with the actual code:
  viennadata::copy<long,  DataType>()(obj1, obj2);
  viennadata::erase<long, DataType>()(obj);
 \end{lstlisting}
-Here, the first pair of parenthesis always refers to the set of data manipulated, while the parameters in the second pair always refer to the objects the data refers to.
+Here, the first pair of parentheses always refers to the set of data manipulated, while the parameters in the second pair always refer to the objects the data refers to.
 In the library author's point of view, the second version is more intuitive and has thus been selected.
 
-\TIP{The first pair of parenthesis always refers to the data being manipulated (either key or number of objects to be reserved), while the second pair of parenthesis always refers to the objects the data is associated with.}
+\TIP{The first pair of parentheses always refers to the data being manipulated (either key or number of objects to be reserved), while the second pair of parentheses always refers to the objects the data is associated with.}
 
 \section{KeyType and DataType Template Parameters}
 Considering the code
@@ -57,7 +57,7 @@ Considering the code
  //store '360.0' for 'obj' using key 42
  viennadata::access<long, double>(42)(obj) = 360.0;
 \end{lstlisting}
-one is tempted to ask whether the template parameters are redundant.
+one is tempted to ask, whether the template parameters are redundant.
 In this example, this is certainly the case. However, a slight variation of the code above looks like this:
 \begin{lstlisting}
  //store '360.0' for 'obj' using key 42
@@ -72,7 +72,7 @@ The one is that for accessing data with possibly implicit conversion, there is n
  //store '360.0' for 'obj' using key 42
  int value = viennadata::access<long, double>(42)(obj);
 \end{lstlisting}
-The other problem is due to unwanted side-effects when changing data types while refactoring code. If the \lstinline|DataType| were optional, the code
+The other problem is due to unwanted side-effects, when changing data types while refactoring code. If the \lstinline|DataType| were optional, the code
 \begin{lstlisting}
  long data = 42;
  /* maybe some other code here */
@@ -84,10 +84,10 @@ The other problem is due to unwanted side-effects when changing data types while
  long data2 = viennadata::access<std::string, long>("data")(obj);
 \end{lstlisting}
 were legal. However, when changing the type of \lstinline|data| from \lstinline|long| to, say, \lstinline|int|, the data retrieval would be broken.
-Thus, to unify the interface for access, copy, move, erase and find, the key type and the data type always have to be supplied. 
-The only possible exception has to be explicitly enabled by the user, cf.~Sec.~\ref{sec:default-valuetype}.
+Thus, to unify the interface for access, copy, move, erase, and find, the key type and the data type always have to be supplied. 
+The only possible exception has to be explicitly enabled by the user, cf.~Section \ref{sec:default-valuetype}.
 
-\TIP{The key type and the data type always has to be specified when calling functions from {\ViennaData}. The only exception has to be explicitly enabled by the user.}
+\TIP{The key type and the data type always has to be specified, when calling functions from {\ViennaData}. The only exception has to be explicitly enabled by the user.}
 
 
 % \section{Memory Management for Dense Data Storage}

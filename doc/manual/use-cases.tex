@@ -5,7 +5,7 @@ More precisely, the use of {\ViennaData} for the solution of partial differentia
 It is assumed in the following that the simulation domain, which can be one-, two- or three-dimensional, is decomposed into small elements, say lines, triangles or tetrahedrons. The simulation domains can represent arbitrary objects, for instance buildings, human bones or microelectronic devices, and the physical effects simulated can be displacements, stresses, heat, charge densities, etc. 
 
 \section{Handling Material Properties}
-Let us consider the classes \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron| that reflect the respective geometric primitives.
+Let us consider the classes \lstinline|Line|, \lstinline|Triangle|, and \lstinline|Tetrahedron|, which reflect the respective geometric primitives.
 When running a two-dimensional simulation, material properties have to be associated with triangles, thus one might be tempted to add a \lstinline|material| member variable of some type, say, \lstinline|Material| to the \lstinline|Triangle| class. 
 However, reusing the same class for facets of a \lstinline|Tetrahedron| in three-dimensional simulations would result in an unused
 member variable \lstinline|material| in \lstinline|Triangle|, because materials are associated with a \lstinline|Tetrahedron| in three-dimensional simulations.
@@ -44,11 +44,11 @@ In order to allow a uniform material retrieval independent of the spatial dimens
 Thus, in this setting {\ViennaData} provides unified access for objects of type \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron|. 
 Moreover, one is not restricted to a particular implementation and can still exchange the implementations for the geometric primitives at some later point without affecting the storage of materials.
 
-\TIP{By using {\ViennaData}, one can easily exchange the implementation of the objects the data is associated with.}
+\TIP{By using {\ViennaData} one can easily exchange the implementation of the objects the data is associated with.}
 
 \section{Use with Discretization Methods}
-The various discretization schemes such as the Finite Volume Method or the Finite Element Method associate unknowns with vertices, lines, facets and/or cells within a mesh.
-A similar reasoning as for the storage of material properties applies to the storage of unknowns (or their identification indices) as well. Moreover, one may not simulate a single effect, but several, which may or may not be coupled. For instance, one may want to simulate mechanical stresses as well as heat flow in a building. Thus, data required for the different simulations may has to be separated. Such a scenario would be almost impossible to handle if the unknown identification indices were members of the respective classes \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron|. However, with {\ViennaData} unknown indices can be stored and retrieved for a point object \lstinline|vertex| as
+The various discretization schemes such as the Finite Volume Method or the Finite Element Method associate unknowns with vertices, lines, facets, and/or cells within a mesh.
+A similar reasoning as for the storage of material properties applies to the storage of unknowns (or their identification indices) as well. Moreover, one may not simulate a single effect, but several, which may or may not be coupled. For instance, one may want to simulate mechanical stresses as well as heat flow in a building. Thus, data required for the different simulations may have to be separated. Such a scenario would be almost impossible to handle, if the unknown identification indices were members of the respective classes \lstinline|Line|, \lstinline|Triangle| and \lstinline|Tetrahedron|. However, with {\ViennaData} unknown indices can be stored and retrieved for a point object \lstinline|vertex| as
 \begin{lstlisting}
  //store unknown index id_1 for simulation 1 (long sim_1 = 1;):
  viennadata::access<long, UnknownIndex>(sim_1)(vertex) = id_1; 
@@ -63,10 +63,10 @@ A similar reasoning as for the storage of material properties applies to the sto
  UnknownIndex id_2 = viennadata::access<long, UnknownIndex>(sim_2)(vertex); 
 \end{lstlisting}
 Thus, not only remains the implementation of geometric primitives light-weight and reusable, the resulting code due to {\ViennaData} is very compact and expressive. 
-To obtain high execution performance, a dense storage scheme should be employed for accessing the unknown indices, cf.~Sec.~\ref{sec:dense-data}.
+To obtain high execution performance, a dense storage scheme should be employed for accessing the unknown indices, cf.~Section \ref{sec:dense-data}.
 
 
-Another important aspect for scientific simulation is the handling of boundary conditions. Typically only a subset of elements on the boundary is effected by a certain type of boundary conditions, thus it would be highly inefficient to use a boolean member variable for all elements in the mesh. Here, the default sparse storage scheme of {\ViennaData} turns out to be memory-efficient when for instance flagging boundary triangles:
+Another important aspect for scientific simulation is the handling of boundary conditions. Typically only a subset of elements on the boundary is effected by a certain type of boundary conditions, thus it would be highly inefficient to use a boolean member variable for all elements in the mesh. Here, the default sparse storage scheme of {\ViennaData} turns out to be memory-efficient, when for instance flagging boundary triangles:
 \begin{lstlisting}
  // tag tri1, tri42 and tri360 for boundary conditions in simulation 1:
  viennadata::access<long, bool>(sim_1)(tri1)   = true; 

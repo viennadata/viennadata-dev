@@ -15,7 +15,7 @@
 
 #include "viennadata/forwards.h"
 
-/** @file viennadata/object_identifier.hpp
+/** @file viennadata/config/object_identifier.hpp
     @brief This file provides the default object identification mechanism in ViennaData.
 */
 

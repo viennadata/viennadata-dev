@@ -15,7 +15,7 @@
 
 #include "viennadata/forwards.h"
 
-/** @file viennadata/dispatch_traits.hpp
+/** @file viennadata/config/key_dispatch.hpp
     @brief This file provides the default key dispatch method.
 */
 

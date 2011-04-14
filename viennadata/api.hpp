@@ -16,6 +16,7 @@
 #include "forwards.h"
 #include "viennadata/data_container.hpp"
 #include "viennadata/key_value_registration.hpp"
+#include "viennadata/config/default_data_for_key.hpp"
 
 /** @file viennadata/interface.hpp
     @brief This file contains all the public interface of ViennaData
@@ -114,6 +115,22 @@ namespace viennadata
     return data_accessor_no_key<key_type, value_type>();
   }
   
+  /** @brief The main access function within ViennaData, using a default data type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:access<KeyType>()(my_obj) = some_value;</pre>
+    * and 
+    *   <pre>some_value = viennadata:access<KeyType>()(my_obj);</pre>
+    * This would write and read data stored using a key of type 'key_type' from 'my_obj'.
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    */
+  template <typename KeyType>
+  data_accessor_no_key<KeyType, typename config::default_data_for_key<KeyType>::type > access()
+  {
+    return data_accessor_no_key<KeyType, typename config::default_data_for_key<KeyType>::type >();
+  }
   
   //////////// erase data ////////////////////
   /** @brief A proxy class for erasing data. Only used internally in ViennaData 
