@@ -62,8 +62,8 @@ void run(size_t num, size_t repeat)
   
   for (size_t i=0; i<num; ++i)
   {
-    refvector[i] = ::sqrt(i);
-    objects[i] = T(::sqrt(i), i);
+    refvector[i] = ::sqrt(static_cast<double>(i));
+    objects[i] = T(::sqrt(static_cast<double>(i)), i);
    
     viennadata::access<std::string, double>(key_string)(objects[i]) = objects[i].value();
     viennadata::access<std::string, double>("bla")(objects[i]) = objects[i].value();

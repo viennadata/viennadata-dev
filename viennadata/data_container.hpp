@@ -31,19 +31,19 @@ namespace viennadata
 
   /** @brief The central container class holding the data. Uses the singleton pattern for a particular key, value and object type triple
    * 
-   * @tparam key_type      The type of the key used for access
-   * @tparam value_type    Type of the data that is stored for the element
-   * @tparam object_type  The type of the object the data is associated with
+   * @tparam KeyType      The type of the key used for access
+   * @tparam DataType    Type of the data that is stored for the element
+   * @tparam ObjectType  The type of the object the data is associated with
    * 
    */
-  template <typename key_type,
-            typename value_type,
-            typename object_type>
+  template <typename KeyType,
+            typename DataType,
+            typename ObjectType>
   class data_container
   {
     private:
       /** @brief The type of the data container */
-      typedef typename traits::container<key_type, value_type, object_type>::container_type    container_type;
+      typedef typename traits::container<KeyType, DataType, ObjectType>::container_type    container_type;
 
       container_type container; ///here is the data stored
 
@@ -60,22 +60,25 @@ namespace viennadata
       {
         static data_container * da = NULL;
         if (da == NULL)
+        {
           da = new data_container();
+          key_value_registration<ObjectType>::instance().template add<KeyType, DataType>();
+        }
 
         return *da;
       }
 
       /** @brief Accesses data for object 'obj' stored at key 'key' using a full key dispatch (object and type). Used internally only, use viennadata::access() instead */
-      value_type & access(object_type const & obj,
-                          key_type const & key)
+      DataType & access(ObjectType const & obj,
+                        KeyType const & key)
       {
-        return traits::container<key_type, value_type, object_type>::access(container, obj, key);
+        return traits::container<KeyType, DataType, ObjectType>::access(container, obj, key);
       }
 
       /** @brief Accesses data for object 'obj' stored at key 'key' using a type based key dispatch. Used internally only, use viennadata::access() instead */
-      value_type & access(object_type const & obj)
+      DataType & access(ObjectType const & obj)
       {
-        return traits::container<key_type, value_type, object_type>::access(container, obj);
+        return traits::container<KeyType, DataType, ObjectType>::access(container, obj);
       }
 
       //////////////////  copy data: ////////////////////
@@ -86,11 +89,11 @@ namespace viennadata
        * @param obj_src      The source object
        * @param obj_dest     The destination object
        */
-      template <typename object_dest_type>
-      void copy(object_type const & obj_src,
-                object_dest_type const & obj_dest)
+      template <typename ObjectDestType>
+      void copy(ObjectType const & obj_src,
+                ObjectDestType const & obj_dest)
       {
-        data_container<key_type, value_type, object_dest_type>::instance().copy(container, obj_src, obj_dest);
+        data_container<KeyType, DataType, ObjectDestType>::instance().copy(container, obj_src, obj_dest);
       }
       
       
@@ -101,13 +104,13 @@ namespace viennadata
        * @param obj_src      The source object
        * @param obj_dest     The destination object
        */
-      template <typename container_src_type,
-                typename object_src_type>
-      void copy(container_src_type & cont_src,
-                object_src_type const & obj_src,
-                object_type const & obj_dest)
+      template <typename ContainerSrcType,
+                typename ObjectSrcType>
+      void copy(ContainerSrcType & cont_src,
+                ObjectSrcType const & obj_src,
+                ObjectType const & obj_dest)
       {
-        traits::container<key_type, value_type, object_type>::copy(cont_src, obj_src, container, obj_dest);
+        traits::container<KeyType, DataType, ObjectType>::copy(cont_src, obj_src, container, obj_dest);
       }
 
       //////////////////  erase data: ////////////////////
@@ -116,10 +119,10 @@ namespace viennadata
        * @param obj       The object for which data should be deleted
        * @param key       The key the data is associated with
        */
-      void erase(object_type const & obj,
-                 key_type const & key)
+      void erase(ObjectType const & obj,
+                 KeyType const & key)
       {
-        traits::container<key_type, value_type, object_type>::erase(container, obj, key);
+        traits::container<KeyType, DataType, ObjectType>::erase(container, obj, key);
       }
 
       // erase data associated with all keys of key_type
@@ -127,29 +130,27 @@ namespace viennadata
        * 
        * @param obj       The object for which data should be deleted
        */
-      void erase(object_type const & obj)
+      void erase(ObjectType const & obj)
       {
-        traits::container<key_type, value_type, object_type>::erase(container, obj);
+        traits::container<KeyType, DataType, ObjectType>::erase(container, obj);
       }
 
       // reserve memory if a vector type is used
       /** @brief Reserves memory for data associated with up to 'num' objects. Object IDs have to be in the range 0...(num-1). */
       void reserve(long num)
       {
-        key_value_registration<object_type>::instance().template add<key_type, value_type>();
-        
         //std::cout << "Reserving..." << std::endl;
-        traits::container<key_type, value_type, object_type>::reserve(container, num);
+        traits::container<KeyType, DataType, ObjectType>::reserve(container, num);
       }
       
       /** @brief Checks whether data for a particular object with a particular key is already stored.
        *
        * @return Returns NULL if no data is found, otherwise returns a pointer to the data
        */ 
-      value_type * find(object_type const & obj,
-                        key_type const & key)
+      DataType * find(ObjectType const & obj,
+                      KeyType const & key)
       {
-        return traits::container<key_type, value_type, object_type>::find(container, obj, key);
+        return traits::container<KeyType, DataType, ObjectType>::find(container, obj, key);
       }
 
   };

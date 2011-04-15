@@ -39,10 +39,10 @@ namespace viennadata
    *
    * @tparam object_type  Type of the object for which the data is stored
    */
-  template <typename object_type>
+  template <typename ObjectType>
   class key_value_registration
   {
-      typedef std::vector<key_value_pair<object_type> >       container_type;
+      typedef std::vector<key_value_pair<ObjectType> >       container_type;
 
       /** @brief Private CTOR due to singleton pattern */
       key_value_registration() {}
@@ -64,12 +64,12 @@ namespace viennadata
       }
 
       /** @brief Adds a new key-value type pair (if not already existing) */
-      template <typename key_type,
-                typename value_type>
+      template <typename KeyType,
+                typename DataType>
       void add()
       {
-        key_value_pair<object_type> kve;
-        kve.template add<key_type, value_type>();
+        key_value_pair<ObjectType> kve;
+        kve.template add<KeyType, DataType>();
 
         //search whether already registered:
         if (std::find(container.begin(), container.end(), kve) == container.end())
@@ -91,13 +91,13 @@ namespace viennadata
 
       //////////////////////// erase ////////////////////////////////////
       /** @brief Erases all data associated with the provided object for a particular key */
-      template <typename key_type>
-      void erase_key_all(object_type const & obj) const
+      template <typename KeyType>
+      void erase_key_all(ObjectType const & obj) const
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        key_value_pair<object_type> kve;
-        kve.template add<key_type, all>();
+        key_value_pair<ObjectType> kve;
+        kve.template add<KeyType, all>();
 
         for (ContIter it = container.begin();
              it != container.end();
@@ -109,13 +109,13 @@ namespace viennadata
       }
 
       /** @brief Erases all data of a particular value type, no matter which key has been used */
-      template <typename value_type>
-      void erase_all_value(object_type const & obj) const
+      template <typename DataType>
+      void erase_all_value(ObjectType const & obj) const
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        key_value_pair<object_type> kve;
-        kve.template add<all, value_type>();
+        key_value_pair<ObjectType> kve;
+        kve.template add<all, DataType>();
 
         for (ContIter it = container.begin();
              it != container.end();
@@ -127,7 +127,7 @@ namespace viennadata
       }
 
       /** @brief Erase all data associated with the provided object */
-      void erase_all_all(object_type const & obj) const
+      void erase_all_all(ObjectType const & obj) const
       {
         typedef typename container_type::const_iterator   ContIter;
 
@@ -146,14 +146,14 @@ namespace viennadata
        * @param src    The source object
        * @param dest   The destination object
        */
-      template <typename key_type>
-      void copy_key_all(object_type const & src,
-                        object_type const & dest) const
+      template <typename KeyType>
+      void copy_key_all(ObjectType const & src,
+                        ObjectType const & dest) const
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        key_value_pair<object_type> kve;
-        kve.template add<key_type, all>();
+        key_value_pair<ObjectType> kve;
+        kve.template add<KeyType, all>();
 
         for (ContIter it = container.begin();
              it != container.end();
@@ -170,12 +170,12 @@ namespace viennadata
        * @param dest   The destination object
        */
       template <typename value_type>
-      void copy_all_value(object_type const & src,
-                          object_type const & dest) const
+      void copy_all_value(ObjectType const & src,
+                          ObjectType const & dest) const
       {
         typedef typename container_type::const_iterator   ContIter;
 
-        key_value_pair<object_type> kve;
+        key_value_pair<ObjectType> kve;
         kve.template add<all, value_type>();
 
         for (ContIter it = container.begin();
@@ -192,8 +192,8 @@ namespace viennadata
        * @param src    The source object
        * @param dest   The destination object
        */
-      void copy_all_all(object_type const & src,
-                        object_type const & dest) const
+      void copy_all_all(ObjectType const & src,
+                        ObjectType const & dest) const
       {
         typedef typename container_type::const_iterator   ContIter;
 

@@ -64,59 +64,59 @@ namespace viennadata
     //forward declarations for access
     /** @brief A proxy class for accessing data with key type and key object dispatch. Only used internally in ViennaData 
      *
-     * @tparam key_type       Type of the key
-     * @tparam value_type     Type of the data
+     * @tparam KeyType       Type of the key
+     * @tparam DataType     Type of the data
      */
-    template <typename key_type, typename value_type>
+    template <typename KeyType, typename DataType>
     class data_accessor_with_key;
     
     /** @brief A proxy class for accessing data with key type dispatch, but no key object dispatch. Only used internally in ViennaData 
      *
-     * @tparam key_type       Type of the key
-     * @tparam value_type     Type of the data
+     * @tparam KeyType       Type of the key
+     * @tparam DataType     Type of the data
      */
-    template <typename key_type, typename value_type>
+    template <typename KeyType, typename DataType>
     class data_accessor_no_key;
     
     /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using full dispatch (type and object)
      *
-     * @tparam key_type       Type of the key
-     * @tparam value_type     Type of the data
+     * @tparam KeyType       Type of the key
+     * @tparam DataType     Type of the data
      */
-    template <typename key_type, typename value_type>
-    data_accessor_with_key<key_type, value_type> access(key_type const & key);
+    template <typename KeyType, typename DataType>
+    data_accessor_with_key<KeyType, DataType> access(KeyType const & key);
 
     /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using type based dispatch. 
      *
-     * @tparam key_type       Type of the key
-     * @tparam value_type     Type of the data
+     * @tparam KeyType       Type of the key
+     * @tparam DataType     Type of the data
      */
-    template <typename key_type, typename value_type>
-    data_accessor_no_key<key_type, value_type> access();
+    template <typename KeyType, typename DataType>
+    data_accessor_no_key<KeyType, DataType> access();
   
     
     
     ////////////////////// other stuff ////////////////////////
     /** @brief The main data storage facility
      * 
-     * @tparam key_type       Type of the key
-     * @tparam value_type     Type of the data
-     * @tparam object_type    Type of the object the data is associated with
+     * @tparam KeyType       Type of the key
+     * @tparam DataType     Type of the data
+     * @tparam ObjectType    Type of the object the data is associated with
      */
-    template <typename key_type,
-              typename value_type,
-              typename object_type>
+    template <typename KeyType,
+              typename DataType,
+              typename ObjectType>
     class data_container;
     
     /** @brief A tag class that is used to represent all types of either a particular key type, or a particular value type */
     struct all {};   //denotes all types
     
     /** @brief A proxy class used internally to copy data from one object to another */
-    template <typename object_type>
+    template <typename ObjectType>
     class key_value_copy_construction;
     
     /** @brief A proxy class used internally to copy data from one object to another */
-    template <typename object_type>
+    template <typename ObjectType>
     class key_value_copy_construction_wrapper;
   
     /** @brief A helper class to raise compile time errors */

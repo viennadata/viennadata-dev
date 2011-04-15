@@ -34,44 +34,44 @@ namespace viennadata
   //////////// data access ////////////////////
   /** @brief A proxy class for accessing data with key type and key object dispatch. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
+  template <typename KeyType,
+            typename DataType>
   class data_accessor_with_key
   {
     public:
-      data_accessor_with_key(key_type const & key) : key_(key) {}
+      data_accessor_with_key(KeyType const & key) : key_(key) {}
       
-      template <typename object_type>
-      value_type & operator()(object_type const & el)
+      template <typename ObjectType>
+      DataType & operator()(ObjectType const & el)
       {
         //std::cout << "Get data from element" << std::endl;
-        return data_container<key_type, value_type, object_type>::instance().access(el, key_);
+        return data_container<KeyType, DataType, ObjectType>::instance().access(el, key_);
       }
       
     private:
-      key_type const & key_;    
+      KeyType const & key_;    
   };
 
   /** @brief A proxy class for accessing data with key type dispatch, but no key object dispatch. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
+  template <typename KeyType,
+            typename DataType>
   class data_accessor_no_key
   {
     public:
       data_accessor_no_key() {}
       
-      template <typename object_type>
-      value_type & operator()(object_type const & el)
+      template <typename ObjectType>
+      DataType & operator()(ObjectType const & el)
       {
         //std::cout << "Get data from element" << std::endl;
-        return data_container<key_type, value_type, object_type>::instance().access(el);
+        return data_container<KeyType, DataType, ObjectType>::instance().access(el);
       }
   };
   
@@ -80,39 +80,39 @@ namespace viennadata
   /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using full dispatch (type and object)
     *
     * Should be called in the form
-    *   <pre>viennadata:access<key_type, value_type>(my_key)(my_obj) = some_value;</pre>
+    *   <pre>viennadata:access<KeyType, DataType>(my_key)(my_obj) = some_value;</pre>
     * and
-    *   <pre>some_value = viennadata:access<key_type, value_type>(my_key)(my_obj);</pre>
-    * This would write and read data stored using a key 'my_key' of type 'key_type' from 'my_obj'.
+    *   <pre>some_value = viennadata:access<KeyType, DataType>(my_key)(my_obj);</pre>
+    * This would write and read data stored using a key 'my_key' of type 'KeyType' from 'my_obj'.
     * 
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
-  data_accessor_with_key<key_type, value_type> access(key_type const & key)
+  template <typename KeyType,
+            typename DataType>
+  data_accessor_with_key<KeyType, DataType> access(KeyType const & key)
   {
-    return data_accessor_with_key<key_type, value_type>(key);
+    return data_accessor_with_key<KeyType, DataType>(key);
   }
 
   /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using type based dispatch. 
     *
     * Should be called in the form 
-    *   <pre>viennadata:access<key_type, value_type>()(my_obj) = some_value;</pre>
+    *   <pre>viennadata:access<KeyType, DataType>()(my_obj) = some_value;</pre>
     * and 
-    *   <pre>some_value = viennadata:access<key_type, value_type>()(my_obj);</pre>
-    * This would write and read data stored using a key of type 'key_type' from 'my_obj'.
+    *   <pre>some_value = viennadata:access<KeyType, DataType>()(my_obj);</pre>
+    * This would write and read data stored using a key of type 'KeyType' from 'my_obj'.
     * 
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
-  data_accessor_no_key<key_type, value_type> access()
+  template <typename KeyType,
+            typename DataType>
+  data_accessor_no_key<KeyType, DataType> access()
   {
-    return data_accessor_no_key<key_type, value_type>();
+    return data_accessor_no_key<KeyType, DataType>();
   }
   
   /** @brief The main access function within ViennaData, using a default data type.
@@ -121,7 +121,7 @@ namespace viennadata
     *   <pre>viennadata:access<KeyType>()(my_obj) = some_value;</pre>
     * and 
     *   <pre>some_value = viennadata:access<KeyType>()(my_obj);</pre>
-    * This would write and read data stored using a key of type 'key_type' from 'my_obj'.
+    * This would write and read data stored using a key of type 'KeyType' from 'my_obj'.
     * 
     * \ingroup public_interface
     * @tparam KeyType       Type of the key
@@ -135,38 +135,38 @@ namespace viennadata
   //////////// erase data ////////////////////
   /** @brief A proxy class for erasing data. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
+  template <typename KeyType,
+            typename DataType>
   class data_erasor_with_key
   {
     public:
-      data_erasor_with_key(key_type const & k) : key(k) {}
+      data_erasor_with_key(KeyType const & k) : key(k) {}
       
-      template <typename object_type>
-      void operator()(object_type const & el)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el)
       {
-        data_container<key_type, value_type, object_type>::instance().erase(el, key);
+        data_container<KeyType, DataType, ObjectType>::instance().erase(el, key);
       }
     private:
-      key_type const & key;
+      KeyType const & key;
   };
   
   //prevent messing around with all-type and supplied key:
   /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
-  template <typename key_type>
-  class data_erasor_with_key<key_type, all>
+  template <typename KeyType>
+  class data_erasor_with_key<KeyType, all>
   {
-    typedef typename error_indicator<key_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_ERASE_FUNCTION_WITH_ALL   error_type;
+    typedef typename error_indicator<KeyType>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_ERASE_FUNCTION_WITH_ALL   error_type;
   };
 
   /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
-  template <typename value_type>
-  class data_erasor_with_key<all, value_type>
+  template <typename DataType>
+  class data_erasor_with_key<all, DataType>
   {
-    typedef typename error_indicator<value_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_ERASE_FUNCTION_WITH_ALL   error_type;
+    typedef typename error_indicator<DataType>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_ERASE_FUNCTION_WITH_ALL   error_type;
   };
 
   /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
@@ -178,48 +178,48 @@ namespace viennadata
   
   /** @brief A proxy class for erasing data. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
+  template <typename KeyType,
+            typename DataType>
   class data_erasor_no_key
   {
     public:
       data_erasor_no_key() {}
       
-      template <typename object_type>
-      void operator()(object_type const & el)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el)
       {
-        data_container<key_type, value_type, object_type>::instance().erase(el);
+        data_container<KeyType, DataType, ObjectType>::instance().erase(el);
       }
   };
 
-  /** @brief Specialization for erasing all data for a particular key_type by providing viennadata::all for the value_type */
-  template <typename key_type>
-  class data_erasor_no_key <key_type, all>
+  /** @brief Specialization for erasing all data for a particular KeyType by providing viennadata::all for the DataType */
+  template <typename KeyType>
+  class data_erasor_no_key <KeyType, all>
   {
     public:
       data_erasor_no_key() {}
       
-      template <typename object_type>
-      void operator()(object_type const & el)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el)
       {
-        key_value_registration<object_type>::instance().template erase_key_all<key_type>(el);
+        key_value_registration<ObjectType>::instance().template erase_key_all<KeyType>(el);
       }
   };
 
-  /** @brief Specialization for erasing all data of a particular value_type by providing viennadata::all for the key_type */
-  template <typename value_type>
-  class data_erasor_no_key <all, value_type>
+  /** @brief Specialization for erasing all data of a particular DataType by providing viennadata::all for the KeyType */
+  template <typename DataType>
+  class data_erasor_no_key <all, DataType>
   {
     public:
       data_erasor_no_key() {}
       
-      template <typename object_type>
-      void operator()(object_type const & el)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el)
       {
-        key_value_registration<object_type>::instance().template erase_all_value<value_type>(el);
+        key_value_registration<ObjectType>::instance().template erase_all_value<DataType>(el);
       }
   };
   
@@ -230,168 +230,87 @@ namespace viennadata
     public:
       data_erasor_no_key() {}
       
-      template <typename object_type>
-      void operator()(object_type const & el)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el)
       {
-        key_value_registration<object_type>::instance().erase_all_all(el);
+        key_value_registration<ObjectType>::instance().erase_all_all(el);
       }
   };
   
   /** @brief Erase data associated with key 'key'. The object is obtained via a proxy class.
     * 
     * Should be called in the form 
-    *   <pre>viennadata:erase<key_type, value_type>(my_key)(my_obj);</pre>
-    * This would erase data stored using a key 'my_key' of type 'key_type' from 'my_obj'.
+    *   <pre>viennadata:erase<KeyType, DataType>(my_key)(my_obj);</pre>
+    * This would erase data stored using a key 'my_key' of type 'KeyType' from 'my_obj'.
     *
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
-  data_erasor_with_key<key_type, value_type> erase(key_type const & key)
+  template <typename KeyType,
+            typename DataType>
+  data_erasor_with_key<KeyType, DataType> erase(KeyType const & key)
   {
-    return data_erasor_with_key<key_type, value_type>(key);
+    return data_erasor_with_key<KeyType, DataType>(key);
   }
 
-  /** @brief Erase all data associated with keys of 'key_type'.
+  /** @brief Erase all data associated with keys of 'KeyType'.
     *
     * Should be called in the form 
-    *   <pre>viennadata:erase<key_type, value_type>()(my_obj);</pre>
-    * This would erase data stored using a key of type 'key_type' from 'my_obj'.
+    *   <pre>viennadata:erase<KeyType, DataType>()(my_obj);</pre>
+    * This would erase data stored using a key of type 'KeyType' from 'my_obj'.
     * 
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
-  data_erasor_no_key<key_type, value_type> erase()
+  template <typename KeyType,
+            typename DataType>
+  data_erasor_no_key<KeyType, DataType> erase()
   {
-    return data_erasor_no_key<key_type, value_type>();
+    return data_erasor_no_key<KeyType, DataType>();
   }
 
 
-  
-  //////////////////////// Move data //////////////////////////////////
-  /** @brief A proxy class for moving data associated with a particular key from one object to another. Only used internally in ViennaData 
-    *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
-    */
-  template <typename key_type,
-            typename value_type>
-  class data_mover_with_key
-  {
-    public:
-      data_mover_with_key(key_type const & key) : key_(key) {}
-      
-      template <typename object_src_type,
-                typename object_dest_type>
-      void operator()(object_src_type const & el_src,
-                      object_dest_type const & el_dest)
-      {
-        //std::cout << "Get data from element" << std::endl;
-        access<key_type, value_type>(key_)(el_dest) = access<key_type, value_type>(key_)(el_src);
-        erase<key_type, value_type>(key_)(el_src);
-      }
-    private:
-      key_type const & key_;
-  };
-  
-  /** @brief Moves data associated with key 'key' from one object to another.
-    *
-    * Should be called in the form 
-    *   <pre>viennadata:move<key_type, value_type>(key)(src_obj, dest_obj);</pre>
-    * This would move data stored using a key 'key' of type 'key_type' from 'src_obj' to 'dest_obj'.
-    * 
-    * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
-    */
-  template <typename key_type,
-            typename value_type>
-  data_mover_with_key<key_type, value_type> move(key_type const & key)
-  {
-    return data_mover_with_key<key_type, value_type>(key);
-  }
-  
-  
-  /** @brief A proxy class for moving data associated with a particular key type from one object to another. Only used internally in ViennaData 
-    *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
-    */
-  template <typename key_type,
-            typename value_type>
-  class data_mover_no_key
-  {
-    public:
-      data_mover_no_key() {}
-      
-      template <typename object_src_type, typename object_dest_type>
-      void operator()(object_src_type const & el_src, object_dest_type const & el_dest)
-      {
-        data_container<key_type, value_type, object_src_type>::instance().copy(el_src, el_dest);
-        data_container<key_type, value_type, object_src_type>::instance().erase(el_src);
-      }
-  };
-  
-  /** @brief Moves data associated with all keys of type 'key_type' from one object to another.
-    *
-    * Should be called in the form 
-    *   <pre>viennadata:move<key_type, value_type>()(src_obj, dest_obj);</pre>
-    * This would move data stored using a key of type 'key_type' from 'src_obj' to 'dest_obj'.
-    * 
-    * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
-    */
-  template <typename key_type,
-            typename value_type>
-  data_mover_no_key<key_type, value_type> move()
-  {
-    return data_mover_no_key<key_type, value_type>();
-  }
   
   
   //////////////////////// Copy data //////////////////////////////////
   /** @brief A proxy class for copying data associated with a particular key from one object to another. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
+  template <typename KeyType,
+            typename DataType>
   class data_copy_with_key
   {
     public:
-      data_copy_with_key(key_type const & key) : key_(key) {}
+      data_copy_with_key(KeyType const & key) : key_(key) {}
       
-      template <typename object_src_type,
-                typename object_dest_type>
-      void operator()(object_src_type const & el_src,
-                      object_dest_type const & el_dest)
+      template <typename ObjectSrcType,
+                typename ObjectDestType>
+      void operator()(ObjectSrcType const & el_src,
+                      ObjectDestType const & el_dest)
       {
-        access<key_type, value_type>(key_)(el_dest) = access<key_type, value_type>(key_)(el_src);
+        access<KeyType, DataType>(key_)(el_dest) = access<KeyType, DataType>(key_)(el_src);
       }
     private:
-      key_type const & key_;
+      KeyType const & key_;
   };
   
   //prevent messing around with all-type and supplied key:
   /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
-  template <typename key_type>
-  class data_copy_with_key<key_type, all>
+  template <typename KeyType>
+  class data_copy_with_key<KeyType, all>
   {
-    typedef typename error_indicator<key_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
+    typedef typename error_indicator<KeyType>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
   };
 
   /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
-  template <typename value_type>
-  class data_copy_with_key<all, value_type>
+  template <typename DataType>
+  class data_copy_with_key<all, DataType>
   {
-    typedef typename error_indicator<value_type>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
+    typedef typename error_indicator<DataType>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
   };
 
   /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
@@ -404,28 +323,28 @@ namespace viennadata
   /** @brief Copies data associated with key 'key' from one object to another.
     *
     * Should be called in the form 
-    *   <pre>viennadata:copy<key_type, value_type>()(src_obj, dest_obj);</pre>
-    * This would copy data stored using a key of type 'key_type' from 'src_obj' to 'dest_obj'.
+    *   <pre>viennadata:copy<KeyType, DataType>()(src_obj, dest_obj);</pre>
+    * This would copy data stored using a key of type 'KeyType' from 'src_obj' to 'dest_obj'.
     * 
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
-  data_copy_with_key<key_type, value_type> copy(key_type const & key)
+  template <typename KeyType,
+            typename DataType>
+  data_copy_with_key<KeyType, DataType> copy(KeyType const & key)
   {
-    return data_copy_with_key<key_type, value_type>(key);
+    return data_copy_with_key<KeyType, DataType>(key);
   }
   
   
   /** @brief A proxy class for copying data associated with a particular key type from one object to another. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
+  template <typename KeyType,
+            typename DataType>
   class data_copy_no_key
   {
     public:
@@ -434,21 +353,21 @@ namespace viennadata
       template <typename object_src_type, typename object_dest_type>
       void operator()(object_src_type const & el_src, object_dest_type const & el_dest)
       {
-        data_container<key_type, value_type, object_src_type>::instance().copy(el_src, el_dest);
+        data_container<KeyType, DataType, object_src_type>::instance().copy(el_src, el_dest);
       }
   };
   
   /** @brief Specialization for copying all data associated with a particular key type from one object to another using viennadata::all */
-  template <typename key_type>
-  class data_copy_no_key <key_type, all>
+  template <typename KeyType>
+  class data_copy_no_key <KeyType, all>
   {
     public:
       data_copy_no_key() {}
       
-      template <typename object_type>
-      void operator()(object_type const & el_src, object_type const & el_dest)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el_src, ObjectType const & el_dest)
       {
-        key_value_registration<object_type>::instance().template copy_key_all<key_type>(el_src, el_dest);
+        key_value_registration<ObjectType>::instance().template copy_key_all<KeyType>(el_src, el_dest);
       }
       
       template <typename object_src_type, typename object_dest_type>
@@ -458,18 +377,18 @@ namespace viennadata
       }
   };
 
-  /** @brief Specialization for copying all data of a particular value_type from one object to another using viennadata::all for the key_type */
-  template <typename value_type>
-  class data_copy_no_key <all, value_type>
+  /** @brief Specialization for copying all data of a particular DataType from one object to another using viennadata::all for the KeyType */
+  template <typename DataType>
+  class data_copy_no_key <all, DataType>
   {
     public:
       data_copy_no_key() {}
       
-      template <typename object_type>
-      void operator()(object_type const & el_src,
-                      object_type const & el_dest)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el_src,
+                      ObjectType const & el_dest)
       {
-        key_value_registration<object_type>::instance().template copy_all_value<value_type>(el_src, el_dest);
+        key_value_registration<ObjectType>::instance().template copy_all_value<DataType>(el_src, el_dest);
       }
       
       template <typename object_src_type,
@@ -487,11 +406,11 @@ namespace viennadata
     public:
       data_copy_no_key() {}
       
-      template <typename object_type>
-      void operator()(object_type const & el_src,
-                      object_type const & el_dest)
+      template <typename ObjectType>
+      void operator()(ObjectType const & el_src,
+                      ObjectType const & el_dest)
       {
-        key_value_registration<object_type>::instance().copy_all_all(el_src, el_dest);
+        key_value_registration<ObjectType>::instance().copy_all_all(el_src, el_dest);
       }
       
       template <typename object_src_type, typename object_dest_type>
@@ -504,42 +423,149 @@ namespace viennadata
   
   
   
-  /** @brief Copies data associated with all keys of type 'key_type' from one object to another.
+  /** @brief Copies data associated with all keys of type 'KeyType' from one object to another.
     *
     * Should be called in the form 
-    *   <pre>viennadata:copy<key_type, value_type>()(src_obj, dest_obj);</pre>
-    * This would copy data stored using a key of type 'key_type' from 'src_obj' to 'dest_obj'.
+    *   <pre>viennadata:copy<KeyType, DataType>()(src_obj, dest_obj);</pre>
+    * This would copy data stored using a key of type 'KeyType' from 'src_obj' to 'dest_obj'.
     * 
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type, typename value_type>
-  data_copy_no_key<key_type, value_type> copy()
+  template <typename KeyType, typename DataType>
+  data_copy_no_key<KeyType, DataType> copy()
   {
-    return data_copy_no_key<key_type, value_type>();
+    return data_copy_no_key<KeyType, DataType>();
+  }
+  
+
+
+  //////////////////////// Move data //////////////////////////////////
+  /** @brief A proxy class for moving data associated with a particular key from one object to another. Only used internally in ViennaData 
+    *
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
+    */
+  template <typename KeyType,
+            typename DataType>
+  class data_mover_with_key
+  {
+    public:
+      data_mover_with_key(KeyType const & key) : key_(key) {}
+      
+      template <typename ObjectSrcType,
+                typename ObjectDestType>
+      void operator()(ObjectSrcType const & el_src,
+                      ObjectDestType const & el_dest)
+      {
+        //std::cout << "Get data from element" << std::endl;
+        access<KeyType, DataType>(key_)(el_dest) = access<KeyType, DataType>(key_)(el_src);
+        erase<KeyType, DataType>(key_)(el_src);
+      }
+    private:
+      KeyType const & key_;
+  };
+  
+  
+  //prevent messing around with all-type and supplied key:
+  /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
+  template <typename KeyType>
+  class data_mover_with_key<KeyType, all>
+  {
+    typedef typename error_indicator<KeyType>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
+  };
+
+  /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
+  template <typename DataType>
+  class data_mover_with_key<all, DataType>
+  {
+    typedef typename error_indicator<DataType>::ERROR_NO_KEY_ARGUMENT_ALLOWED_WHEN_USING_COPY_FUNCTION_WITH_ALL   error_type;
+  };
+
+  /** @brief Specialization that prevents supplying a key argument when using viennadata::all */
+  template <>
+  class data_mover_with_key<all, all>
+  {
+    //force linker error here
+  };
+  
+  
+  /** @brief Moves data associated with key 'key' from one object to another.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:move<KeyType, DataType>(key)(src_obj, dest_obj);</pre>
+    * This would move data stored using a key 'key' of type 'KeyType' from 'src_obj' to 'dest_obj'.
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
+    */
+  template <typename KeyType,
+            typename DataType>
+  data_mover_with_key<KeyType, DataType> move(KeyType const & key)
+  {
+    return data_mover_with_key<KeyType, DataType>(key);
   }
   
   
+  /** @brief A proxy class for moving data associated with a particular key type from one object to another. Only used internally in ViennaData 
+    *
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
+    */
+  template <typename KeyType,
+            typename DataType>
+  class data_mover_no_key
+  {
+    public:
+      data_mover_no_key() {}
+      
+      template <typename object_src_type, typename object_dest_type>
+      void operator()(object_src_type const & el_src, object_dest_type const & el_dest)
+      {
+        data_copy_no_key<KeyType, DataType>()(el_src, el_dest);
+        data_erasor_no_key<KeyType, DataType>()(el_src);
+      }
+  };
+  
+  /** @brief Moves data associated with all keys of type 'KeyType' from one object to another.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:move<KeyType, DataType>()(src_obj, dest_obj);</pre>
+    * This would move data stored using a key of type 'KeyType' from 'src_obj' to 'dest_obj'.
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType      Type of the key
+    * @tparam DataType     Type of the data
+    */
+  template <typename KeyType,
+            typename DataType>
+  data_mover_no_key<KeyType, DataType> move()
+  {
+    return data_mover_no_key<KeyType, DataType>();
+  }
+  
+
 
   //////////// memory allocation for data ////////////////////
   
   /** @brief A proxy class for reserving memory needed for storing data associated with a particular key type. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type,
-            typename value_type>
+  template <typename KeyType,
+            typename DataType>
   class data_reservation_proxy
   {
     public:
       data_reservation_proxy(long num) : num_(num) {}
       
-      template <typename object_type>
-      void operator()(object_type const & e)
+      template <typename ObjectType>
+      void operator()(ObjectType const & e)
       {
-        data_container<key_type, value_type, object_type>::instance().reserve(num_);
+        data_container<KeyType, DataType, ObjectType>::instance().reserve(num_);
       }
     
     private:
@@ -550,59 +576,59 @@ namespace viennadata
   /** @brief Reserves memory for storing data associated with a particular key type.
     *
     * Should be called in the form 
-    *   <pre>viennadata:reserve<key_type, value_type>(num)(my_obj);</pre>
-    * This would reserve memory for num objects with the same type as my_obj for data storage using a key of type 'key_type'. Object IDs have to be in the range 0...(num-1) then.
+    *   <pre>viennadata:reserve<KeyType, DataType>(num)(my_obj);</pre>
+    * This would reserve memory for num objects with the same type as my_obj for data storage using a key of type 'KeyType'. Object IDs have to be in the range 0...(num-1) then.
     * 
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     * @param  num            Number of objects for which memory should be reserved. Object IDs have to be in the range 0...(num-1) then.
     */
-  template <typename key_type,
-            typename value_type>
-  data_reservation_proxy<key_type, value_type> reserve(long num)
+  template <typename KeyType,
+            typename DataType>
+  data_reservation_proxy<KeyType, DataType> reserve(long num)
   {
-    return data_reservation_proxy<key_type, value_type>(num);
+    return data_reservation_proxy<KeyType, DataType>(num);
   }
   
   
   /////////// find sparse data /////////////
   /** @brief A proxy class for finding data associated with a particular key. Only used internally in ViennaData 
     *
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     */
-  template <typename key_type, typename value_type>
+  template <typename KeyType, typename DataType>
   class data_find_proxy
   {
     public:
-      data_find_proxy(key_type const & key) : key_(key) {}
+      data_find_proxy(KeyType const & key) : key_(key) {}
       
-      template <typename object_type>
-      value_type * operator()(object_type const & el)
+      template <typename ObjectType>
+      DataType * operator()(ObjectType const & el)
       {
-        return data_container<key_type, value_type, object_type>::instance().find(el, key_);
+        return data_container<KeyType, DataType, ObjectType>::instance().find(el, key_);
       }
     
     private:
-      key_type const & key_;
+      KeyType const & key_;
   };
 
   /** @brief Reserves memory for storing data associated with a particular key type.
     *
     * Should be called in the form 
-    *   <pre>viennadata:find<key_type, value_type>(my_key)(my_obj);</pre>
-    * This would search for data associated with my_obj using a key of type 'key_type'. If found, a pointer to the data is returned, otherwise NULL.
+    *   <pre>viennadata:find<KeyType, DataType>(my_key)(my_obj);</pre>
+    * This would search for data associated with my_obj using a key of type 'KeyType'. If found, a pointer to the data is returned, otherwise NULL.
     * 
     * \ingroup public_interface
-    * @tparam key_type       Type of the key
-    * @tparam value_type     Type of the data
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
     * @param  key            The key object
     */
-  template <typename key_type, typename value_type>
-  data_find_proxy<key_type, value_type> find(key_type const & key)
+  template <typename KeyType, typename DataType>
+  data_find_proxy<KeyType, DataType> find(KeyType const & key)
   {
-    return data_find_proxy<key_type, value_type>(key);
+    return data_find_proxy<KeyType, DataType>(key);
   }
   
 } //namespace viennadata

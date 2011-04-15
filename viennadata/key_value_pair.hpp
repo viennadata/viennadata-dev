@@ -40,7 +40,7 @@ namespace viennadata
    *
    * @tparam object_type  The type of the object the data is associated with
    */
-  template <typename object_type>
+  template <typename ObjectType>
   class key_value_pair_interface
   {
     public:
@@ -48,13 +48,13 @@ namespace viennadata
       virtual ~key_value_pair_interface() {};
 
       /** @brief Copy data from one object to another */
-      virtual void copy(object_type const & src, object_type const & dest) const = 0;
+      virtual void copy(ObjectType const & src, ObjectType const & dest) const = 0;
       
       /** @brief Erase data for the particular object */
-      virtual void erase(object_type const & src) const = 0;
+      virtual void erase(ObjectType const & src) const = 0;
       
       /** @brief Compare key-value-pairs for the same template arguments */
-      virtual bool operator==(key_value_pair_interface<object_type> const &) const = 0;
+      virtual bool operator==(key_value_pair_interface<ObjectType> const &) const = 0;
   };
 
 
@@ -66,28 +66,28 @@ namespace viennadata
   * @tparam value_type    Type of the data that is stored for the element
   * @tparam object_type  The type of the object the data is associated with
   */
-  template <typename key_type,
-            typename value_type,
-            typename object_type>
-  class key_value_pair_wrapper : public key_value_pair_interface<object_type>
+  template <typename KeyType,
+            typename DataType,
+            typename ObjectType>
+  class key_value_pair_wrapper : public key_value_pair_interface<ObjectType>
   {
-      typedef key_value_pair_wrapper<key_type, value_type, object_type>    self_type;
-      typedef key_value_pair_wrapper<key_type, all, object_type>           self_type_key_all;
-      typedef key_value_pair_wrapper<all, value_type, object_type>         self_type_all_value;
-      typedef key_value_pair_wrapper<all, all, object_type>                self_type_all_all;
+      typedef key_value_pair_wrapper<KeyType, DataType, ObjectType>      self_type;
+      typedef key_value_pair_wrapper<KeyType, all, ObjectType>           self_type_key_all;
+      typedef key_value_pair_wrapper<all, DataType, ObjectType>          self_type_all_value;
+      typedef key_value_pair_wrapper<all, all, ObjectType>               self_type_all_all;
 
     public:
       /// Forwards the copy request to the data container.
-      void copy(object_type const & src,
-                object_type const & dest) const
+      void copy(ObjectType const & src,
+                ObjectType const & dest) const
       {
-        data_container<key_type, value_type, object_type>::instance().copy(src, dest);
+        data_container<KeyType, DataType, ObjectType>::instance().copy(src, dest);
       }
 
       /// Forwards the erase request to the data container.
-      void erase(object_type const & src) const
+      void erase(ObjectType const & src) const
       {
-        data_container<key_type, value_type, object_type>::instance().erase(src);
+        data_container<KeyType, DataType, ObjectType>::instance().erase(src);
       }
 
       /** @brief Compares two key-value type erased pairs. Takes also the all-quantifier into account
@@ -99,7 +99,7 @@ namespace viennadata
        *
        * @param other    The other type-erased key-value pair
        */
-      bool operator==(key_value_pair_interface<object_type> const & other) const
+      bool operator==(key_value_pair_interface<ObjectType> const & other) const
       {
         return (dynamic_cast< self_type const *>( &other ) != NULL
                 || dynamic_cast< self_type_key_all const *>( &other ) != NULL
@@ -116,7 +116,7 @@ namespace viennadata
   *
   * @tparam object_type  The type of the object the data is associated with
   */
-  template <typename object_type>
+  template <typename ObjectType>
   class key_value_pair
   {
     public:
@@ -138,7 +138,7 @@ namespace viennadata
       }
 
       /** @brief Compares two key_value_pairs for wrapping the same key and value types. See also key_value_pair_wrapper::operator==() for full details */
-      bool operator==(key_value_pair<object_type> const & other) const
+      bool operator==(key_value_pair<ObjectType> const & other) const
       {
         return *key_value == *(other.key_value);
       }
@@ -148,11 +148,11 @@ namespace viennadata
        * @tparam key_type    Type of the key to be wrapped
        * @tparam value_type  Type of the data to be wrapped
        */
-      template <typename key_type, typename value_type>
+      template <typename KeyType, typename DataType>
       void add()
       {
         assert(key_value == NULL);
-        key_value = new key_value_pair_wrapper<key_type, value_type, object_type>();
+        key_value = new key_value_pair_wrapper<KeyType, DataType, ObjectType>();
       }
 
       /** @brief Copies data of the wrapped type to another object 
@@ -160,20 +160,20 @@ namespace viennadata
        * @param src  The source object
        * @param dest The destination object
        */
-      void copy(object_type const & src,
-                object_type const & dest) const
+      void copy(ObjectType const & src,
+                ObjectType const & dest) const
       {
         key_value->copy(src, dest);
       }
 
       /** @brief Erases data for the wrapped key and value type from the supplied object */
-      void erase(object_type const & el) const
+      void erase(ObjectType const & el) const
       {
         key_value->erase(el);
       }
 
     private:
-      key_value_pair_interface<object_type> * key_value;
+      key_value_pair_interface<ObjectType> * key_value;
       mutable bool owner; /// Ownership flag: If true, this object is responsible for deleting the key_value member
   };
 

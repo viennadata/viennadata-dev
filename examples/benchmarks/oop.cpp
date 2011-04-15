@@ -15,6 +15,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <string>
 
 #include "examples/benchmarks/common.hpp"
 #include "viennadata/api.hpp"
@@ -29,8 +30,8 @@ void run_oop(size_t num, size_t repeat)
 
   for (size_t i=0; i<num; ++i)
   {
-    refvector[i] = ::sqrt(i);
-    objects[i] = T(::sqrt(i), i);
+    refvector[i] = ::sqrt(static_cast<double>(i));
+    objects[i] = T(::sqrt(static_cast<double>(i)), i);
   }
   
   double result;
@@ -69,21 +70,21 @@ void run_oop(size_t num, size_t repeat)
 int main(int argc, char *argv[])
 {
   std::cout << "--- Test 1: SlimClass, 1 000 objects, 1000 repetitions ---" << std::endl;
-  run_oop<SlimClass>(1e3, 1000);
+  run_oop<SlimClass>(1000, 1000);
   std::cout << "--- Test 2: SlimClass, 1 000 000 objects ---" << std::endl;
-  run_oop<SlimClass>(1e6, 1);
+  run_oop<SlimClass>(1000000, 1);
   std::cout << "--- Test 3: FatClass<10>, 1 000 objects, 1000 repetitions ---" << std::endl;
-  run_oop<FatClass<10> >(1e3, 1000);
+  run_oop<FatClass<10> >(1000, 1000);
   std::cout << "--- Test 3: FatClass<10>, 1 000 000 objects ---" << std::endl;
-  run_oop<FatClass<10> >(1e6, 1);
+  run_oop<FatClass<10> >(1000000, 1);
   std::cout << "--- Test 5: FatClass<100>, 1 000 objects, 1000 repetitions ---" << std::endl;
-  run_oop<FatClass<100> >(1e3, 1000);
+  run_oop<FatClass<100> >(1000, 1000);
   std::cout << "--- Test 5: FatClass<100>, 1 000 000 objects ---" << std::endl;
-  run_oop<FatClass<100> >(1e6, 1);
+  run_oop<FatClass<100> >(1000000, 1);
   std::cout << "--- Test 7: FatClass<1000>, 1 000 objects, 1000 repetitions ---" << std::endl;
-  run_oop<FatClass<1000> >(1e3, 1000);
+  run_oop<FatClass<1000> >(1000, 1000);
   std::cout << "--- Test 7: FatClass<1000>, 1 000 000 objects ---" << std::endl;
-  run_oop<FatClass<1000> >(1e6, 1);
+  run_oop<FatClass<1000> >(1000000, 1);
   
   return EXIT_SUCCESS;
 }

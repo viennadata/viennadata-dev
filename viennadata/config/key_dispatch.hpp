@@ -37,9 +37,9 @@ namespace viennadata
     *
     * Mind that this overload has to be placed in namespace viennadata.
     * 
-    * @tparam key_type      The type of the key for which the dispatch scheme is specified.
+    * @tparam KeyType      The type of the key for which the dispatch scheme is specified.
     */
-    template <typename key_type>
+    template <typename KeyType>
     struct key_dispatch
     {
       typedef full_key_dispatch_tag    tag;

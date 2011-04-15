@@ -40,19 +40,19 @@ namespace viennadata
     *   typedef element_provided_id         tag;
     *   typedef int                         id_type;
     * 
-    *   static id_type id(SomeClass const & el) { return el.getID(); }
+    *   static id_type get(SomeClass const & el) { return el.getID(); }
     * };
     * 
-    * @tparam object_type  The type of the object the data is associated with
+    * @tparam ObjectType  The type of the object the data is associated with
     */
-    template <typename object_type>
+    template <typename ObjectType>
     struct object_identifier
     {
       typedef pointer_based_id        tag;
-      typedef const object_type *     id_type;
+      typedef const ObjectType *      id_type;
       
       /** @brief per default, the element address is the id */
-      static id_type get(object_type const & obj) { return &obj; }
+      static id_type get(ObjectType const & obj) { return &obj; }
     };
 
     //add here some custom element identifier

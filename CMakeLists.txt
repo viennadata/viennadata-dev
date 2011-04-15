@@ -28,5 +28,11 @@ ADD_EXECUTABLE(sparseaddressbench  examples/benchmarks/sparse-address.cpp)
 ADD_EXECUTABLE(sparsecustombench   examples/benchmarks/sparse-custom.cpp)
 
 ADD_EXECUTABLE(access              examples/tutorials/access.cpp)
+ADD_EXECUTABLE(copy                examples/tutorials/copy.cpp)
+ADD_EXECUTABLE(move                examples/tutorials/move.cpp)
+ADD_EXECUTABLE(erase               examples/tutorials/erase.cpp)
+ADD_EXECUTABLE(find                examples/tutorials/find.cpp)
+ADD_EXECUTABLE(customid            examples/tutorials/custom_id.cpp)
+ADD_EXECUTABLE(densedata           examples/tutorials/dense_data.cpp)
+ADD_EXECUTABLE(keydispatch         examples/tutorials/key_dispatch.cpp)
 ADD_EXECUTABLE(defaulttype         examples/tutorials/default_data_type.cpp)
-

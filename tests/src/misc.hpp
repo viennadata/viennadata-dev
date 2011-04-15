@@ -14,6 +14,8 @@
 #ifndef VIENNADATA_TESTBENCH_HPP
 #define VIENNADATA_TESTBENCH_HPP
 
+#include <iostream>
+#include <string>
 #include "viennadata/api.hpp"
 
 struct StandardClass {};

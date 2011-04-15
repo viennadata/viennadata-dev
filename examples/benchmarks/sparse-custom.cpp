@@ -15,8 +15,11 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <string>
 
 #include "examples/benchmarks/common.hpp"
+
+//main ViennaData include file:
 #include "viennadata/api.hpp"
 
 //configure ViennaData:
@@ -51,7 +54,7 @@ int main(int argc, char *argv[])
   run<SlimClass>(1000, 1000);
 
   std::cout << "--- Test: SlimClass, 1 000 000 objects ---" << std::endl;
-  run<SlimClass>(1e6, 1);
+  run<SlimClass>(1000000, 1);
   
   return EXIT_SUCCESS;
 }

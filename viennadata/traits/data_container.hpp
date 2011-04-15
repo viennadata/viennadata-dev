@@ -23,7 +23,6 @@
 /** @file viennadata/data_container_traits.hpp
     @brief Manipulations of the different storage containers are implemented here.
 */
-#include <../ViennaCL/dev/CL/cl_platform.h>
 
 namespace viennadata
 {
@@ -36,10 +35,10 @@ namespace viennadata
     
     
     /** @brief Helper class: Checks for valid access without key. If no key is supplied, than full dispatch is clearly illegal. */
-    template <typename key_dispatch_tag>
+    template <typename KeyDispatchTag>
     struct IS_ACCESS_WITHOUT_KEY_ALLOWED
     {
-      typedef typename key_dispatch_tag::ERROR_ACCESS_CALLED_WITHOUT_KEY_ARGUMENT  check_type;
+      typedef typename KeyDispatchTag::ERROR_ACCESS_CALLED_WITHOUT_KEY_ARGUMENT  check_type;
     };
     
     /** @brief No key is allowed when using a type based dispatch */
@@ -54,21 +53,21 @@ namespace viennadata
     
     
     /** @brief Helper class: Reserve memory based on the selected identification mechanism. Nothing needs to be done when a map container is used. */
-    template <typename container_type,
-              typename object_identification_tag,
-              typename storage_tag>
+    template <typename ContainerType,
+              typename ObjectIdentificationTag,
+              typename StorageTag>
     struct container_reservation_dispatcher
     {
       //by default, do nothing: (some map-based mechanism)
-      static void reserve(container_type & container, long num) {  }
+      static void reserve(ContainerType & container, long num) {  }
     };
     
     /** @brief When used with dense data storage, the underlying vector container needs to be resized. */
-    template <typename container_type>
-    struct container_reservation_dispatcher<container_type, object_provided_id, dense_data_tag>
+    template <typename ContainerType>
+    struct container_reservation_dispatcher<ContainerType, object_provided_id, dense_data_tag>
     {
       //id based identification:
-      static void reserve(container_type & container, long num) { container.resize(num); }
+      static void reserve(ContainerType & container, long num) { container.resize(num); }
     };
     
     
@@ -76,48 +75,48 @@ namespace viennadata
     
     
     ////////////////// container_key_value_pair ////////////////////////////
-    /** @brief Accesses the data based on the provided (key_type, value_type) pair 
+    /** @brief Accesses the data based on the provided (KeyType, DataType) pair 
     * 
-    * @tparam key_type          Type of the key
-    * @tparam value_type        Type of the data 
-    * @tparam key_dispatch_tag  A tag indicating full or type based key dispatch
+    * @tparam KeyType          Type of the key
+    * @tparam DataType        Type of the data 
+    * @tparam KeyDispatchTag  A tag indicating full or type based key dispatch
     */
-    template <typename key_type,
-              typename value_type,
-              typename key_dispatch_tag>
+    template <typename KeyType,
+              typename DataType,
+              typename KeyDispatchTag>
     struct container_key_value_pair
     {
-      typedef std::map< key_type, value_type >   key_value_type;  // with key object based dispatch    
+      typedef std::map< KeyType, DataType >   key_DataType;  // with key object based dispatch    
       
       /** @brief Accesses the container for the given object ID and the provided key */
-      template <typename container_type,
-                typename id_type>
-      static value_type & access(container_type & cont,
-                                id_type const & id,
-                                key_type const & key)
+      template <typename ContainerType,
+                typename IdType>
+      static DataType & access(ContainerType & cont,
+                               IdType const & id,
+                               KeyType const & key)
       {
         return cont[id][key];
       }
     };
     
     /** @brief Specialization of container_key_value_pair for type-based key dispatch (type_key_dispatch_tag) */
-    template <typename key_type,
-              typename value_type>
-    struct container_key_value_pair <key_type, value_type, type_key_dispatch_tag>
+    template <typename KeyType,
+              typename DataType>
+    struct container_key_value_pair <KeyType, DataType, type_key_dispatch_tag>
     {
-      typedef value_type   key_value_type;  // with key object based dispatch    
+      typedef DataType   key_DataType;  // with key object based dispatch    
       
       /** @brief Accesses the container for the given object ID.  Since using type-based dispatch, key argument is ignored. */
-      template <typename container_type, typename id_type>
-      static value_type & access(container_type & cont, id_type const & id, key_type const & key)
+      template <typename ContainerType, typename IdType>
+      static DataType & access(ContainerType & cont, IdType const & id, KeyType const & key)
       {
         return cont[id];
       }
 
       //also allow access without key here, because uniquely defined:
       /** @brief Accesses the container for the given object ID. Since using type-based dispatch, no key is needed here. */
-      template <typename container_type, typename id_type>
-      static value_type & access(container_type & cont, id_type const & id)
+      template <typename ContainerType, typename IdType>
+      static DataType & access(ContainerType & cont, IdType const & id)
       {
         return cont[id];
       }
@@ -130,31 +129,31 @@ namespace viennadata
     * 
     * Refer to Alexandrescu, "Modern C++ Design" for details on type erasure
     * 
-    * @tparam key_type      The type of the key used for access
-    * @tparam value_type    Type of the data that is stored for the element
-    * @tparam object_type  The type of the object the data is associated with
-    * @tparam object_identification_tag  Determines the dispatch mechanism for objects the data is associated with. Either 'pointer_based_id' (the default) or 'object_provided_id' (requires suitable overload of 'object_identifier')
-    * @tparam key_dispatch_tag   Determines the method for key dispatch (either full dispatch ('full_key_dispatch_tag', default) or dispatch based on key type 'type_key_dispatch_tag')
-    * @tparam storage_tag   Specifies dense ('dense_data_tag') or sparse ('storage_data_tag', default) storage of data. The former requires element-identification by id, cf. class 'object_identifier'
+    * @tparam KeyType      The type of the key used for access
+    * @tparam DataType    Type of the data that is stored for the element
+    * @tparam ObjectType  The type of the object the data is associated with
+    * @tparam ObjectIdentificationTag  Determines the dispatch mechanism for objects the data is associated with. Either 'pointer_based_id' (the default) or 'object_provided_id' (requires suitable overload of 'object_identifier')
+    * @tparam KeyDispatchTag   Determines the method for key dispatch (either full dispatch ('full_KeyDispatchTag', default) or dispatch based on key type 'type_KeyDispatchTag')
+    * @tparam StorageTag   Specifies dense ('dense_data_tag') or sparse ('storage_data_tag', default) storage of data. The former requires element-identification by id, cf. class 'object_identifier'
     */
-    template <typename key_type,
-              typename value_type,
-              typename object_identification_tag,
-              typename key_dispatch_tag,
-              typename storage_tag>
+    template <typename KeyType,
+              typename DataType,
+              typename ObjectIdentificationTag,
+              typename KeyDispatchTag,
+              typename StorageTag>
     struct container_erasure_dispatcher
     {
       
       /** @brief Erase data for a particular key */
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id, key_type const & key)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id, KeyType const & key)
       {
         cont[id].erase(key);
       }
       
       /** @brief Erase all data associated with keys of the supplied type for the object */
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id)
       {
         cont.erase(id);
       }
@@ -162,74 +161,74 @@ namespace viennadata
     };
 
     /** @brief Spezialization: Provides erase functionality for type-based key dispatch */
-    template <typename key_type,
-              typename value_type,
-              typename object_identification_tag,
-              typename storage_tag>
-    struct container_erasure_dispatcher < key_type, 
-                                          value_type,
-                                          object_identification_tag,
+    template <typename KeyType,
+              typename DataType,
+              typename ObjectIdentificationTag,
+              typename StorageTag>
+    struct container_erasure_dispatcher < KeyType, 
+                                          DataType,
+                                          ObjectIdentificationTag,
                                           type_key_dispatch_tag,
-                                          storage_tag >
+                                          StorageTag >
     {
       /** @brief Erase data for the provided key */
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id, key_type const & key)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id, KeyType const & key)
       {
         cont.erase(id);
       }
       
       /** @brief Erase data for this key type (using type-based dispatch here!) */
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id)
       {
         cont.erase(id);
       }
     };  
 
     /** @brief For a dense data storage with vectors, delete element by resetting. */
-    template <typename key_type, typename value_type, typename key_dispatch_tag>
-    struct container_erasure_dispatcher < key_type, value_type, object_provided_id, key_dispatch_tag, dense_data_tag >
+    template <typename KeyType, typename DataType, typename KeyDispatchTag>
+    struct container_erasure_dispatcher < KeyType, DataType, object_provided_id, KeyDispatchTag, dense_data_tag >
     {
-      typedef typename container_key_value_pair< key_type,
-                                                value_type,
-                                                key_dispatch_tag >::key_value_type   key_value_type;
+      typedef typename container_key_value_pair< KeyType,
+                                                 DataType,
+                                                 KeyDispatchTag >::key_DataType   key_DataType;
                                                 
       /** @brief Erase data for this key type*/
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id, key_type const & key)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id, KeyType const & key)
       {
-        cont[id] = key_value_type();
+        cont[id] = key_DataType();
       }
       
       /** @brief Erase data for this key type*/
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id)
       {
-        cont[id] = key_value_type();
+        cont[id] = key_DataType();
       }
     };
 
     /** @brief Resolves the ambiguity erasing elements using dense storage with type-based dispatch */
-    template <typename key_type, typename value_type>
-    struct container_erasure_dispatcher < key_type, value_type, object_provided_id, type_key_dispatch_tag, dense_data_tag >
+    template <typename KeyType, typename DataType>
+    struct container_erasure_dispatcher < KeyType, DataType, object_provided_id, type_key_dispatch_tag, dense_data_tag >
     {
-      typedef typename container_key_value_pair< key_type,
-                                                value_type,
-                                                type_key_dispatch_tag >::key_value_type   key_value_type;
+      typedef typename container_key_value_pair< KeyType,
+                                                 DataType,
+                                                 type_key_dispatch_tag >::key_DataType   key_DataType;
                                                 
       /** @brief Erase data for this key type (using type-based dispatch here!) */
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id, key_type const & key)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id, KeyType const & key)
       {
-        cont[id] = key_value_type();
+        cont[id] = key_DataType();
       }
       
       /** @brief Erase data for this key type (using type-based dispatch here!) */
-      template <typename container_type, typename id_type>
-      static void erase(container_type & cont, id_type const & id)
+      template <typename ContainerType, typename IdType>
+      static void erase(ContainerType & cont, IdType const & id)
       {
-        cont[id] = key_value_type();
+        cont[id] = key_DataType();
       }
     };
 
@@ -239,20 +238,20 @@ namespace viennadata
     
     
     /** @brief Helper class for the deduction of the correct storage type. Default case. */
-    template <typename key_type,
-              typename value_type,
-              typename object_type,
-              typename object_identification_tag,
-              typename key_dispatch_tag,
-              typename storage_tag>
+    template <typename KeyType,
+              typename DataType,
+              typename ObjectType,
+              typename ObjectIdentificationTag,
+              typename KeyDispatchTag,
+              typename StorageTag>
     struct container_storage
     {
       //default case:
-      typedef typename viennadata::config::object_identifier<object_type>::id_type     id_type;
+      typedef typename viennadata::config::object_identifier<ObjectType>::id_type     id_type;
       typedef std::map< id_type,
-                        typename container_key_value_pair< key_type,
-                                                          value_type,
-                                                          key_dispatch_tag >::key_value_type
+                        typename container_key_value_pair< KeyType,
+                                                          DataType,
+                                                          KeyDispatchTag >::key_DataType
                       >                                              container_type;
                       
       /** @brief Reserves memory for up to 'num' objects. */               
@@ -261,17 +260,17 @@ namespace viennadata
     
     //dense storage when providing ID
     /** @brief Helper class for the deduction of the correct storage type. Dense storage with provided ID. */
-    template <typename key_type,
-              typename value_type,
-              typename object_type,
-              typename key_dispatch_tag>
-    struct container_storage <key_type, value_type, object_type,
-                              object_provided_id, key_dispatch_tag, dense_data_tag>
+    template <typename KeyType,
+              typename DataType,
+              typename ObjectType,
+              typename KeyDispatchTag>
+    struct container_storage <KeyType, DataType, ObjectType,
+                              object_provided_id, KeyDispatchTag, dense_data_tag>
     {
-      typedef typename viennadata::config::object_identifier<object_type>::id_type     id_type;
-      typedef std::vector< typename container_key_value_pair< key_type,
-                                                              value_type,
-                                                              key_dispatch_tag >::key_value_type
+      typedef typename viennadata::config::object_identifier<ObjectType>::id_type     id_type;
+      typedef std::vector< typename container_key_value_pair< KeyType,
+                                                              DataType,
+                                                              KeyDispatchTag >::key_DataType
                         >                                           container_type;
                         
       /** @brief Reserves memory for up to 'num' objects. */               
@@ -280,7 +279,7 @@ namespace viennadata
     
    
     /** @brief Resizes a vector automatically in order to allow valid access */
-    template <typename storage_tag>
+    template <typename StorageTag>
     struct container_auto_resize
     {
       template <typename ContainerType, typename SizeType>
@@ -305,116 +304,116 @@ namespace viennadata
     
     /** @brief The main container manipulation class. 
     * 
-    * @tparam key_type                  Type of the key
-    * @tparam value_type                Type of the data
-    * @tparam object_type               Type of the object the data is stored for
-    * @tparam object_identification_tag Identification mechanism (either by address or by ID)
-    * @tparam key_dispatch_tag          Dispatch by key object and type or only by type
-    * @tparam storage_tag               Store data either in a dense or in a sparse manner
+    * @tparam KeyType                  Type of the key
+    * @tparam DataType                Type of the data
+    * @tparam ObjectType               Type of the object the data is stored for
+    * @tparam ObjectIdentificationTag Identification mechanism (either by address or by ID)
+    * @tparam KeyDispatchTag          Dispatch by key object and type or only by type
+    * @tparam StorageTag               Store data either in a dense or in a sparse manner
     */
-    template <typename key_type,
-              typename value_type,
-              typename object_type,
-              typename object_identification_tag = typename viennadata::config::object_identifier<object_type>::tag,
-              typename key_dispatch_tag = typename viennadata::config::key_dispatch<key_type>::tag,
-              typename storage_tag = typename viennadata::config::storage<key_type, value_type, object_type>::tag>
+    template <typename KeyType,
+              typename DataType,
+              typename ObjectType,
+              typename ObjectIdentificationTag = typename viennadata::config::object_identifier<ObjectType>::tag,
+              typename KeyDispatchTag = typename viennadata::config::key_dispatch<KeyType>::tag,
+              typename StorageTag = typename viennadata::config::storage<KeyType, DataType, ObjectType>::tag>
     struct container
     {
       // the datatype:
-      typedef typename container_storage<key_type, value_type, object_type,
-                                        object_identification_tag,
-                                        key_dispatch_tag,
-                                        storage_tag>::container_type    container_type;
+      typedef typename container_storage<KeyType, DataType, ObjectType,
+                                        ObjectIdentificationTag,
+                                        KeyDispatchTag,
+                                        StorageTag>::container_type    container_type;
 
       /** @brief Accesses the data associated with the supplied key for the provided object */
-      static value_type & access(container_type & cont, object_type const & obj, key_type const & key)
+      static DataType & access(container_type & cont, ObjectType const & obj, KeyType const & key)
       {
         //std::cout << "Accessing sparse data by pointer" << std::endl;
         
         //make sure that for dense data access the resizing is done:
-        container_auto_resize<storage_tag>::apply(cont, viennadata::config::object_identifier<object_type>::get(obj));
+        container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
         
-        return container_key_value_pair <key_type,
-                                          value_type,
-                                          key_dispatch_tag>::access(cont, viennadata::config::object_identifier<object_type>::get(obj), key);
+        return container_key_value_pair <KeyType,
+                                          DataType,
+                                          KeyDispatchTag>::access(cont, viennadata::config::object_identifier<ObjectType>::get(obj), key);
       }
 
       /** @brief Accesses the data associated with the particular key type if type-based dispatch is used */
-      static value_type & access(container_type & cont, object_type const & obj)
+      static DataType & access(container_type & cont, ObjectType const & obj)
       {
-        typedef typename IS_ACCESS_WITHOUT_KEY_ALLOWED<key_dispatch_tag>::check_type   some_type;
+        typedef typename IS_ACCESS_WITHOUT_KEY_ALLOWED<KeyDispatchTag>::check_type   some_type;
         
         //make sure that for dense data access the resizing is done:
-        container_auto_resize<storage_tag>::apply(cont, viennadata::config::object_identifier<object_type>::get(obj));
+        container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
         
-        return container_key_value_pair <key_type,
-                                          value_type,
-                                          key_dispatch_tag>::access(cont, viennadata::config::object_identifier<object_type>::get(obj));
+        return container_key_value_pair <KeyType,
+                                          DataType,
+                                          KeyDispatchTag>::access(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
       }
 
       /** @brief Copies all data of the particular key type (including degenerate case of type based dispatch, where only single data is moved) */
-      template <typename container_src_type, typename object_src_type>
-      static void copy(container_src_type & cont_src, 
-                      object_src_type const & obj_src,
-                      container_type & cont_dest, 
-                      object_type const & obj_dest)
+      template <typename ContainerSrcType, typename ObjectSrcType>
+      static void copy(ContainerSrcType & cont_src, 
+                       ObjectSrcType const & obj_src,
+                       container_type & cont_dest, 
+                       ObjectType const & obj_dest)
       {
-        container_auto_resize<storage_tag>::apply(cont_src, viennadata::config::object_identifier<object_type>::get(obj_src));
-        container_auto_resize<storage_tag>::apply(cont_dest, viennadata::config::object_identifier<object_type>::get(obj_dest));
+        container_auto_resize<StorageTag>::apply(cont_src, viennadata::config::object_identifier<ObjectSrcType>::get(obj_src));
+        container_auto_resize<StorageTag>::apply(cont_dest, viennadata::config::object_identifier<ObjectType>::get(obj_dest));
         
         //TODO: can be improved if cont_src[id_src] is actually empty, because there is no move necessary then...
-        cont_dest[viennadata::config::object_identifier<object_type>::get(obj_dest)] =
-          cont_src[viennadata::config::object_identifier<object_src_type>::get(obj_src)];
+        cont_dest[viennadata::config::object_identifier<ObjectType>::get(obj_dest)] =
+          cont_src[viennadata::config::object_identifier<ObjectSrcType>::get(obj_src)];
       }
       
 
       /** @brief Reserves memory for data using up to 'num' objects. */
       static void reserve(container_type & cont, long num)
       {
-        container_storage<key_type, value_type, object_type,
-                          object_identification_tag,
-                          key_dispatch_tag,
-                          storage_tag>::reserve(cont, num);
+        container_storage<KeyType, DataType, ObjectType,
+                          ObjectIdentificationTag,
+                          KeyDispatchTag,
+                          StorageTag>::reserve(cont, num);
       }
 
       /** @brief Erases data for a particular key */
       static void erase(container_type & cont, 
-                        object_type const & obj,
-                        key_type const & key)
+                        ObjectType const & obj,
+                        KeyType const & key)
       {
-        container_auto_resize<storage_tag>::apply(cont, viennadata::config::object_identifier<object_type>::get(obj));
+        container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
         
-        //cont[object_identifier<object_type>::id(element)].erase(key);
-        container_erasure_dispatcher<key_type, value_type,
-                                        object_identification_tag,
-                                        key_dispatch_tag,
-                                        storage_tag>::erase(cont, viennadata::config::object_identifier<object_type>::get(obj), key);
+        //cont[object_identifier<ObjectType>::id(element)].erase(key);
+        container_erasure_dispatcher<KeyType, DataType,
+                                     ObjectIdentificationTag,
+                                     KeyDispatchTag,
+                                     StorageTag>::erase(cont, viennadata::config::object_identifier<ObjectType>::get(obj), key);
       }
 
       /** @brief Erases data for all keys of that type */
       static void erase(container_type & cont,
-                        object_type const & obj)
+                        ObjectType const & obj)
       {
-        container_auto_resize<storage_tag>::apply(cont, viennadata::config::object_identifier<object_type>::get(obj));
+        container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
         
-        container_erasure_dispatcher<key_type, value_type,
-                                        object_identification_tag,
-                                        key_dispatch_tag,
-                                        storage_tag>::erase(cont, viennadata::config::object_identifier<object_type>::get(obj));
+        container_erasure_dispatcher<KeyType, DataType,
+                                     ObjectIdentificationTag,
+                                     KeyDispatchTag,
+                                     StorageTag>::erase(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
       }
 
       /** @brief Checks whether data for a particular object with a particular key is already stored.
       *
       * @return Returns NULL if no data is found, otherwise returns a pointer to the data
       */ 
-      static value_type * find(container_type & cont,
-                              object_type const & obj,
-                              key_type const & key)
+      static DataType * find(container_type & cont,
+                             ObjectType const & obj,
+                             KeyType const & key)
       {
-        container_auto_resize<storage_tag>::apply(cont, viennadata::config::object_identifier<object_type>::get(obj));
+        container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
         
-        typename std::map< key_type, value_type >::iterator it = cont[viennadata::config::object_identifier<object_type>::get(obj)].find(key);
-        if (it == cont[viennadata::config::object_identifier<object_type>::get(obj)].end())
+        typename std::map< KeyType, DataType >::iterator it = cont[viennadata::config::object_identifier<ObjectType>::get(obj)].find(key);
+        if (it == cont[viennadata::config::object_identifier<ObjectType>::get(obj)].end())
           return NULL;
         
         return &(it->second);

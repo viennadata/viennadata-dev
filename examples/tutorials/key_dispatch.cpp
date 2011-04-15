@@ -17,7 +17,7 @@
 #include "viennadata/api.hpp"
 
 //
-// Tutorial: Setting a default data type for a particular key
+// Tutorial: Activating type based dispatch for a particular key
 //
 
 
@@ -27,7 +27,7 @@
 struct StandardClass { /* possibly sophisticated internals here */ };
 
 //
-// A key type for which a default data type will be set (see the tutorial in key_dispatch.cpp)
+// A key type for which a default data type will be set
 //
 struct MyKey {};
 
@@ -39,17 +39,9 @@ namespace viennadata
 {
   namespace config
   {
-    //
-    // configure 'double' as default data type for 'MyKey'
-    //
-    template <>
-    struct default_data_for_key<MyKey>
-    {
-      typedef double    type;
-    };
     
     //
-    // in addition, use a compile-time key dispatch for the 'MyKey' type
+    // The following specialization sets a compile-time key dispatch for the 'MyKey' type
     //
     template <>
     struct key_dispatch<MyKey>
@@ -67,14 +59,12 @@ int main(int argc, char *argv[])
     StandardClass obj2;
 
     //
-    // Store a bit of data on obj1 and obj2
+    // Store a bit of data on obj1 and obj2. Note that there are no key arguments needed any longer.
     //
     viennadata::access<MyKey, double>()(obj1) = 1.23456;
-    viennadata::access<MyKey>()(obj1) = 3.1415;      //equivalent to the previous line, since 'double' is the default data argument
     viennadata::access<MyKey, long>()(obj1) = 42;
 
     viennadata::access<MyKey, double>()(obj2) = 9.8765;
-    viennadata::access<MyKey>()(obj2) = 2.71;        //equivalent to the previous line, since 'double' is the default data argument
     viennadata::access<MyKey, long>()(obj2) = 360;
 
     //
@@ -82,12 +72,10 @@ int main(int argc, char *argv[])
     //
     std::cout << "--- Data for obj1 ---" << std::endl;
     std::cout << "Data (type 'double'): " << viennadata::access<MyKey, double>()(obj1) << std::endl;
-    std::cout << "Data (type 'double'): " << viennadata::access<MyKey>()(obj1) << std::endl;
     std::cout << "Data (type 'long'):   " << viennadata::access<MyKey, long>()(obj1) << std::endl;
     std::cout << std::endl;
     std::cout << "--- Data for obj2 ---" << std::endl;
     std::cout << "Data (type 'double'): " << viennadata::access<MyKey, double>()(obj2) << std::endl;
-    std::cout << "Data (type 'double'): " << viennadata::access<MyKey>()(obj2) << std::endl;
     std::cout << "Data (type 'long'):   " << viennadata::access<MyKey, long>()(obj2) << std::endl;
 
   return EXIT_SUCCESS;

@@ -30,21 +30,21 @@ namespace viennadata
     * Add custom element identifier in your own code by overloading storage_traits appropriately.
     * E.g. to store data of type double for class 'MyClass' in a dense manner, use
     *
-    * template < typename key_type>
-    * struct storage_traits< key_type, double, MyClass>
+    * template < typename KeyType>
+    * struct storage_traits< KeyType, double, MyClass>
     * {
     *   typedef dense_data_tag    tag;
     * };
     *
     * Mind that this overload has to be placed in namespace viennadata.
     * 
-    * @tparam key_type      The type of the key used for access
-    * @tparam value_type    Type of the data that is stored for the element
-    * @tparam object_type  The type of the object the data is associated with
+    * @tparam KeyType     The type of the key used for access
+    * @tparam DataType    Type of the data that is stored for the element
+    * @tparam ObjectType  The type of the object the data is associated with
     */
-    template <typename key_type,
-              typename value_type,
-              typename object_type>
+    template <typename KeyType,
+              typename DataType,
+              typename ObjectType>
     struct storage
     {
       typedef sparse_data_tag    tag;
