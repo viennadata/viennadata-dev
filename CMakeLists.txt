@@ -3,7 +3,7 @@ PROJECT(viennadata)
 
 cmake_minimum_required(VERSION 2.4)
 
-#if you don't want the full compiler output, remove the following line
+#if you don't want the full compiler output, remove or comment the following line
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 
 #specify include and source directory
