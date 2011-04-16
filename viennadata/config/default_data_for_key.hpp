@@ -46,8 +46,7 @@ namespace viennadata
     template <typename KeyType>
     struct default_data_for_key
     {
-      //by default, the data type must not be omitted, thus force a compile time error in this case:
-      typedef typename KeyType::ERROR_NO_DEFAULT_ARGUMENT_SPECIFIED_FOR_KEY    type;
+      //by default, the data type must not be omitted, thus force a compiler error in this case (no matching function found)
     };
 
   } //namespace config  
