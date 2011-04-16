@@ -15,7 +15,7 @@
 
 #include "viennadata/forwards.h"
 
-/** @file viennadata/storage_traits.hpp
+/** @file viennadata/config/storage.hpp
     @brief This file sets the default storage scheme to sparse. Switching to a dense storage scheme should be done individually by the library user in his own files
 */
 

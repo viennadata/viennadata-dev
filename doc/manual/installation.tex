@@ -51,18 +51,24 @@ Tab.~\ref{tab:tutorial-dependencies}.
 
 \begin{table}[tb]
 \begin{center}
-\begin{tabular}{l|l}
+\begin{tabular}{l|p{8.5cm}}
 File & Purpose\\
 \hline
 \texttt{tutorial/access.cpp}    & Shows the use of \lstinline|access| \\
+\texttt{tutorial/copy.cpp}      & Shows the use of \lstinline|copy| \\
+\texttt{tutorial/custom\_id.cpp} & Shows how to use custom object identification \\
+\texttt{tutorial/default\_data\_type.cpp} & Shows how a default data type for a key type is specified \\
+\texttt{tutorial/dense\_data.cpp} & Shows how to enable a dense storage scheme \\
 \texttt{tutorial/erase.cpp}     & Shows the use of \lstinline|erase| \\
 \texttt{tutorial/find.cpp}      & Shows the use of \lstinline|find| \\
-\texttt{tutorial/copy.cpp}      & Shows the use of \lstinline|copy| \\
+\texttt{tutorial/key\_dispatch.cpp} & Shows how to switch between compile time and run time key dispatch \\
 \texttt{tutorial/move.cpp}      & Shows the use of \lstinline|move| \\
-\texttt{benchmarks/sparse.cpp}  & Benchmarks for different sparse storage schemes \\
 \texttt{benchmarks/dense.cpp}   & Benchmarks for dense storage schemes \\
+\texttt{benchmarks/oop.cpp}     & Benchmarks for OOP-type class layout \\
+\texttt{benchmarks/sparse-address.cpp} & Benchmarks for the default sparse storage scheme \\
+\texttt{benchmarks/sparse-custom.cpp}  & Benchmarks for a sparse storage scheme with custom object identification \\
 \end{tabular}
-\caption{Dependencies for the examples in the \texttt{examples/} folder}
+\caption{Overview of the examples in the \texttt{examples/} folder}
 \label{tab:tutorial-dependencies}
 \end{center}
 \end{table}

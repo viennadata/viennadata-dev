@@ -20,7 +20,7 @@
 #include "viennadata/config/key_dispatch.hpp"
 #include "viennadata/config/storage.hpp"
 
-/** @file viennadata/data_container_traits.hpp
+/** @file viennadata/traits/data_container.hpp
     @brief Manipulations of the different storage containers are implemented here.
 */
 
@@ -286,6 +286,7 @@ namespace viennadata
       static void apply(ContainerType const & c, SizeType const & s) {}
     };
     
+    /** @brief Resizes a vector automatically in order to allow valid access. Specialization for dense data access. */
     template <>
     struct container_auto_resize<dense_data_tag>
     {

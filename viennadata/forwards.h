@@ -61,40 +61,6 @@ namespace viennadata
     struct type_key_dispatch_tag {};  //key dispatch based on type only
 
 
-    //forward declarations for access
-    /** @brief A proxy class for accessing data with key type and key object dispatch. Only used internally in ViennaData 
-     *
-     * @tparam KeyType       Type of the key
-     * @tparam DataType     Type of the data
-     */
-    template <typename KeyType, typename DataType>
-    class data_accessor_with_key;
-    
-    /** @brief A proxy class for accessing data with key type dispatch, but no key object dispatch. Only used internally in ViennaData 
-     *
-     * @tparam KeyType       Type of the key
-     * @tparam DataType     Type of the data
-     */
-    template <typename KeyType, typename DataType>
-    class data_accessor_no_key;
-    
-    /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using full dispatch (type and object)
-     *
-     * @tparam KeyType       Type of the key
-     * @tparam DataType     Type of the data
-     */
-    template <typename KeyType, typename DataType>
-    data_accessor_with_key<KeyType, DataType> access(KeyType const & key);
-
-    /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using type based dispatch. 
-     *
-     * @tparam KeyType       Type of the key
-     * @tparam DataType     Type of the data
-     */
-    template <typename KeyType, typename DataType>
-    data_accessor_no_key<KeyType, DataType> access();
-  
-    
     
     ////////////////////// other stuff ////////////////////////
     /** @brief The main data storage facility

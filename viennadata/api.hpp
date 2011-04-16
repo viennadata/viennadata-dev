@@ -18,13 +18,13 @@
 #include "viennadata/key_value_registration.hpp"
 #include "viennadata/config/default_data_for_key.hpp"
 
-/** @file viennadata/interface.hpp
+/** @file viennadata/api.hpp
     @brief This file contains all the public interface of ViennaData
 */
 
 /**
  * \defgroup public_interface Public Interface
- * @brief for library users of ViennaData
+ * @brief This module contains all the functions needed by library users of ViennaData.
  */
 
 
@@ -95,6 +95,27 @@ namespace viennadata
   {
     return data_accessor_with_key<KeyType, DataType>(key);
   }
+
+  /** @brief The main access function within ViennaData using a default data type. Allows to access data stored with a particular key, using full dispatch (type and object)
+    *
+    * Should be called in the form
+    *   <pre>viennadata:access<KeyType>(my_key)(my_obj) = some_value;</pre>
+    * and
+    *   <pre>some_value = viennadata:access<KeyType>(my_key)(my_obj);</pre>
+    * This would write and read data stored using a key 'my_key' of type 'KeyType' from 'my_obj'.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    */
+  template <typename KeyType>
+  data_accessor_with_key<KeyType, typename config::default_data_for_key<KeyType>::type> access(KeyType const & key)
+  {
+    return data_accessor_with_key<KeyType, typename config::default_data_for_key<KeyType>::type>(key);
+  }
+
+
 
   /** @brief The main access function within ViennaData. Allows to access data stored with a particular key, using type based dispatch. 
     *
@@ -254,6 +275,23 @@ namespace viennadata
     return data_erasor_with_key<KeyType, DataType>(key);
   }
 
+  /** @brief Erase data associated with key 'key' for the default data type. The object is obtained via a proxy class.
+    * 
+    * Should be called in the form 
+    *   <pre>viennadata:erase<KeyType>(my_key)(my_obj);</pre>
+    * This would erase data stored using a key 'my_key' of type 'KeyType' from 'my_obj'.
+    *
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    *
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    */
+  template <typename KeyType>
+  data_erasor_with_key<KeyType, typename config::default_data_for_key<KeyType>::type> erase(KeyType const & key)
+  {
+    return data_erasor_with_key<KeyType, typename config::default_data_for_key<KeyType>::type>(key);
+  }
+
   /** @brief Erase all data associated with keys of 'KeyType'.
     *
     * Should be called in the form 
@@ -271,6 +309,22 @@ namespace viennadata
     return data_erasor_no_key<KeyType, DataType>();
   }
 
+  /** @brief Erase all data associated with keys of 'KeyType' using a default data type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:erase<KeyType>()(my_obj);</pre>
+    * This would erase data stored using a key of type 'KeyType' from 'my_obj'.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    */
+  template <typename KeyType>
+  data_erasor_no_key<KeyType, typename config::default_data_for_key<KeyType>::type> erase()
+  {
+    return data_erasor_no_key<KeyType, typename config::default_data_for_key<KeyType>::type>();
+  }
 
   
   
@@ -336,7 +390,24 @@ namespace viennadata
   {
     return data_copy_with_key<KeyType, DataType>(key);
   }
-  
+
+  /** @brief Copies data associated with key 'key' from one object to another using a default data type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:copy<KeyType>()(src_obj, dest_obj);</pre>
+    * This would copy data stored using a key of type 'KeyType' from 'src_obj' to 'dest_obj'.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    */
+  template <typename KeyType>
+  data_copy_with_key<KeyType, typename config::default_data_for_key<KeyType>::type> copy(KeyType const & key)
+  {
+    return data_copy_with_key<KeyType, typename config::default_data_for_key<KeyType>::type>(key);
+  }
+
   
   /** @brief A proxy class for copying data associated with a particular key type from one object to another. Only used internally in ViennaData 
     *
@@ -439,6 +510,22 @@ namespace viennadata
     return data_copy_no_key<KeyType, DataType>();
   }
   
+  /** @brief Copies data associated with all keys of type 'KeyType' from one object to another using a default data type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:copy<KeyType>()(src_obj, dest_obj);</pre>
+    * This would copy data stored using a key of type 'KeyType' from 'src_obj' to 'dest_obj'.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    */
+  template <typename KeyType>
+  data_copy_no_key<KeyType, typename config::default_data_for_key<KeyType>::type> copy()
+  {
+    return data_copy_no_key<KeyType, typename config::default_data_for_key<KeyType>::type>();
+  }
 
 
   //////////////////////// Move data //////////////////////////////////
@@ -508,7 +595,24 @@ namespace viennadata
     return data_mover_with_key<KeyType, DataType>(key);
   }
   
-  
+  /** @brief Moves data associated with key 'key' from one object to another using a default data type specified for the key type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:move<KeyType>(key)(src_obj, dest_obj);</pre>
+    * This would move data stored using a key 'key' of type 'KeyType' from 'src_obj' to 'dest_obj'.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    */
+  template <typename KeyType>
+  data_mover_with_key<KeyType, typename config::default_data_for_key<KeyType>::type> move(KeyType const & key)
+  {
+    return data_mover_with_key<KeyType, typename config::default_data_for_key<KeyType>::type>(key);
+  }
+
+
   /** @brief A proxy class for moving data associated with a particular key type from one object to another. Only used internally in ViennaData 
     *
     * @tparam KeyType       Type of the key
@@ -546,6 +650,22 @@ namespace viennadata
     return data_mover_no_key<KeyType, DataType>();
   }
   
+  /** @brief Moves data associated with all keys of type 'KeyType' from one object to another using a default data type specified for the key type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:move<KeyType>()(src_obj, dest_obj);</pre>
+    * This would move data stored using a key of type 'KeyType' from 'src_obj' to 'dest_obj'.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType      Type of the key
+    */
+  template <typename KeyType>
+  data_mover_no_key<KeyType, typename config::default_data_for_key<KeyType>::type> move()
+  {
+    return data_mover_no_key<KeyType, typename config::default_data_for_key<KeyType>::type>();
+  }
 
 
   //////////// memory allocation for data ////////////////////
@@ -591,6 +711,23 @@ namespace viennadata
     return data_reservation_proxy<KeyType, DataType>(num);
   }
   
+  /** @brief Reserves memory for storing data associated with a particular key type and the specified default data type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:reserve<KeyType>(num)(my_obj);</pre>
+    * This would reserve memory for num objects with the same type as my_obj for data storage using a key of type 'KeyType'. Object IDs have to be in the range 0...(num-1) then.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    * @param  num            Number of objects for which memory should be reserved. Object IDs have to be in the range 0...(num-1) then.
+    */
+  template <typename KeyType>
+  data_reservation_proxy<KeyType, typename config::default_data_for_key<KeyType>::type> reserve(long num)
+  {
+    return data_reservation_proxy<KeyType, typename config::default_data_for_key<KeyType>::type>(num);
+  }
   
   /////////// find sparse data /////////////
   /** @brief A proxy class for finding data associated with a particular key. Only used internally in ViennaData 
@@ -630,7 +767,25 @@ namespace viennadata
   {
     return data_find_proxy<KeyType, DataType>(key);
   }
-  
+
+  /** @brief Reserves memory for storing data associated with a particular key type and the specified default data type.
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:find<KeyType>(my_key)(my_obj);</pre>
+    * This would search for data associated with my_obj using a key of type 'KeyType'. If found, a pointer to the data is returned, otherwise NULL.
+    * 
+    * Default data type is set by specializations of the class viennadata::config::default_data_for_key. See examples/tutorials/default_data_type.cpp for an example. 
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    * @param  key            The key object
+    */
+  template <typename KeyType>
+  data_find_proxy<KeyType, typename config::default_data_for_key<KeyType>::type> find(KeyType const & key)
+  {
+    return data_find_proxy<KeyType, typename config::default_data_for_key<KeyType>::type>(key);
+  }
+
 } //namespace viennadata
 
 

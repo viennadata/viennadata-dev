@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
   run<SlimClass>(1000, 1000);
 
   std::cout << "--- Test: SlimClass, 1 000 000 objects ---" << std::endl;
-  run<SlimClass>(1000, 1);
+  run<SlimClass>(1000000, 1);
   
   return EXIT_SUCCESS;
 }
