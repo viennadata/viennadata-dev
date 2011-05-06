@@ -153,6 +153,15 @@ namespace viennadata
         return traits::container<KeyType, DataType, ObjectType>::find(container, obj, key);
       }
 
+      /** @brief Checks whether data for a particular object with a particular key is already stored.
+       *
+       * @return Returns NULL if no data is found, otherwise returns a pointer to the data
+       */ 
+      DataType * find(ObjectType const & obj)
+      {
+        return traits::container<KeyType, DataType, ObjectType>::find(container, obj);
+      }
+
   };
 
 } // namespace viennadata

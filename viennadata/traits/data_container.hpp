@@ -420,6 +420,22 @@ namespace viennadata
         return &(it->second);
       }
 
+      /** @brief Checks whether data for a particular object with a particular key is already stored. Key-type dispatch version.
+      *
+      * @return Returns NULL if no data is found, otherwise returns a pointer to the data
+      */ 
+      static DataType * find(container_type & cont,
+                             ObjectType const & obj)
+      {
+        //container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
+        
+        typename container_type::iterator it = cont.find(viennadata::config::object_identifier<ObjectType>::get(obj));
+        if (it == cont.end())
+          return NULL;
+        
+        return &(it->second);
+      }
+
     };
 
   } //namespace traits

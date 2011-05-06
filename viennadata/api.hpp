@@ -736,10 +736,10 @@ namespace viennadata
     * @tparam DataType     Type of the data
     */
   template <typename KeyType, typename DataType>
-  class data_find_proxy
+  class data_find_proxy_with_key
   {
     public:
-      data_find_proxy(KeyType const & key) : key_(key) {}
+      data_find_proxy_with_key(KeyType const & key) : key_(key) {}
       
       template <typename ObjectType>
       DataType * operator()(ObjectType const & el)
@@ -763,9 +763,9 @@ namespace viennadata
     * @param  key            The key object
     */
   template <typename KeyType, typename DataType>
-  data_find_proxy<KeyType, DataType> find(KeyType const & key)
+  data_find_proxy_with_key<KeyType, DataType> find(KeyType const & key)
   {
-    return data_find_proxy<KeyType, DataType>(key);
+    return data_find_proxy_with_key<KeyType, DataType>(key);
   }
 
   /** @brief Reserves memory for storing data associated with a particular key type and the specified default data type.
@@ -781,9 +781,47 @@ namespace viennadata
     * @param  key            The key object
     */
   template <typename KeyType>
-  data_find_proxy<KeyType, typename config::default_data_for_key<KeyType>::type> find(KeyType const & key)
+  data_find_proxy_with_key<KeyType, typename config::default_data_for_key<KeyType>::type> find(KeyType const & key)
   {
-    return data_find_proxy<KeyType, typename config::default_data_for_key<KeyType>::type>(key);
+    return data_find_proxy_with_key<KeyType, typename config::default_data_for_key<KeyType>::type>(key);
+  }
+
+
+
+  /** @brief A proxy class for finding data associated with a particular key. Only used internally in ViennaData 
+    *
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
+    */
+  template <typename KeyType, typename DataType>
+  class data_find_proxy_no_key
+  {
+    public:
+      data_find_proxy_no_key() {}
+      
+      template <typename ObjectType>
+      DataType * operator()(ObjectType const & el)
+      {
+        return data_container<KeyType, DataType, ObjectType>::instance().find(el);
+      }
+  };
+
+  /** @brief Reserves memory for storing data associated with a particular key type (key type dispatch).
+    *
+    * Should be called in the form 
+    *   <pre>viennadata:find<KeyType, DataType>()(my_obj);</pre>
+    * This would search for data associated with my_obj using a key of type 'KeyType'. If found, a pointer to the data is returned, otherwise NULL.
+    * 
+    * \ingroup public_interface
+    * @tparam KeyType       Type of the key
+    * @tparam DataType     Type of the data
+    * @param  key            The key object
+    */
+  
+  template <typename KeyType, typename DataType>
+  data_find_proxy_no_key<KeyType, DataType> find()
+  {
+    return data_find_proxy_no_key<KeyType, DataType>();
   }
 
 } //namespace viennadata
