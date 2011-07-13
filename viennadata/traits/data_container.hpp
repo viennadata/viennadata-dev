@@ -49,6 +49,18 @@ namespace viennadata
     };
     
     
+    /** @brief A helper metafunction that fixes problems with std::vector<bool> returning std::_bit_reference instead of bool */
+    template <typename DataType, typename ContainerType>
+    struct data_type_reference
+    {
+      typedef DataType &       type; 
+    };
+
+    template <>
+    struct data_type_reference<bool, std::vector<bool> >
+    {
+      typedef std::vector<bool>::reference       type; 
+    };
     
     
     
@@ -108,7 +120,8 @@ namespace viennadata
       
       /** @brief Accesses the container for the given object ID.  Since using type-based dispatch, key argument is ignored. */
       template <typename ContainerType, typename IdType>
-      static DataType & access(ContainerType & cont, IdType const & id, KeyType const & key)
+      static typename data_type_reference<DataType, ContainerType>::type  //DataType &    does not work here for std::vector<bool> as ContainerType!
+      access(ContainerType & cont, IdType const & id, KeyType const & key)
       {
         return cont[id];
       }
@@ -116,7 +129,8 @@ namespace viennadata
       //also allow access without key here, because uniquely defined:
       /** @brief Accesses the container for the given object ID. Since using type-based dispatch, no key is needed here. */
       template <typename ContainerType, typename IdType>
-      static DataType & access(ContainerType & cont, IdType const & id)
+      static typename data_type_reference<DataType, ContainerType>::type  //DataType &    does not work here for std::vector<bool> as ContainerType!
+      access(ContainerType & cont, IdType const & id)
       {
         return cont[id];
       }
@@ -301,8 +315,6 @@ namespace viennadata
       }
     };
     
-    
-    
     /** @brief The main container manipulation class. 
     * 
     * @tparam KeyType                  Type of the key
@@ -325,9 +337,11 @@ namespace viennadata
                                         ObjectIdentificationTag,
                                         KeyDispatchTag,
                                         StorageTag>::container_type    container_type;
+                                        
+      typedef typename data_type_reference<DataType, container_type>::type     reference;                                  
 
       /** @brief Accesses the data associated with the supplied key for the provided object */
-      static DataType & access(container_type & cont, ObjectType const & obj, KeyType const & key)
+      static reference access(container_type & cont, ObjectType const & obj, KeyType const & key)
       {
         //std::cout << "Accessing sparse data by pointer" << std::endl;
         
@@ -340,7 +354,7 @@ namespace viennadata
       }
 
       /** @brief Accesses the data associated with the particular key type if type-based dispatch is used */
-      static DataType & access(container_type & cont, ObjectType const & obj)
+      static reference access(container_type & cont, ObjectType const & obj)
       {
         typedef typename IS_ACCESS_WITHOUT_KEY_ALLOWED<KeyDispatchTag>::check_type   some_type;
         
@@ -348,8 +362,8 @@ namespace viennadata
         container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
         
         return container_key_value_pair <KeyType,
-                                          DataType,
-                                          KeyDispatchTag>::access(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
+                                         DataType,
+                                         KeyDispatchTag>::access(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
       }
 
       /** @brief Copies all data of the particular key type (including degenerate case of type based dispatch, where only single data is moved) */

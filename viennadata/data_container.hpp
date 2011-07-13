@@ -55,6 +55,8 @@ namespace viennadata
       ~data_container() {}
 
     public:
+      typedef typename traits::data_type_reference<DataType, container_type>::type         reference;                                  
+      
       /** @brief Returns the only instance of data_container (Singleton Pattern) */
       static data_container & instance()
       {
@@ -69,14 +71,14 @@ namespace viennadata
       }
 
       /** @brief Accesses data for object 'obj' stored at key 'key' using a full key dispatch (object and type). Used internally only, use viennadata::access() instead */
-      DataType & access(ObjectType const & obj,
+      reference access(ObjectType const & obj,
                         KeyType const & key)
       {
         return traits::container<KeyType, DataType, ObjectType>::access(container, obj, key);
       }
 
       /** @brief Accesses data for object 'obj' stored at key 'key' using a type based key dispatch. Used internally only, use viennadata::access() instead */
-      DataType & access(ObjectType const & obj)
+      reference access(ObjectType const & obj)
       {
         return traits::container<KeyType, DataType, ObjectType>::access(container, obj);
       }

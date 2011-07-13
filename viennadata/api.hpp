@@ -68,8 +68,10 @@ namespace viennadata
       data_accessor_no_key() {}
       
       template <typename ObjectType>
-      DataType & operator()(ObjectType const & el)
+      typename data_container<KeyType, DataType, ObjectType>::reference //note: a plain 'DataType &' is not compatible with std::vector<bool>, which returns a bit_reference!
+      operator()(ObjectType const & el)
       {
+    
         //std::cout << "Get data from element" << std::endl;
         return data_container<KeyType, DataType, ObjectType>::instance().access(el);
       }
