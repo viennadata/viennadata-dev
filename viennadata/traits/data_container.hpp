@@ -417,13 +417,27 @@ namespace viennadata
                                      StorageTag>::erase(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
       }
 
-      /** @brief Checks whether data for a particular object with a particular key is already stored.
+      /** @brief Checks whether data for a particular object with a particular key is already stored. Implementation for type-based dispatch.
+      *
+      * @return In this case, always a valid pointer to the underlying data is returned.
+      */ 
+      static DataType * find_impl(container_type & cont,
+                             ObjectType const & obj,
+                             KeyType const & key,
+                             type_key_dispatch_tag)
+      {
+        container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
+        return &( cont[viennadata::config::object_identifier<ObjectType>::get(obj)] );
+      }
+
+      /** @brief Checks whether data for a particular object with a particular key is already stored. Implementation for full key dispatch.
       *
       * @return Returns NULL if no data is found, otherwise returns a pointer to the data
       */ 
-      static DataType * find(container_type & cont,
+      static DataType * find_impl(container_type & cont,
                              ObjectType const & obj,
-                             KeyType const & key)
+                             KeyType const & key,
+                             full_key_dispatch_tag)
       {
         container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
         
@@ -432,6 +446,17 @@ namespace viennadata
           return NULL;
         
         return &(it->second);
+      }
+
+      /** @brief Checks whether data for a particular object with a particular key is already stored.
+      *
+      * @return Returns NULL if no data is found, otherwise returns a pointer to the data
+      */ 
+      static DataType * find(container_type & cont,
+                             ObjectType const & obj,
+                             KeyType const & key)
+      {
+        return find_impl(cont, obj, key, KeyDispatchTag());
       }
 
       /** @brief Checks whether data for a particular object with a particular key is already stored. Key-type dispatch version.
