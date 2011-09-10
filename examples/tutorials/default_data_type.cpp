@@ -35,6 +35,14 @@ struct MyKey {};
 //
 // Configure ViennaData:
 //
+VIENNADATA_ENABLE_DEFAULT_DATA_TYPE_FOR_KEY(char, long)    // configure 'long' as default data type for keys of type 'char'
+VIENNADATA_ENABLE_DEFAULT_DATA_TYPE_FOR_KEY(MyKey, double) // configure 'double' as default data type for 'MyKey'
+VIENNADATA_ENABLE_TYPE_BASED_KEY_DISPATCH(MyKey)        // in addition, use a compile-time key dispatch for the 'MyKey' type
+
+//
+// For documentation purposes, the three macros expand to the following code:
+//
+/*
 namespace viennadata
 {
   namespace config
@@ -66,16 +74,16 @@ namespace viennadata
       typedef type_key_dispatch_tag    tag;
     };
   }
-}
+}*/
 
 
 
 void print(StandardClass const & obj)
 {
-    std::cout << "Data (type 'long',   key type 'char' ): " << viennadata::access<char>('c')(obj) << std::endl;
-    std::cout << "Data (type 'double', key type 'MyKey'): " << viennadata::access<MyKey, double>()(obj) << std::endl;
-    std::cout << "Data (type 'double', key type 'MyKey'): " << viennadata::access<MyKey>()(obj) << std::endl;
-    std::cout << "Data (type 'long',   key type 'MyKey'): " << viennadata::access<MyKey, long>()(obj) << std::endl;
+    std::cout << "Data (key type 'char',  data type 'long'  ): " << viennadata::access<char>('c')(obj) << std::endl;
+    std::cout << "Data (key type 'MyKey', data type 'double'): " << viennadata::access<MyKey, double>()(obj) << std::endl;
+    std::cout << "Data (key type 'MyKey', default data type ): " << viennadata::access<MyKey>()(obj) << std::endl;
+    std::cout << "Data (key type 'MyKey', data type 'long'  ): " << viennadata::access<MyKey, long>()(obj) << std::endl;
 }
   
 int main(int argc, char *argv[])
@@ -88,12 +96,12 @@ int main(int argc, char *argv[])
     //
     viennadata::access<char>('c')(obj1) = 360;       //default data type for keys of type char is 'long'
     viennadata::access<MyKey, double>()(obj1) = 1.23456;
-    viennadata::access<MyKey>()(obj1) = 3.1415;      //equivalent to the previous line, since 'double' is the default data argument
+    viennadata::access<MyKey>()(obj1) = 3.1415;      //overwrites the previous line, since 'double' is the default data argument
     viennadata::access<MyKey, long>()(obj1) = 42;
 
     viennadata::access<char>('c')(obj2) = 42;       //default data type for keys of type char is 'long'
     viennadata::access<MyKey, double>()(obj2) = 9.8765;
-    viennadata::access<MyKey>()(obj2) = 2.71;        //equivalent to the previous line, since 'double' is the default data argument
+    viennadata::access<MyKey>()(obj2) = 2.71;        //overwrites the previous line, since 'double' is the default data argument
     viennadata::access<MyKey, long>()(obj2) = 360;
 
     //

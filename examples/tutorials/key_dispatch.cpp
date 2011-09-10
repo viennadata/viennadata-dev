@@ -27,14 +27,20 @@
 struct StandardClass { /* possibly sophisticated internals here */ };
 
 //
-// A key type for which a default data type will be set
+// A key type for which a type-based key dispatch will be used
 //
 struct MyKey {};
 
 
 //
-// Configure ViennaData:
+// Configure ViennaData to use a type-based key dispatch for 'MyKey'
 //
+
+// Method 1: Via macro:
+VIENNADATA_ENABLE_TYPE_BASED_KEY_DISPATCH(MyKey)
+
+// Method 2: Via class specialization. Macro expands to this code. We recommend to use the macro.
+/*
 namespace viennadata
 {
   namespace config
@@ -50,7 +56,7 @@ namespace viennadata
     };
   }
 }
-
+*/
 
 
 int main(int argc, char *argv[])

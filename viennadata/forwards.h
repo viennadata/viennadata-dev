@@ -89,8 +89,6 @@ namespace viennadata
     template <typename T>
     struct error_indicator {};
   
-    
-  
 } //namespace
 
 

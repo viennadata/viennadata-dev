@@ -55,5 +55,93 @@ namespace viennadata
 } //namespace viennadata
 
 
+///// three arguments for macro /////
+
+// Provide a convenience macro for dense data storage for a particular tuple of key type, data type and object type
+#define VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA_OBJECT(arg_KEYCLASS, arg_DATACLASS, arg_OBJECTCLASS) \
+namespace viennadata { namespace config { \
+    template <>  struct storage<arg_KEYCLASS, arg_DATACLASS, arg_OBJECTCLASS> { typedef dense_data_tag    tag; }; \
+} }
+
+// Provide a convenience macro for sparse data storage for a particular tuple of key type, data type and object type
+// Makes sense only if the dense data storage is enabled for a large class of (key, data, object)-type tuples.
+#define VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA_OBJECT(arg_KEYCLASS, arg_DATACLASS, arg_OBJECTCLASS) \
+namespace viennadata { namespace config { \
+    template <>  struct storage<arg_KEYCLASS, arg_DATACLASS, arg_OBJECTCLASS> { typedef sparse_data_tag    tag; }; \
+} }
+
+///// two arguments for macro //////
+
+// (key, data):
+
+// Provide a convenience macro for dense data storage for a particular tuple of key type and data type
+#define VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA(arg_KEYCLASS, arg_DATACLASS) \
+namespace viennadata { namespace config { \
+    template <typename ObjectType>  struct storage<arg_KEYCLASS, arg_DATACLASS, ObjectType> { typedef dense_data_tag    tag; }; \
+} }
+
+// Provide a convenience macro for sparse data storage for a particular pair of key type and data type
+// Makes sense only if the dense data storage is enabled for a large class of (key, data, object)-type tuples.
+#define VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA(arg_KEYCLASS, arg_DATACLASS) \
+namespace viennadata { namespace config { \
+    template <typename ObjectType>  struct storage<arg_KEYCLASS, arg_DATACLASS, ObjectType> { typedef sparse_data_tag    tag; }; \
+} }
+
+
+
+// (key, object):
+
+// Provide a convenience macro for dense data storage for a particular tuple of key type and object type
+#define VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY_OBJECT(arg_KEYCLASS, arg_OBJECTCLASS) \
+namespace viennadata { namespace config { \
+    template <typename DataType>  struct storage<arg_KEYCLASS, DataType, arg_OBJECTCLASS> { typedef dense_data_tag    tag; }; \
+} }
+
+// Provide a convenience macro for sparse data storage for a particular pair of key type and object type
+// Makes sense only if the dense data storage is enabled for a large class of (key, data, object)-type tuples.
+#define VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_KEY_OBJECT(arg_KEYCLASS, arg_OBJECTCLASS) \
+namespace viennadata { namespace config { \
+    template <typename DataType>  struct storage<arg_KEYCLASS, DataType, arg_OBJECTCLASS> { typedef sparse_data_tag    tag; }; \
+} }
+
+
+// (data, object):
+
+// Provide a convenience macro for dense data storage for a particular tuple of key type and object type
+#define VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_DATA_OBJECT(arg_DATACLASS, arg_OBJECTCLASS) \
+namespace viennadata { namespace config { \
+    template <typename KeyType>  struct storage<KeyType, arg_DATACLASS, arg_OBJECTCLASS> { typedef dense_data_tag    tag; }; \
+} }
+
+// Provide a convenience macro for sparse data storage for a particular pair of key type and object type
+// Makes sense only if the dense data storage is enabled for a large class of (key, data, object)-type tuples.
+#define VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_DATA_OBJECT(arg_DATACLASS, arg_OBJECTCLASS) \
+namespace viennadata { namespace config { \
+    template <typename KeyType>  struct storage<KeyType, arg_DATACLASS, arg_OBJECTCLASS> { typedef sparse_data_tag    tag; }; \
+} }
+
+
+///// one argument for macro //////
+
+#define VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY(arg_KEYCLASS) \
+namespace viennadata { namespace config { \
+    template <typename DataType, typename ObjectType> \
+    struct storage<arg_KEYCLASS, DataType, ObjectType> { typedef dense_data_tag    tag; }; \
+} }
+
+#define VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_DATA(arg_DATACLASS) \
+namespace viennadata { namespace config { \
+    template <typename KeyType, typename ObjectType> \
+    struct storage<KeyType, arg_DATACLASS, ObjectType> { typedef dense_data_tag    tag; }; \
+} }
+
+#define VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_OBJECT(arg_OBJECTCLASS) \
+namespace viennadata { namespace config { \
+    template <typename KeyType, typename DataType> \
+    struct storage<KeyType, DataType, arg_OBJECTCLASS> { typedef dense_data_tag    tag; }; \
+} }
+
+//Note that selective disablers with one argument do not make sense, since there is no 'stronger' global enabler for dense storage.
+
 #endif
 

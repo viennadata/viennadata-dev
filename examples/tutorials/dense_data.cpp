@@ -38,6 +38,8 @@ class ClassWithID
 //
 // Configure ViennaData:
 //
+
+// Step 1: Provide ID mechanism for ClassWithID objects:
 namespace viennadata
 {
   namespace config
@@ -51,21 +53,31 @@ namespace viennadata
       typedef object_provided_id    tag;
       typedef size_t                id_type;
 
-      static size_t get(ClassWithID const & obj) { return obj.id(); }
+      static size_t get(ClassWithID const & obj)
+      {
+        //for demonstration purposes, also print a message within this tutorial:
+        std::cout << "get() for ClassWithID object called!" << std::endl;
+        return obj.id();
+      }
     };
     
     //
-    // store doubles densely, no matter which key is used:
+    // store doubles densely for ClassWithID, no matter which key is used. 
+    // Will be enabled using the convenience macro below (Step 2).
     //
+    /*
     template <typename KeyType>
     struct storage<KeyType, double, ClassWithID>
     {
       typedef dense_data_tag    tag;
     };
-  
+    */
   }
-  
 }
+
+// Step 2: Enable dense data storage for data of type 'double' on ClassWithID objects:
+VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_DATA_OBJECT(double, ClassWithID)
+
 
 
 
@@ -79,7 +91,7 @@ int main(int argc, char *argv[])
     //
     // Store a bit of data on obj1 and obj2
     //
-    viennadata::access<char, double>('c')(obj1) = 3.1415;                   //using key of type char, data of type double
+    viennadata::access<char, double>('c')(obj1) = 3.1415;                  //using key of type char, data of type double
     viennadata::access<char, std::string>('c')(obj1) = "Hello";            //using key of type char, data of type std::string
     viennadata::access<std::string, char>("some_character")(obj1) = 'a';   //using key of type std::string, data of type char
 
@@ -91,16 +103,22 @@ int main(int argc, char *argv[])
     // Output data:
     //
     std::cout << "--- Data for obj1 ---" << std::endl;
-    std::cout << "Data (type 'double') for key 'c' (type 'char'): " << viennadata::access<char, double>('c')(obj1) << std::endl;
-    std::cout << "Data (type 'std::string') for key 'c' (type 'char'): " << viennadata::access<char, std::string>('c')(obj1) << std::endl;
-    std::cout << "Data (type 'char') for key 'some_character' (type 'std::string'): " << viennadata::access<std::string, char>("some_character")(obj1) << std::endl;
+    std::cout << "Data (type 'double') for key 'c' (type 'char'): " 
+              << viennadata::access<char, double>('c')(obj1) << std::endl;
+    std::cout << "Data (type 'std::string') for key 'c' (type 'char'): "
+              << viennadata::access<char, std::string>('c')(obj1) << std::endl;
+    std::cout << "Data (type 'char') for key 'some_character' (type 'std::string'): " 
+              << viennadata::access<std::string, char>("some_character")(obj1) << std::endl;
     
     std::cout << std::endl;
     
     std::cout << "--- Data for obj2 ---" << std::endl;
-    std::cout << "Data (type 'long') for key '42' (type 'long'): " << viennadata::access<long, long>(42)(obj2) << std::endl;
-    std::cout << "Data (type 'std::string') for key '3.1415' (type 'double'): " << viennadata::access<double, std::string>(3.1415)(obj2) << std::endl;
-    std::cout << "Data (type 'char') for key 'some_character' (type 'std::string'): " << viennadata::access<std::string, char>("some_character")(obj2) << std::endl;
+    std::cout << "Data (type 'long') for key '42' (type 'long'): "
+              << viennadata::access<long, long>(42)(obj2) << std::endl;
+    std::cout << "Data (type 'std::string') for key '3.1415' (type 'double'): "
+              << viennadata::access<double, std::string>(3.1415)(obj2) << std::endl;
+    std::cout << "Data (type 'char') for key 'some_character' (type 'std::string'): "
+              << viennadata::access<std::string, char>("some_character")(obj2) << std::endl;
     
   return EXIT_SUCCESS;
 }
