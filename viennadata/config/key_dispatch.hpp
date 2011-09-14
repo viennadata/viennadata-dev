@@ -50,6 +50,7 @@ namespace viennadata
 
 
 // Provide a convenience macro for key dispatch:
+/** @brief A convenience macro for enabling type-based key dispatch: arg_CLASS denotes the key type for which type-based dispatch should be enabled */
 #define VIENNADATA_ENABLE_TYPE_BASED_KEY_DISPATCH(arg_CLASS) \
 namespace viennadata { namespace config { \
     template <> struct key_dispatch<arg_CLASS> { typedef type_key_dispatch_tag    tag; }; \

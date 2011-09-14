@@ -47,8 +47,7 @@ Since {\ViennaData} relies on a static type system, it cannot reasonably deal wi
 Even though data is stored for the same object, the resulting program will still print a zero value. 
 The reason is that data is stored for an object of type \lstinline|Base|, while it is retrieved for an object of type \lstinline|Derived|.
 
-%At present there is no direct way to overcome this issue. Future versions of {\ViennaData} may provide means to work with pointers to base classes.
-Better support for run time polymorphism might be provided in future versions of {\ViennaData}. In the current version, library users are advised to use a custom identification mechanisms and provide objects of the base type only.
+Better support for run time polymorphism might be provided in future versions of {\ViennaData}. In the current version, library users are advised to use custom identification mechanisms and provide objects of the base type only.
 
 \NOTE{The use of {\ViennaData} with run time polymorphism may lead to unexpected results if no custom identification mechanism is provided!}
 

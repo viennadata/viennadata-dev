@@ -53,7 +53,7 @@ namespace viennadata
   
 } //namespace viennadata
 
-// Provide a convenience macro for default data types:
+/** @brief A convenience macro for default data types: arg_KEYCLASS denotes the key type, arg_DATACLASS denotes the data type */
 #define VIENNADATA_ENABLE_DEFAULT_DATA_TYPE_FOR_KEY(arg_KEYCLASS, arg_DATACLASS) \
 namespace viennadata { namespace config { \
   template <> struct default_data_for_key<arg_KEYCLASS> {  typedef arg_DATACLASS  type; }; \

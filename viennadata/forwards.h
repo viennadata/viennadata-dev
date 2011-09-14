@@ -27,7 +27,7 @@
 */
 
 /**
- @mainpage Source Code Documentation for ViennaData 1.0.0
+ @mainpage Source Code Documentation for ViennaData 1.0.1
 
  This is the source code documentation of ViennaData. Detailed information about the functions available in ViennaData can be found here.
  

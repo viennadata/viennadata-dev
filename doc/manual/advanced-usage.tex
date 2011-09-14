@@ -72,6 +72,25 @@ namespace viennadata
 \end{lstlisting}
 are sufficient. Due to the template specialization, a fine-grained control over which storage to use for the various types of data and keys is readily provided. Thus, it is possible to use both dense and sparse storage schemes simultaneously for associating data with a particular object.
 
+For convenience, a number of macros is provided, which simplify the overloading process:
+\begin{lstlisting}
+ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA_OBJECT(...)
+ VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA_OBJECT(...)
+
+ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA(...)
+ VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_KEY_DATA(...)
+ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY_OBJECT(...)
+ VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_KEY_OBJECT(...)
+ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_DATA_OBJECT(...)
+ VIENNADATA_DISABLE_DENSE_DATA_STORAGE_FOR_DATA_OBJECT(...)
+
+ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_KEY(...)
+ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_DATA(...)
+ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_OBJECT(...)
+\end{lstlisting}
+The parameter to be passed to the macros are the key type, the data type and/or the object type as indicated by the macro name tail.
+Note that the macros have to be placed in global namespace and the template overloading rules apply.
+
 Similar to tree-based schemes, dense data storage also offers automatic memory management. However, to reduce reallocations,
 the user may reserve the required memory manually.
 To reserve data memory for data of type \lstinline|DataType| with keys of type \lstinline|KeyType| for up to $42$ objects of the same type as \lstinline|obj|,
@@ -100,6 +119,13 @@ namespace viennadata
 } 
 \end{lstlisting}
 are sufficient. One may then omit the key parameter for the API functions provided by {\ViennaData}, cf.~Chapter \ref{chap:basic-usage}.
+
+A convenience macro is again provided:
+\begin{lstlisting}
+ VIENNADATA_ENABLE_TYPE_BASED_KEY_DISPATCH(...)
+\end{lstlisting}
+where the parameter is the the key type. Note that the macro has to be placed in global namespace.
+
 
 \TIP{When using a compile time key dispatch based on types, the key type is not required to fulfill the LessThan-Comparable concept.}
 
@@ -135,3 +161,9 @@ Now, the initial code snippet can be written more compactly as
  viennadata::access< edge_color>()(obj1) = RGBColor(255,0,42);
 \end{lstlisting}
 If no default data type is specified, but the second argument is nevertheless omitted, a compile time error is thrown.
+
+A convenience macro for the default data type is provided by
+\begin{lstlisting}
+ VIENNADATA_ENABLE_DEFAULT_DATA_TYPE_FOR_KEY(...)
+\end{lstlisting}
+where the two parameters are the key type and the data type. Note that the macro has to be placed in global namespace.

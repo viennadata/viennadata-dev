@@ -154,10 +154,10 @@ ReadWrite=true
 
 [item:advanced-usage.tex]
 archive=true
-column=133
+column=118
 encoding=UTF-8
 highlight=LaTeX
-line=103
+line=168
 mode=LaTeX
 open=true
 order=3
@@ -184,33 +184,33 @@ order=1
 
 [item:changelogs.tex]
 archive=true
-column=0
+column=279
 encoding=UTF-8
 highlight=LaTeX
-line=2
+line=3
 mode=LaTeX
-open=false
-order=-1
+open=true
+order=11
 
 [item:contributors.tex]
 archive=true
-column=9
+column=27
 encoding=UTF-8
 highlight=LaTeX
-line=5
+line=3
 mode=LaTeX
-open=false
-order=1
+open=true
+order=13
 
 [item:cover.tex]
 archive=true
-column=16
+column=22
 encoding=UTF-8
 highlight=LaTeX
-line=5
+line=4
 mode=LaTeX
-open=false
-order=2
+open=true
+order=12
 
 [item:design-decisions.tex]
 archive=true
@@ -274,10 +274,10 @@ order=8
 
 [item:pitfalls.tex]
 archive=true
-column=229
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=50
+line=49
 mode=LaTeX
 open=true
 order=7
@@ -333,8 +333,8 @@ open=true
 order=0
 
 [view-settings,view=0,item:advanced-usage.tex]
-CursorColumn=133
-CursorLine=103
+CursorColumn=118
+CursorLine=168
 
 [view-settings,view=0,item:basic-usage.tex]
 CursorColumn=0
@@ -345,16 +345,16 @@ CursorColumn=117
 CursorLine=3
 
 [view-settings,view=0,item:changelogs.tex]
-CursorColumn=0
-CursorLine=2
+CursorColumn=279
+CursorLine=3
 
 [view-settings,view=0,item:contributors.tex]
-CursorColumn=9
-CursorLine=5
+CursorColumn=27
+CursorLine=3
 
 [view-settings,view=0,item:cover.tex]
-CursorColumn=16
-CursorLine=5
+CursorColumn=22
+CursorLine=4
 
 [view-settings,view=0,item:design-decisions.tex]
 CursorColumn=63
@@ -381,8 +381,8 @@ CursorColumn=18
 CursorLine=3
 
 [view-settings,view=0,item:pitfalls.tex]
-CursorColumn=229
-CursorLine=50
+CursorColumn=0
+CursorLine=49
 
 [view-settings,view=0,item:setup.tex]
 CursorColumn=0
