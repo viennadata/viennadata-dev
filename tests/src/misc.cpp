@@ -22,7 +22,7 @@
 #include <iostream>
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
   check_data_access();
 

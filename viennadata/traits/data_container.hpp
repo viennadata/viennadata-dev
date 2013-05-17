@@ -210,7 +210,7 @@ namespace viennadata
                                                 
       /** @brief Erase data for this key type*/
       template <typename ContainerType, typename IdType>
-      static void erase(ContainerType & cont, IdType const & id, KeyType const & key)
+      static void erase(ContainerType & cont, IdType const & id, KeyType const & /*key*/)
       {
         cont[id] = key_DataType();
       }
@@ -233,7 +233,7 @@ namespace viennadata
                                                 
       /** @brief Erase data for this key type (using type-based dispatch here!) */
       template <typename ContainerType, typename IdType>
-      static void erase(ContainerType & cont, IdType const & id, KeyType const & key)
+      static void erase(ContainerType & cont, IdType const & id, KeyType const & /*key*/)
       {
         cont[id] = key_DataType();
       }
