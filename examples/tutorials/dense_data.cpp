@@ -83,7 +83,7 @@ VIENNADATA_ENABLE_DENSE_DATA_STORAGE_FOR_DATA_OBJECT(double, ClassWithID)
 
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
     ClassWithID obj1(1);
     ClassWithID obj2(2);

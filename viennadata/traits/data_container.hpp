@@ -269,7 +269,7 @@ namespace viennadata
                       >                                              container_type;
                       
       /** @brief Reserves memory for up to 'num' objects. */               
-      static void reserve(container_type & cont, long num) { }
+      static void reserve(container_type & /*cont*/, long /*num*/) { }
     };
     
     //dense storage when providing ID
@@ -297,7 +297,7 @@ namespace viennadata
     struct container_auto_resize
     {
       template <typename ContainerType, typename SizeType>
-      static void apply(ContainerType const & c, SizeType const & s) {}
+      static void apply(ContainerType const & /* c */, SizeType const & /* s */) {}
     };
     
     /** @brief Resizes a vector automatically in order to allow valid access. Specialization for dense data access. */

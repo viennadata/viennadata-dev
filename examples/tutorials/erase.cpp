@@ -38,7 +38,7 @@ void print(StandardClass const & obj)
     std::cout << "Key 'some_character', data type char: " << viennadata::access<std::string, char>("some_character")(obj) << std::endl;
 }
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
     StandardClass obj1;
 

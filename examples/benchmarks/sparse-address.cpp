@@ -36,7 +36,7 @@ namespace viennadata
 }
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
   std::cout << "--- Test: SlimClass, 1 000 objects, 1000 repetitions ---" << std::endl;
   run<SlimClass>(1000, 1000);

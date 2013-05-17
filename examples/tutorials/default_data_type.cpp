@@ -86,7 +86,7 @@ void print(StandardClass const & obj)
     std::cout << "Data (key type 'MyKey', data type 'long'  ): " << viennadata::access<MyKey, long>()(obj) << std::endl;
 }
   
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
     StandardClass obj1;
     StandardClass obj2;

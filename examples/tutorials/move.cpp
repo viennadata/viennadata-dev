@@ -50,7 +50,7 @@ void write_data(StandardClass const & obj)
 }
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
     StandardClass obj1;
     StandardClass obj2;

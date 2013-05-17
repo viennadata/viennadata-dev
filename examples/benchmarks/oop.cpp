@@ -67,7 +67,7 @@ void run_oop(size_t num, size_t repeat)
 
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
   std::cout << "--- Test 1: SlimClass, 1 000 objects, 1000 repetitions ---" << std::endl;
   run_oop<SlimClass>(1000, 1000);

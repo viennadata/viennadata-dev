@@ -60,7 +60,7 @@ namespace viennadata
 
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
     ClassWithID obj1(1);
     ClassWithID obj2(2);

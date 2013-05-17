@@ -685,7 +685,7 @@ namespace viennadata
       data_reservation_proxy(long num) : num_(num) {}
       
       template <typename ObjectType>
-      void operator()(ObjectType const & e)
+      void operator()(ObjectType const & /*e*/)
       {
         data_container<KeyType, DataType, ObjectType>::instance().reserve(num_);
       }

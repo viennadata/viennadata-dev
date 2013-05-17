@@ -27,7 +27,7 @@
 struct StandardClass { /* possibly sophisticated internals here */ };
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char ** /*argv*/)
 {
     StandardClass obj1;
     StandardClass obj2;
