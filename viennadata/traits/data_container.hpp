@@ -121,7 +121,7 @@ namespace viennadata
       /** @brief Accesses the container for the given object ID.  Since using type-based dispatch, key argument is ignored. */
       template <typename ContainerType, typename IdType>
       static typename data_type_reference<DataType, ContainerType>::type  //DataType &    does not work here for std::vector<bool> as ContainerType!
-      access(ContainerType & cont, IdType const & id, KeyType const & key)
+      access(ContainerType & cont, IdType const & id, KeyType const & /*key*/)
       {
         return cont[id];
       }
@@ -187,7 +187,7 @@ namespace viennadata
     {
       /** @brief Erase data for the provided key */
       template <typename ContainerType, typename IdType>
-      static void erase(ContainerType & cont, IdType const & id, KeyType const & key)
+      static void erase(ContainerType & cont, IdType const & id, KeyType const & /*key*/)
       {
         cont.erase(id);
       }
@@ -423,7 +423,7 @@ namespace viennadata
       */ 
       static DataType * find_impl(container_type & cont,
                              ObjectType const & obj,
-                             KeyType const & key,
+                             KeyType const & /*key*/,
                              type_key_dispatch_tag)
       {
         container_auto_resize<StorageTag>::apply(cont, viennadata::config::object_identifier<ObjectType>::get(obj));
