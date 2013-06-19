@@ -1,13 +1,13 @@
 #!/bin/bash
 
 INPUT=$1
-BUILDFOLDER=build
+BUILDFOLDER=../build
 
 # extract number of cores on the system
 CORES=`grep -c ^processor /proc/cpuinfo`
 echo "building with " $CORES "cores " 
 
-./clean.sh
+#./clean.sh
 if [ "$INPUT" != "" ]; then
    if [ "$INPUT" == "help" ] ; then
       echo "usage: ./run_regression.sh [options]"
@@ -25,7 +25,7 @@ if [ "$INPUT" != "" ]; then
       echo ""
       echo "regression result is available here:"
       echo "----------------------------------------------"
-      echo "http://my.cdash.org/index.php?project=ViennaData"
+      echo "http://my.cdash.org/index.php?project=ViennaCL"
       echo "----------------------------------------------"
       echo ""
    else 
