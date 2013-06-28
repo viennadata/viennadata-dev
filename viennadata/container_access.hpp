@@ -46,7 +46,7 @@ namespace viennadata
           container.resize(container.size()-1);
     }
 
-    static value_type * find(container_type & container, element_type const & element)
+    static typename container_type::pointer find(container_type & container, element_type const & element)
     {
       typedef typename result_of::offset< typename element_type::id_type >::type     offset_type;
       offset_type offset = result_of::offset< typename element_type::id_type >::get(element.id());
@@ -54,7 +54,7 @@ namespace viennadata
       return (container.size() > offset) ? (&container[offset]) : NULL; // return NULL if not found
     }
 
-    static value_type const * find(container_type const & container, element_type const & element)
+    static typename container_type::const_pointer find(container_type const & container, element_type const & element)
     {
       typedef typename result_of::offset< typename element_type::id_type >::type      offset_type;
 
@@ -62,8 +62,25 @@ namespace viennadata
 
       return (container.size() > offset) ? (&container[offset]) : NULL; // return NULL if not found
     }
+    
+    static typename container_type::reference lookup_unchecked(container_type & container, element_type const & element) // no offset checking
+    {
+      typedef typename result_of::offset< typename element_type::id_type >::type      offset_type;
+      offset_type offset = result_of::offset< typename element_type::id_type >::get(element.id());
+      return container[offset];
+    }
 
-    static value_type & lookup(container_type & container, element_type const & element)
+    static typename container_type::const_reference lookup_unchecked(container_type const & container, element_type const & element)
+    {
+      typedef typename result_of::offset< typename element_type::id_type >::type      offset_type;
+      
+      offset_type offset = result_of::offset< typename element_type::id_type >::get(element.id());
+      
+      assert(container.size() > offset); // no release-runtime check for accessing elements outside container
+      return container[offset];
+    }
+
+    static typename container_type::reference lookup(container_type & container, element_type const & element)
     {
       typedef typename result_of::offset< typename element_type::id_type >::type      offset_type;
 
@@ -73,19 +90,19 @@ namespace viennadata
       return container[offset];
     }
 
-    static value_type const & lookup(container_type const & container, element_type const & element)
+    static typename container_type::const_reference lookup(container_type const & container, element_type const & element)
     {
-      typedef typename result_of::offset< typename element_type::id_type >::type      offset_type;
-
-      offset_type offset = result_of::offset< typename element_type::id_type >::get(element.id());
-
-      assert(container.size() > offset); // no release-runtime check for accessing elements outside container
-      return container[offset];
+      return lookup_unchecked(container, element); // using unchecked lookup
     }
 
     static void copy(container_type & container, element_type const & src_element, element_type const & dst_element)
     {
       lookup(container, dst_element) = lookup(container, src_element);
+    }
+    
+    static void resize(container_type & container, std::size_t size)
+    {
+      container.resize( size );
     }
   };
 
@@ -108,7 +125,7 @@ namespace viennadata
         container.erase(it);
     }
 
-    static value_type * find(container_type & container, element_type const & element)
+    static typename container_type::pointer find(container_type & container, element_type const & element)
     {
       typename result_of::access_type<element_type, AccessTag>::type access(element);
 
@@ -116,7 +133,7 @@ namespace viennadata
       return (it != container.end()) ? &it->second : NULL; // return NULL if not found
     }
 
-    static value_type const * find(container_type const & container, element_type const & element)
+    static typename container_type::const_pointer find(container_type const & container, element_type const & element)
     {
       typename result_of::access_type<element_type, AccessTag>::type access(element);
 
@@ -124,13 +141,13 @@ namespace viennadata
       return (it != container.end()) ? &it->second : NULL; // return NULL if not found
     }
 
-    static value_type & lookup(container_type & container, element_type const & element)
+    static typename container_type::reference lookup_unchecked(container_type & container, element_type const & element)
     {
       typename result_of::access_type<element_type, AccessTag>::type access(element);
       return container[access];
     }
 
-    static value_type const & lookup(container_type const & container, element_type const & element)
+    static typename container_type::const_reference lookup_unchecked(container_type const & container, element_type const & element)
     {
       typename result_of::access_type<element_type, AccessTag>::type access(element);
       typename container_type::const_iterator it = container.find(access);
@@ -139,11 +156,23 @@ namespace viennadata
 
       return it->second;
     }
+    
+    static typename container_type::reference lookup(container_type & container, element_type const & element)
+    {
+      return lookup_unchecked(container, element); // using unchecked lookup
+    }
+
+    static typename container_type::const_reference lookup(container_type const & container, element_type const & element)
+    {
+      return lookup_unchecked(container, element); // using unchecked lookup
+    }
 
     static void copy(container_type & container, element_type const & src_element, element_type const & dst_element)
     {
       lookup(container, dst_element) = lookup(container, src_element);
     }
+    
+    static void resize(container_type & container, std::size_t size) {} // not supported
   };
 
 

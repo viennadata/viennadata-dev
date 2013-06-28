@@ -185,36 +185,52 @@ namespace viennadata
    public:
     typedef ContainerType                                             container_type;
     typedef typename result_of::value_type<container_type>::type      value_type;
+    typedef ElementType                                               access_type;
 
     container_accessor( container_type & container_obj ) : container_(container_obj) {}
 
-    value_type * find(ElementType const & element)
+    typename container_type::pointer find(ElementType const & element)
     {
       return container_access<container_type, ElementType, AccessTag>::find(container_, element);
     }
 
-    value_type const * find(ElementType const & element) const
+    typename container_type::const_pointer find(ElementType const & element) const
     {
       return container_access<container_type, ElementType, AccessTag>::find(container_, element);
     }
 
-    value_type & access(ElementType const & element)
+    typename container_type::reference access_unchecked(ElementType const & element)
+    {
+      return container_access<container_type, ElementType, AccessTag>::lookup_unchecked(container_, element);
+    }
+
+    typename container_type::const_reference access_unchecked(ElementType const & element) const
+    {
+      return container_access<container_type, ElementType, AccessTag>::lookup_unchecked(container_, element);
+    }
+    
+    typename container_type::reference access(ElementType const & element)
     {
       return container_access<container_type, ElementType, AccessTag>::lookup(container_, element);
     }
 
-    value_type const & access(ElementType const & element) const
+    typename container_type::const_reference access(ElementType const & element) const
     {
       return container_access<container_type, ElementType, AccessTag>::lookup(container_, element);
     }
 
-    value_type       & operator()(ElementType const & element)       { return access(element); }
-    value_type const & operator()(ElementType const & element) const { return access(element); }
+    typename container_type::reference       operator()(ElementType const & element)       { return access(element); }
+    typename container_type::const_reference operator()(ElementType const & element) const { return access(element); }
 
 
     void erase(ElementType const & element)
     {
-      return container_access<container_type, ElementType, AccessTag>::erase(container_, element);
+      container_access<container_type, ElementType, AccessTag>::erase(container_, element);
+    }
+    
+    void resize( std::size_t size )
+    {
+      container_access<container_type, ElementType, AccessTag>::resize(container_, size);
     }
 
    private:
