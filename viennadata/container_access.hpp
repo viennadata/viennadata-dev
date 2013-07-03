@@ -83,10 +83,11 @@ namespace viennadata
     static typename container_type::reference lookup(container_type & container, element_type const & element)
     {
       typedef typename result_of::offset< typename element_type::id_type >::type      offset_type;
+      typedef typename container_type::size_type                                       size_type;
 
       offset_type offset = result_of::offset< typename element_type::id_type >::get(element.id());
 
-      if (container.size() <= offset) container.resize(offset+1); // ensure that container is big enough
+      if (container.size() <= static_cast<size_type>(offset)) container.resize(offset+1); // ensure that container is big enough
       return container[offset];
     }
 
