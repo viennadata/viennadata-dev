@@ -186,41 +186,48 @@ namespace viennadata
     typedef ContainerType                                             container_type;
     typedef typename result_of::value_type<container_type>::type      value_type;
     typedef ElementType                                               access_type;
+    
+    typedef typename container_access<container_type, ElementType, AccessTag>::reference       reference;
+    typedef typename container_access<container_type, ElementType, AccessTag>::const_reference const_reference;
 
+    typedef typename container_access<container_type, ElementType, AccessTag>::pointer         pointer;
+    typedef typename container_access<container_type, ElementType, AccessTag>::const_pointer   const_pointer;
+
+    
     container_accessor( container_type & container_obj ) : container_(container_obj) {}
 
-    typename container_type::pointer find(ElementType const & element)
+    pointer find(ElementType const & element)
     {
       return container_access<container_type, ElementType, AccessTag>::find(container_, element);
     }
 
-    typename container_type::const_pointer find(ElementType const & element) const
+    const_pointer find(ElementType const & element) const
     {
       return container_access<container_type, ElementType, AccessTag>::find(container_, element);
     }
 
-    typename container_type::reference access_unchecked(ElementType const & element)
+    reference access_unchecked(ElementType const & element)
     {
       return container_access<container_type, ElementType, AccessTag>::lookup_unchecked(container_, element);
     }
 
-    typename container_type::const_reference access_unchecked(ElementType const & element) const
+    const_reference access_unchecked(ElementType const & element) const
     {
       return container_access<container_type, ElementType, AccessTag>::lookup_unchecked(container_, element);
     }
     
-    typename container_type::reference access(ElementType const & element)
+    reference access(ElementType const & element)
     {
       return container_access<container_type, ElementType, AccessTag>::lookup(container_, element);
     }
 
-    typename container_type::const_reference access(ElementType const & element) const
+    const_reference access(ElementType const & element) const
     {
       return container_access<container_type, ElementType, AccessTag>::lookup(container_, element);
     }
 
-    typename container_type::reference       operator()(ElementType const & element)       { return access(element); }
-    typename container_type::const_reference operator()(ElementType const & element) const { return access(element); }
+    reference       operator()(ElementType const & element)       { return access(element); }
+    const_reference operator()(ElementType const & element) const { return access(element); }
 
 
     void erase(ElementType const & element)
