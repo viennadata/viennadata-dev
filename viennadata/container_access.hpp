@@ -105,7 +105,7 @@ namespace viennadata
       typedef typename result_of::offset< typename access_type::id_type >::type offset_type;
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
 
-      if (offset-1 == static_cast<offset_type>(container.size())) // container is shrinked only when deleting data for last element
+      if (offset+1 == static_cast<offset_type>(container.size())) // container is shrinked only when deleting data for last element
           container.resize(container.size()-1);
     }
     
