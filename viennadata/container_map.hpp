@@ -85,7 +85,7 @@ namespace viennadata
   };
 
   /** @brief Dynamic container map, has reference to container_map and knows its type; also know the accessing element_type */
-  template<typename ContainerMapType, typename ElementType>
+  template<typename ContainerMapType, typename AccessType>
   struct dynamic_container_map_accessor : public base_dynamic_container_map_accessor
   {
     dynamic_container_map_accessor(ContainerMapType & container_map_obj) : container_map_(container_map_obj) {}
@@ -93,14 +93,14 @@ namespace viennadata
     void erase_all(base_dynamic_type_wrapper const & dynamic_element)
     {
       // knows the accessing element type -> static casting the base element type
-      dynamic_type_wrapper<ElementType> const & element =
-        static_cast< dynamic_type_wrapper<ElementType> const & >(dynamic_element);
+      dynamic_type_wrapper<AccessType> const & element =
+        static_cast< dynamic_type_wrapper<AccessType> const & >(dynamic_element);
 
       // iterate over all containers and erases the data for value
       for (typename ContainerMapType::container_map_type::iterator it = container_map_.get_map().begin(); it != container_map_.get_map().end(); ++it)
       {
         container_access<typename ContainerMapType::container_type,
-                         ElementType,
+                         AccessType,
                          typename ContainerMapType::access_tag>::erase(it->second, element.value);
       }
     }
@@ -109,8 +109,8 @@ namespace viennadata
                base_dynamic_type_wrapper const & dynamic_element)
     {
       // knows the accessing element type -> static casting the base element type
-      dynamic_type_wrapper<ElementType> const & element =
-        static_cast< dynamic_type_wrapper<ElementType> const & >(dynamic_element);
+      dynamic_type_wrapper<AccessType> const & element =
+        static_cast< dynamic_type_wrapper<AccessType> const & >(dynamic_element);
 
       // knows the key type -> static casting the base key type
       dynamic_type_wrapper<typename ContainerMapType::key_type> const & key =
@@ -121,7 +121,7 @@ namespace viennadata
       if (it != container_map_.get_map().end())
       {
         container_access<typename ContainerMapType::container_type,
-                         ElementType,
+                         AccessType,
                          typename ContainerMapType::access_tag>::erase(it->second, element.value);
       }
     }
@@ -130,10 +130,10 @@ namespace viennadata
                   base_dynamic_type_wrapper const & dynamic_dst_element)
     {
       // knows the accessing element type -> static casting the base element type
-      dynamic_type_wrapper<ElementType> const & src_element =
-        static_cast< dynamic_type_wrapper<ElementType> const & >(dynamic_src_element);
-      dynamic_type_wrapper<ElementType> const & dst_element =
-        static_cast< dynamic_type_wrapper<ElementType> const & >(dynamic_dst_element);
+      dynamic_type_wrapper<AccessType> const & src_element =
+        static_cast< dynamic_type_wrapper<AccessType> const & >(dynamic_src_element);
+      dynamic_type_wrapper<AccessType> const & dst_element =
+        static_cast< dynamic_type_wrapper<AccessType> const & >(dynamic_dst_element);
 
       // iterate over all containers and erases the data for value
       for (typename ContainerMapType::container_map_type::iterator it  = container_map_.get_map().begin();
@@ -141,7 +141,7 @@ namespace viennadata
                                                                    ++it)
       {
         container_access<typename ContainerMapType::container_type,
-                         ElementType,
+                         AccessType,
                          typename ContainerMapType::access_tag>::copy(it->second, src_element.value, dst_element.value);
       }
     }
@@ -151,10 +151,10 @@ namespace viennadata
               base_dynamic_type_wrapper const & dynamic_dst_element)
     {
       // knows the accessing element type -> static casting the base element type
-      dynamic_type_wrapper<ElementType> const & src_element =
-        static_cast< dynamic_type_wrapper<ElementType> const & >(dynamic_src_element);
-      dynamic_type_wrapper<ElementType> const & dst_element =
-        static_cast< dynamic_type_wrapper<ElementType> const & >(dynamic_dst_element);
+      dynamic_type_wrapper<AccessType> const & src_element =
+        static_cast< dynamic_type_wrapper<AccessType> const & >(dynamic_src_element);
+      dynamic_type_wrapper<AccessType> const & dst_element =
+        static_cast< dynamic_type_wrapper<AccessType> const & >(dynamic_dst_element);
 
       // knows the key type -> static casting the base key type
       dynamic_type_wrapper<typename ContainerMapType::key_type> const & key =
@@ -165,7 +165,7 @@ namespace viennadata
       if (it != container_map_.get_map().end())
       {
         container_access<typename ContainerMapType::container_type,
-                         ElementType,
+                         AccessType,
                          typename ContainerMapType::access_tag>::copy(it->second, src_element.value, dst_element.value);
       }
     }
@@ -179,69 +179,77 @@ namespace viennadata
     *
     * when possible, use accessors instead of direct access to storage like viennadata::access
     */
-  template<typename ContainerType, typename ElementType, typename AccessTag>
+  template<typename ContainerType, typename AccessType, typename AccessTag>
   class container_accessor
   {
    public:
     typedef ContainerType                                             container_type;
     typedef typename result_of::value_type<container_type>::type      value_type;
-    typedef ElementType                                               access_type;
+    typedef AccessType                                               access_type;
     
-    typedef typename container_access<container_type, ElementType, AccessTag>::reference       reference;
-    typedef typename container_access<container_type, ElementType, AccessTag>::const_reference const_reference;
+    typedef typename container_access<container_type, AccessType, AccessTag>::reference       reference;
+    typedef typename container_access<container_type, AccessType, AccessTag>::const_reference const_reference;
 
-    typedef typename container_access<container_type, ElementType, AccessTag>::pointer         pointer;
-    typedef typename container_access<container_type, ElementType, AccessTag>::const_pointer   const_pointer;
+    typedef typename container_access<container_type, AccessType, AccessTag>::pointer         pointer;
+    typedef typename container_access<container_type, AccessType, AccessTag>::const_pointer   const_pointer;
 
     
-    container_accessor( container_type & container_obj ) : container_(container_obj) {}
+    container_accessor() : container_(NULL) {}
+    container_accessor( container_type & container_obj ) : container_(&container_obj) {}
+    
+    bool is_valid() const { return container_ != NULL; }
 
-    pointer find(ElementType const & element)
+    pointer find(AccessType const & element)
     {
-      return container_access<container_type, ElementType, AccessTag>::find(container_, element);
+      return container_access<container_type, AccessType, AccessTag>::find(*container_, element);
     }
 
-    const_pointer find(ElementType const & element) const
+    const_pointer find(AccessType const & element) const
     {
-      return container_access<container_type, ElementType, AccessTag>::find(container_, element);
+      return container_access<container_type, AccessType, AccessTag>::find(*container_, element);
     }
 
-    reference access_unchecked(ElementType const & element)
+    reference access_unchecked(AccessType const & element)
     {
-      return container_access<container_type, ElementType, AccessTag>::lookup_unchecked(container_, element);
+      return container_access<container_type, AccessType, AccessTag>::lookup_unchecked(*container_, element);
     }
 
-    const_reference access_unchecked(ElementType const & element) const
+    const_reference access_unchecked(AccessType const & element) const
     {
-      return container_access<container_type, ElementType, AccessTag>::lookup_unchecked(container_, element);
+      return container_access<container_type, AccessType, AccessTag>::lookup_unchecked(*container_, element);
     }
     
-    reference access(ElementType const & element)
+    reference access(AccessType const & element)
     {
-      return container_access<container_type, ElementType, AccessTag>::lookup(container_, element);
+      return container_access<container_type, AccessType, AccessTag>::lookup(*container_, element);
     }
 
-    const_reference access(ElementType const & element) const
+    const_reference access(AccessType const & element) const
     {
-      return container_access<container_type, ElementType, AccessTag>::lookup(container_, element);
+      return container_access<container_type, AccessType, AccessTag>::lookup(*container_, element);
     }
 
-    reference       operator()(ElementType const & element)       { return access(element); }
-    const_reference operator()(ElementType const & element) const { return access(element); }
+    reference       operator()(AccessType const & element)       { return access(element); }
+    const_reference operator()(AccessType const & element) const { return access(element); }
 
 
-    void erase(ElementType const & element)
+    void erase(AccessType const & element)
     {
-      container_access<container_type, ElementType, AccessTag>::erase(container_, element);
+      container_access<container_type, AccessType, AccessTag>::erase(*container_, element);
+    }
+    
+    void clear()
+    {
+      container_access<container_type, AccessType, AccessTag>::clear(*container_);
     }
     
     void resize( std::size_t size )
     {
-      container_access<container_type, ElementType, AccessTag>::resize(container_, size);
+      container_access<container_type, AccessType, AccessTag>::resize(*container_, size);
     }
 
    private:
-    container_type & container_;
+    container_type * container_;
   };
 
 

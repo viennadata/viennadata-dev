@@ -45,7 +45,7 @@ namespace viennadata
     {
         typedef IDType      type;
 
-        static type get(IDType const & id) { return id; }
+        static type get(type const & id) { return id; }
     };
 
     // specialization for smart_id_t, used in ViennaGrid
@@ -55,7 +55,7 @@ namespace viennadata
         typedef viennagrid::storage::smart_id_t<value_type, base_id_type> id_type;
         typedef base_id_type type;
 
-        static type get(IDType const & id) { return id.get(); }
+        static type get(type const & id) { return id.get(); }
     };*/
 
 

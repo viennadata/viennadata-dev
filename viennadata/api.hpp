@@ -243,20 +243,39 @@ namespace viennadata
   {
     container<KeyType, ValueType, ElementTypeOrTag>(storage, key).reserve(size);
   }
+  
+  
+  
+  
+  /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
+  template<typename AccessType, typename AccessTag, typename ContainerType>
+  container_accessor<ContainerType, AccessType, AccessTag> accessor(ContainerType & container)
+  {
+      return container;
+  }
+
+  /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
+  template<typename AccessType, typename AccessTag, typename ContainerType>
+  container_accessor<const ContainerType, AccessType, AccessTag> accessor(ContainerType const & container)
+  {
+      return container;
+  }
+    
+  
 
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
-  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename StorageType>
-  typename result_of::accessor<StorageType, KeyType, ValueType, ElementTypeOrTag>::type
-      accessor(StorageType & storage_obj, KeyType const & key)
+  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename ContainerConfig, typename RuntimeTypeInformation>
+  typename result_of::accessor<storage<ContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementTypeOrTag>::type
+      accessor(storage<ContainerConfig, RuntimeTypeInformation> & storage_obj, KeyType const & key)
   {
       return container<KeyType, ValueType, ElementTypeOrTag>(storage_obj, key);
   }
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
-  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename StorageType>
-  typename result_of::accessor<const StorageType, KeyType, ValueType, ElementTypeOrTag>::type
-      accessor(StorageType const & storage_obj, KeyType const & key )
+  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename ContainerConfig, typename RuntimeTypeInformation>
+  typename result_of::accessor<const storage<ContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementTypeOrTag>::type
+      accessor(storage<ContainerConfig, RuntimeTypeInformation> const & storage_obj, KeyType const & key )
   {
       return container<KeyType, ValueType, ElementTypeOrTag>(storage_obj, key);
   }
