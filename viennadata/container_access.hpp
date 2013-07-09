@@ -50,7 +50,7 @@ namespace viennadata
       typedef typename result_of::offset< typename access_type::id_type >::type     offset_type;
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
 
-      return (container.size() > offset) ? (&container[offset]) : NULL; // return NULL if not found
+      return (static_cast<offset_type>(container.size()) > offset) ? (&container[offset]) : NULL; // return NULL if not found
     }
 
     static const_pointer find(container_type const & container, access_type const & element)
@@ -59,7 +59,7 @@ namespace viennadata
 
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
 
-      return (container.size() > offset) ? (&container[offset]) : NULL; // return NULL if not found
+      return (static_cast<offset_type>(container.size()) > offset) ? (&container[offset]) : NULL; // return NULL if not found
     }
     
     static reference lookup_unchecked(container_type & container, access_type const & element) // no offset checking
@@ -75,7 +75,7 @@ namespace viennadata
       
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
       
-      assert(container.size() > offset); // no release-runtime check for accessing elements outside container
+      assert( static_cast<offset_type>(container.size()) > offset ); // no release-runtime check for accessing elements outside container
       return container[offset];
     }
 
@@ -86,7 +86,7 @@ namespace viennadata
 
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
 
-      if (container.size() <= static_cast<size_type>(offset)) container.resize(offset+1); // ensure that container is big enough
+      if ( static_cast<offset_type>(container.size()) <= offset) container.resize(offset+1); // ensure that container is big enough
       return container[offset];
     }
 
@@ -105,7 +105,7 @@ namespace viennadata
       typedef typename result_of::offset< typename access_type::id_type >::type offset_type;
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
 
-      if (offset-1 == container.size()) // container is shrinked only when deleting data for last element
+      if (offset-1 == static_cast<offset_type>(container.size())) // container is shrinked only when deleting data for last element
           container.resize(container.size()-1);
     }
     
@@ -150,7 +150,7 @@ namespace viennadata
       
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
       
-      assert(container.size() > offset); // no release-runtime check for accessing elements outside container
+      assert( static_cast<offset_type>(container.size()) > offset ); // no release-runtime check for accessing elements outside container
       return container[offset];
     }
 
@@ -244,7 +244,7 @@ namespace viennadata
       container.clear();
     }
     
-    static void resize(container_type & container, std::size_t size) {} // not supported
+    static void resize(container_type &, std::size_t) {} // not supported
   };
   
   // const map specialization

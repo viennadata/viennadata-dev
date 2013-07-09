@@ -108,7 +108,7 @@ namespace viennameta
     struct true_predicate
     {
         template<typename type>
-        bool operator()(const type & t)
+        bool operator()(const type &)
         {
             return true;
         }

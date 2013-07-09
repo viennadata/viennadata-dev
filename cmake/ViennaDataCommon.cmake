@@ -39,7 +39,7 @@ mark_as_advanced(ENABLE_PEDANTIC_FLAGS)
 
 # Set high warning level on GCC
 if(ENABLE_PEDANTIC_FLAGS)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 endif()
 
 # Disable Warning 4996 (std::copy is unsafe ...) on Visual Studio
