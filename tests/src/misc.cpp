@@ -24,7 +24,8 @@
 
 int main(int /*argc*/, char ** /*argv*/)
 {
-  check_data_access();
+  if (check_data_access()  > 0)
+    return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }
