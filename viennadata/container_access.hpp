@@ -18,6 +18,7 @@
    License:      MIT (X11), see file LICENSE in the base directory
 ======================================================================= */
 
+#include <cassert>
 #include <map>
 
 #include "viennadata/forwards.hpp"
@@ -43,36 +44,29 @@ namespace viennadata
     typedef typename container_type::pointer           pointer;
     typedef typename container_type::const_pointer     const_pointer;
 
+    typedef typename result_of::offset< typename access_type::id_type >::type     offset_type;
     
     
     static pointer find(container_type & container, access_type const & element)
     {
-      typedef typename result_of::offset< typename access_type::id_type >::type     offset_type;
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
-
       return (static_cast<offset_type>(container.size()) > offset) ? (&container[offset]) : NULL; // return NULL if not found
     }
 
     static const_pointer find(container_type const & container, access_type const & element)
     {
-      typedef typename result_of::offset< typename access_type::id_type >::type      offset_type;
-
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
-
       return (static_cast<offset_type>(container.size()) > offset) ? (&container[offset]) : NULL; // return NULL if not found
     }
     
     static reference lookup_unchecked(container_type & container, access_type const & element) // no offset checking
     {
-      typedef typename result_of::offset< typename access_type::id_type >::type      offset_type;
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
       return container[offset];
     }
 
     static const_reference lookup_unchecked(container_type const & container, access_type const & element)
     {
-      typedef typename result_of::offset< typename access_type::id_type >::type      offset_type;
-      
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
       
       assert( static_cast<offset_type>(container.size()) > offset ); // no release-runtime check for accessing elements outside container
@@ -81,9 +75,6 @@ namespace viennadata
 
     static reference lookup(container_type & container, access_type const & element)
     {
-      typedef typename result_of::offset< typename access_type::id_type >::type      offset_type;
-      typedef typename container_type::size_type                                       size_type;
-
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
 
       if ( static_cast<offset_type>(container.size()) <= offset) container.resize(offset+1); // ensure that container is big enough
@@ -102,7 +93,6 @@ namespace viennadata
     
     static void erase(container_type & container, access_type const & element)
     {
-      typedef typename result_of::offset< typename access_type::id_type >::type offset_type;
       offset_type offset = result_of::offset< typename access_type::id_type >::get(element.id());
 
       if (offset+1 == static_cast<offset_type>(container.size())) // container is shrinked only when deleting data for last element
@@ -119,7 +109,7 @@ namespace viennadata
       container.resize( size );
     }
   };
-  
+
   // const container specialization
   template<typename ContainerType, typename AccessType, typename AccessTag>
   struct container_access<const ContainerType, AccessType, AccessTag>
@@ -256,10 +246,10 @@ namespace viennadata
     typedef AccessType                                         access_type;
     typedef ValueType                                           value_type;
     
-    typedef value_type &         reference;
+    typedef value_type const &         reference;
     typedef value_type const &   const_reference;
     
-    typedef value_type *           pointer;
+    typedef value_type const *           pointer;
     typedef value_type const *     const_pointer;
 
     static const_pointer find(container_type const & container, access_type const & element)

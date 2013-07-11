@@ -93,7 +93,11 @@ namespace viennadata
       typedef ValueType               type;
     };
 
-
+    template<typename KeyType, typename ValueType, typename Compare, typename Alloc>
+    struct value_type< const std::map<KeyType, ValueType, Compare, Alloc> >
+    {
+      typedef ValueType               type;
+    };
 
 
 
@@ -227,6 +231,15 @@ namespace viennadata
       typedef typename container_from_config<ContainerConfig, to_query>::type                        container_type;
       typedef typename access_tag_from_config<ContainerConfig, to_query>::type                       access_tag;
       typedef container_accessor<container_type, ElementType, access_tag>                            type;
+    };
+
+    template<typename ContainerConfig, typename RuntimeTypeInformation, typename KeyType, typename ValueType, typename ElementType>
+    struct accessor< const storage<ContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementType >
+    {
+      typedef viennameta::static_pair< ElementType, viennameta::static_pair<KeyType, ValueType> >    to_query;
+      typedef typename container_from_config<ContainerConfig, to_query>::type                        container_type;
+      typedef typename access_tag_from_config<ContainerConfig, to_query>::type                       access_tag;
+      typedef container_accessor<const container_type, ElementType, access_tag>                            type;
     };
 
   } // namespace result_of

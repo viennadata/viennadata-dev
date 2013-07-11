@@ -196,6 +196,12 @@ namespace viennadata
     
     container_accessor() : container_(NULL) {}
     container_accessor( container_type & container_obj ) : container_(&container_obj) {}
+
+    template<typename StorageType, typename KeyType>
+    container_accessor( storage_container_accessor_proxy<StorageType, KeyType> proxy )
+    {
+        *this = container_accessor( proxy.storage().template get_container<KeyType, value_type, access_type>(proxy.key()) );
+    }
     
     bool is_valid() const { return container_ != NULL; }
 

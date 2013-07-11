@@ -122,6 +122,21 @@ namespace viennadata
   template<typename ContainerConfig = default_container_config, typename RuntimeTypeInformation = typeid_string_runtime_information>
   class storage;
 
+
+  template<typename StorageType, typename KeyType>
+  class storage_container_accessor_proxy
+  {
+  public:
+    storage_container_accessor_proxy(StorageType & s, KeyType const & k) : storage_(s), key_(k) {}
+
+    StorageType & storage() { return storage_; }
+    KeyType const & key() const { return key_; }
+    
+  private:
+    StorageType & storage_;
+    KeyType const & key_;
+  };
+  
   template<typename ContainerType, typename ElementType, typename AccessTag>
   class container_accessor;
 }
