@@ -1,5 +1,8 @@
 \chapter{Design Decisions} \label{chap:design}
 
+\NOTE{This documentation hasn't been updated to the interface of the upcoming ViennaData 1.1.0 release yet}
+
+
 Every now and then a programmer is faced with the question ``Why have you implemented it that way?''.
 This is then the chance to outline the various pros and cons of different approaches and assign appropriate weights such that the approach taken turns out to be the best.
 
@@ -9,7 +12,7 @@ In this case, the various pros and cons of different approaches should be outlin
 In this chapter the various design considerations are presented and the reasons why the library is the way it is are given.
 Remaining questions or inputs for further improvements should be sent to the mailing list at
 \begin{center}
-\texttt{viennadata-support$@$lists.sourceforge.net} 
+\texttt{viennadata-support$@$lists.sourceforge.net}
 \end{center}
 
 \section{Two Pairs of Parentheses}
@@ -84,16 +87,16 @@ The other problem is due to unwanted side-effects, when changing data types whil
  long data2 = viennadata::access<std::string, long>("data")(obj);
 \end{lstlisting}
 were legal. However, when changing the type of \lstinline|data| from \lstinline|long| to, say, \lstinline|int|, the data retrieval would be broken.
-Thus, to unify the interface for access, copy, move, erase, and find, the key type and the data type always have to be supplied. 
+Thus, to unify the interface for access, copy, move, erase, and find, the key type and the data type always have to be supplied.
 The only possible exception has to be explicitly enabled by the user, cf.~Section \ref{sec:default-valuetype}.
 
 \TIP{The key type and the data type always has to be specified, when calling functions from {\ViennaData}. The only exception has to be explicitly enabled by the user.}
 
 
 % \section{Memory Management for Dense Data Storage}
-% 
+%
 % The main reason for using a dense data storage scheme is presumably performance, cf.~Chap.~\ref{chap:benchmarks}. As a side effect, total memory consumption is reduced
 % considerably if all objects carry associated data.
-% 
+%
 % Explain multi-stage performance: First switch to dense storage, check if code works. Then disable auto-registration, ensure code works. Then disable size-checks, ensure that code works... ;-)
 

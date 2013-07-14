@@ -1,5 +1,7 @@
 \chapter{Advanced Usage} \label{chap:advanced-usage}
 
+\NOTE{This documentation hasn't been updated to the interface of the upcoming ViennaData 1.1.0 release yet}
+
 While Chapter \ref{chap:basic-usage} outlines the basic usage of {\ViennaData}, this chapter focuses
 on customizing the library to the user's demands and the particular environment. It is explained how
 the object identification can be changed, how the internal storage of data can be customized and data
@@ -53,7 +55,7 @@ a tree-based layout can be configured to be of type
 \begin{lstlisting}
  std::vector<DataContainer>
 \end{lstlisting}
-This requires that a custom identification mechanism is set up as outlined in the previous section. Moreover, the 
+This requires that a custom identification mechanism is set up as outlined in the previous section. Moreover, the
 custom \lstinline|id_type| must be compatible with being used as an array index. Since such a storage scheme is only memory efficient,
 if the number of objects is comparable to $N$, we refer to this scheme as \emph{dense data storage}.
 To change the default tree-based data storage scheme to the dense storage scheme for objects of type \lstinline|MyClass|, the lines
@@ -116,7 +118,7 @@ namespace viennadata
     typedef type_key_dispatch_tag    tag;
   };
  }
-} 
+}
 \end{lstlisting}
 are sufficient. One may then omit the key parameter for the API functions provided by {\ViennaData}, cf.~Chapter \ref{chap:basic-usage}.
 
@@ -137,7 +139,7 @@ This is especially common, when using a type-based key dispatch for data access.
  viennadata::access<back_color,  RGBColor>()(obj1) = RGBColor(0,42,255);
  viennadata::access<edge_color,  RGBColor>()(obj1) = RGBColor(255,0,42);
 \end{lstlisting}
-Since the key classes are already named appropriately and always the some data type \lstinline|RGBColor| is used, 
+Since the key classes are already named appropriately and always the some data type \lstinline|RGBColor| is used,
 setting \lstinline|RGBColor| as default data type for the respective keys allows to make the code more compact.
 This can be enabled along the lines
 \begin{lstlisting}
@@ -152,7 +154,7 @@ namespace viennadata
   };
   // and similarly for back_color, edge_color
  }
-} 
+}
 \end{lstlisting}
 Now, the initial code snippet can be written more compactly as
 \begin{lstlisting}

@@ -1,8 +1,11 @@
 \chapter{Basic Usage} \label{chap:basic-usage}
 
-In this section the fundamental operations in {\ViennaData} are explained. 
+\NOTE{This documentation hasn't been updated to the interface of the upcoming ViennaData 1.1.0 release yet}
+
+
+In this section the fundamental operations in {\ViennaData} are explained.
 All functionality is available out of the box and operations are checked in order to detect potential pitfalls during development.
-If {\ViennaData} access turns out to be 
+If {\ViennaData} access turns out to be
 performance critical, several optimizations can be triggered, which is discussed in Chapter \ref{chap:advanced-usage}.
 
 In order to use {\ViennaData}, the main header file has to be included in the respective source files:
@@ -15,7 +18,7 @@ No other files from {\ViennaData} need to be included.
 The main function in {\ViennaData} is the \lstinline|access()| function. From a user perspective,
 the call
 \begin{lstlisting}
- viennadata::access<KeyType, DataType>(key)(obj) 
+ viennadata::access<KeyType, DataType>(key)(obj)
 \end{lstlisting}
 returns a reference to the data of type \lstinline|DataType| stored for an arbitrary object \lstinline|obj| and identified by the \lstinline|key| object of
 type \lstinline|KeyType|. At first sight, the offered functionality can be seen as a \lstinline|std::map<KeyType, DataType>| for each object \lstinline|obj|.
@@ -60,7 +63,7 @@ At this point the second template argument appears to be somewhat redundant.
 However, please read about the design decisions in Chapter \ref{chap:design} in order to get more details on why the second template parameter is still required.
 
 
-In the last examples, only one key object per key type has been used. As will be shown in 
+In the last examples, only one key object per key type has been used. As will be shown in
 Chapter \ref{chap:advanced-usage}, one can completely turn off run-time comparisons of keys,
 so that one can write
 \begin{lstlisting}
@@ -139,7 +142,7 @@ it is sufficient to write
 \NOTE{\lstinline|obj_src| and \lstinline|obj_dest| have to be of the same type if the \lstinline|viennadata::all| type is supplied.}
 
 % \NOTE{In order to have \lstinline|viennadata:all| working correctly, every pair of \lstinline|KeyType| and \lstinline|ValueType| in use must be registered.
-% By default, this is done automatically in the background. 
+% By default, this is done automatically in the background.
 % If the library user decides to disable automatic registration, each such pair must be registered manually (cf.~Section \ref{sec:register-data}).}
 
 \section{Move}

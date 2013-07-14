@@ -1,4 +1,8 @@
 \chapter{Pitfalls} \label{chap:pitfalls}
+
+\NOTE{This documentation hasn't been updated to the interface of the upcoming ViennaData 1.1.0 release yet}
+
+
 The increased reusability of classes due to a separation of intrinsic and associated data (cf.~\hyperref[intro]{Introduction})
 introduces a few pitfalls one should be aware of. Depending on the code design and the application,
 these pitfalls can be somewhere between completely unrealistic and painful. In the following, we discuss the most important of them.
@@ -19,7 +23,7 @@ In order to ensure that all data is properly deleted, when the respective object
 \begin{itemize}
  \item Manually call \lstinline|viennadata::erase<KeyType, DataType>()(*myA)| for all pairs of \lstinline|KeyType| and \lstinline|DataType| used.
  \item Manually ensure that \lstinline|viennadata::erase<all,all>()(*myA)| is called prior to deleting \lstinline|*myA|. This requires that all data is registered properly, which is by default the case.
- \item Use \lstinline|viennadata::free(*myA)| instead of \lstinline|delete|. This will call \lstinline|viennadata::erase<all,all>()(*myA)| and then \lstinline|delete myA|. 
+ \item Use \lstinline|viennadata::free(*myA)| instead of \lstinline|delete|. This will call \lstinline|viennadata::erase<all,all>()(*myA)| and then \lstinline|delete myA|.
  It will not work, if \lstinline|myA| points to an array, for which \lstinline|delete[]| has be called.
  \item If the sources of \lstinline|myA| can be modified, then one can inject the call to \lstinline|viennadata::erase<all,all>()(*myA)| into the destructor as follows:
 \begin{lstlisting}
@@ -44,7 +48,7 @@ Since {\ViennaData} relies on a static type system, it cannot reasonably deal wi
  viennadata<long, double>(360)(*pb) = 3.1415;
  std::cout << viennadata<long, double>(360)(d) << std::endl;
 \end{lstlisting}
-Even though data is stored for the same object, the resulting program will still print a zero value. 
+Even though data is stored for the same object, the resulting program will still print a zero value.
 The reason is that data is stored for an object of type \lstinline|Base|, while it is retrieved for an object of type \lstinline|Derived|.
 
 Better support for run time polymorphism might be provided in future versions of {\ViennaData}. In the current version, library users are advised to use custom identification mechanisms and provide objects of the base type only.

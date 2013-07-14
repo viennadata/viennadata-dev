@@ -1,12 +1,15 @@
 \chapter{Installation}
 
+\NOTE{This documentation hasn't been updated to the interface of the upcoming ViennaData 1.1.0 release yet}
+
+
 This chapter shows how {\ViennaData} can be integrated into a project and how
 the examples are built. The necessary steps are outlined for several different
 platforms, but we could not check every possible combination of hardware,
 operating system, and compiler. If you experience any trouble, please write to
 the mailing list at \\
 \begin{center}
-\texttt{viennadata-support$@$lists.sourceforge.net} 
+\texttt{viennadata-support$@$lists.sourceforge.net}
 \end{center}
 
 
@@ -26,7 +29,7 @@ for building the examples)
 
 
 \section{Generic Installation of ViennaData} \label{sec:viennacl-installation}
-Since {\ViennaData} is a header-only library, it is sufficient to copy the 
+Since {\ViennaData} is a header-only library, it is sufficient to copy the
 \lstinline|viennadata/| folder either into your project folder or to your global system
 include path. On Unix based systems, this is often \lstinline|/usr/include/| or
 \lstinline|/usr/local/include/|.
@@ -37,7 +40,7 @@ path correctly. With Visual Studio this is usually something like
 \texttt{C:$\setminus$Program Files$\setminus$Microsoft Visual Studio
 9.0$\setminus$VC$\setminus$include}
 and can be set in \texttt{Tools -> Options -> Projects and Solutions ->
-VC++-\-Directories}. 
+VC++-\-Directories}.
 
 
 % -----------------------------------------------------------------------------
@@ -85,7 +88,7 @@ Execute
 \end{lstlisting}
 to obtain a Makefile and type
 \begin{lstlisting}
- $> make 
+ $> make
 \end{lstlisting}
 to build the examples. If desired, one can build each example separately instead:
 \begin{lstlisting}
@@ -97,12 +100,12 @@ to build the examples. If desired, one can build each example separately instead
 
 \subsection{Mac OS X}
 \label{apple}
-The tools mentioned in Section \ref{dependencies} are available on 
-Macintosh platforms too. 
+The tools mentioned in Section \ref{dependencies} are available on
+Macintosh platforms too.
 For the {\GCC} compiler the Xcode~\cite{xcode} package has to be installed.
 To install {\CMake}, external portation tools such as
-Fink~\cite{fink}, DarwinPorts~\cite{darwinports}, 
-or MacPorts~\cite{macports} have to be used. 
+Fink~\cite{fink}, DarwinPorts~\cite{darwinports},
+or MacPorts~\cite{macports} have to be used.
 
 The build process of {\ViennaData} is similar to Linux.
 
