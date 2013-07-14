@@ -123,7 +123,7 @@ namespace viennadata
     struct erase_helper
     {
       template<typename StorageType, typename ElementType>
-      static void erase(StorageType & storage_obj, KeyType const & key, ElementType & element)
+      static void erase(StorageType & storage_obj, KeyType const & key, ElementType const & element)
       {
         storage_obj.template erase<KeyType, ValueType, ElementType>(key, element);
       }
@@ -140,7 +140,7 @@ namespace viennadata
       }
 
       template<typename StorageType, typename ElementType>
-      static void erase(StorageType & storage_obj, KeyType const & key, ElementType & element)
+      static void erase(StorageType & storage_obj, KeyType const & key, ElementType const & element)
       {
         storage_obj.erase_all_data_from_element_with_key(key, element);
       }
@@ -151,7 +151,7 @@ namespace viennadata
     struct erase_helper<viennadata::all, ValueType>
     {
       template<typename StorageType, typename ElementType>
-      static void erase(StorageType & storage_obj, ElementType & element)
+      static void erase(StorageType & storage_obj, ElementType const & element)
       {
         storage_obj.template erase_all_data_from_element_with_value_type<ValueType>(element);
       }
@@ -162,7 +162,7 @@ namespace viennadata
     struct erase_helper<viennadata::all, viennadata::all>
     {
       template<typename StorageType, typename ElementType>
-      static void erase(StorageType & storage_obj, ElementType & element)
+      static void erase(StorageType & storage_obj, ElementType const & element)
       {
         storage_obj.erase_all_data_from_element(element);
       }
@@ -243,10 +243,10 @@ namespace viennadata
   {
     container<KeyType, ValueType, ElementTypeOrTag>(storage, key).reserve(size);
   }
-  
-  
-  
-  
+
+
+
+
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
   template<typename AccessType, typename AccessTag, typename ContainerType>
   container_accessor<ContainerType, AccessType, AccessTag> accessor(ContainerType & container)
@@ -260,8 +260,8 @@ namespace viennadata
   {
       return container;
   }
-    
-  
+
+
 
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
@@ -284,7 +284,7 @@ namespace viennadata
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
   template<typename ContainerConfig, typename RuntimeTypeInformation, typename KeyType>
-  storage_container_accessor_proxy< storage<ContainerConfig, RuntimeTypeInformation>, KeyType > 
+  storage_container_accessor_proxy< storage<ContainerConfig, RuntimeTypeInformation>, KeyType >
       acc(storage<ContainerConfig, RuntimeTypeInformation> & storage_obj, KeyType const & key)
   {
       return storage_container_accessor_proxy< storage<ContainerConfig, RuntimeTypeInformation>, KeyType >(storage_obj, key);
@@ -292,13 +292,13 @@ namespace viennadata
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
   template<typename ContainerConfig, typename RuntimeTypeInformation, typename KeyType>
-  storage_container_accessor_proxy< const storage<ContainerConfig, RuntimeTypeInformation>, KeyType > 
+  storage_container_accessor_proxy< const storage<ContainerConfig, RuntimeTypeInformation>, KeyType >
       acc(storage<ContainerConfig, RuntimeTypeInformation> const & storage_obj, KeyType const & key )
   {
       return storage_container_accessor_proxy< const storage<ContainerConfig, RuntimeTypeInformation>, KeyType >(storage_obj, key);
   }
 
-  
+
 
 } // namespace viennadata
 
