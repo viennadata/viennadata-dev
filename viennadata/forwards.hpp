@@ -104,6 +104,11 @@ namespace viennadata
       viennameta::static_pair<std_map_tag, pointer_access_tag>
   >::type default_container_config;
 
+  /** @brief Default config wrapping the default configuration typemap default_container_config */
+  struct wrapped_default_container_config
+  {
+    typedef default_container_config   type;
+  };
 
   /** @brief Base class for dynamic type wrapper */
   struct base_dynamic_type_wrapper
@@ -119,7 +124,7 @@ namespace viennadata
       ElementType const & value;
   };
 
-  template<typename ContainerConfig = default_container_config, typename RuntimeTypeInformation = typeid_string_runtime_information>
+  template<typename ContainerConfig = wrapped_default_container_config, typename RuntimeTypeInformation = typeid_string_runtime_information>
   class storage;
 
 
@@ -131,12 +136,12 @@ namespace viennadata
 
     StorageType & storage() { return storage_; }
     KeyType const & key() const { return key_; }
-    
+
   private:
     StorageType & storage_;
     KeyType const & key_;
   };
-  
+
   template<typename ContainerType, typename ElementType, typename AccessTag>
   class container_accessor;
 }
