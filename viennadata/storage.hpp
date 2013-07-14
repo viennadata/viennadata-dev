@@ -35,14 +35,14 @@ namespace viennadata
     *
     * @tparam cont
     */
-  template<typename ContainerConfig /* see forwards.hpp for default argument */,
+  template<typename WrappedContainerConfig /* see forwards.hpp for default argument */,
            typename RuntimeTypeInformation /* see forwards.hpp for default argument */>
   class storage
   {
    public:
 
     typedef RuntimeTypeInformation                               runtime_type_information;
-    typedef ContainerConfig                                      container_config;
+    typedef typename WrappedContainerConfig::type                container_config;
 
     typedef typename RuntimeTypeInformation::runtime_key_type    runtime_key_type;
     typedef std::map<runtime_key_type, container_map_base*>      container_map_map_type;

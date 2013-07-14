@@ -52,7 +52,22 @@ class QuickKey
     long id;
 };
 
+struct my_container_config_1
+{
+    typedef viennameta::make_typemap<
+      viennadata::default_tag, viennameta::static_pair<viennadata::std_map_tag, viennadata::pointer_access_tag>,
+      viennameta::static_pair< StandardClass, viennameta::static_pair<int, double> >, viennameta::static_pair<viennadata::std_deque_tag, viennadata::id_access_tag>
+    >::type type;
+};
 
+
+struct my_container_config_2
+{
+    typedef viennameta::make_typemap<
+      viennadata::default_tag, viennameta::static_pair<viennadata::std_map_tag, viennadata::pointer_access_tag>,
+      viennameta::static_pair< ClassWithID, viennameta::static_pair<int, double> >, viennameta::static_pair<viennadata::std_deque_tag, viennadata::id_access_tag>
+    >::type type;
+};
 
 // Checks all data for being stored and retrieved properly.
 long check_data_access()
@@ -63,19 +78,9 @@ long check_data_access()
     ClassWithID    id_obj1(23);
     ClassWithID    id_obj2(42);
 
-    typedef viennameta::make_typemap<
-      viennadata::default_tag, viennameta::static_pair<viennadata::std_map_tag, viennadata::pointer_access_tag>,
-      viennameta::static_pair< StandardClass, viennameta::static_pair<int, double> >, viennameta::static_pair<viennadata::std_deque_tag, viennadata::id_access_tag>
-    >::type container_config1;
-
-    typedef viennameta::make_typemap<
-      viennadata::default_tag, viennameta::static_pair<viennadata::std_map_tag, viennadata::pointer_access_tag>,
-      viennameta::static_pair< ClassWithID, viennameta::static_pair<int, double> >, viennameta::static_pair<viennadata::std_deque_tag, viennadata::id_access_tag>
-    >::type container_config2;
-
     // create a storage using ur custom configuration
-    viennadata::storage<container_config1> storage_std_class;
-    viennadata::storage<container_config2> storage_class_with_id;
+    viennadata::storage<my_container_config_1> storage_std_class;
+    viennadata::storage<my_container_config_2> storage_class_with_id;
 
     //reserve data:
     /*viennadata::reserve<char,     double,      StandardClass>(storage_std_class, 'c', 123);

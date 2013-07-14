@@ -207,9 +207,10 @@ namespace viennadata
     template<typename StorageType, typename KeyType, typename ValueType, typename ElementTypeOrTag>
     struct container_type;
 
-    template<typename ContainerConfig, typename RuntimeTypeInformation, typename KeyType, typename ValueType, typename ElementTypeOrTag>
-    struct container_type< storage<ContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementTypeOrTag>
+    template<typename WrappedContainerConfig, typename RuntimeTypeInformation, typename KeyType, typename ValueType, typename ElementTypeOrTag>
+    struct container_type< storage<WrappedContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementTypeOrTag>
     {
+      typedef typename WrappedContainerConfig::type                                                   ContainerConfig;
       typedef typename element_tag<ElementTypeOrTag>::type                                            element_tag;
       typedef viennameta::static_pair<element_tag, viennameta::static_pair<KeyType, ValueType> >      static_key_type;
 
@@ -224,18 +225,20 @@ namespace viennadata
     template<typename StorageType, typename KeyType, typename ValueType, typename ElementType>
     struct accessor {};
 
-    template<typename ContainerConfig, typename RuntimeTypeInformation, typename KeyType, typename ValueType, typename ElementType>
-    struct accessor< storage<ContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementType >
+    template<typename WrappedContainerConfig, typename RuntimeTypeInformation, typename KeyType, typename ValueType, typename ElementType>
+    struct accessor< storage<WrappedContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementType >
     {
+      typedef typename WrappedContainerConfig::type                                                  ContainerConfig;
       typedef viennameta::static_pair< ElementType, viennameta::static_pair<KeyType, ValueType> >    to_query;
       typedef typename container_from_config<ContainerConfig, to_query>::type                        container_type;
       typedef typename access_tag_from_config<ContainerConfig, to_query>::type                       access_tag;
       typedef container_accessor<container_type, ElementType, access_tag>                            type;
     };
 
-    template<typename ContainerConfig, typename RuntimeTypeInformation, typename KeyType, typename ValueType, typename ElementType>
-    struct accessor< const storage<ContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementType >
+    template<typename WrappedContainerConfig, typename RuntimeTypeInformation, typename KeyType, typename ValueType, typename ElementType>
+    struct accessor< const storage<WrappedContainerConfig, RuntimeTypeInformation>, KeyType, ValueType, ElementType >
     {
+      typedef typename WrappedContainerConfig::type                                                  ContainerConfig;
       typedef viennameta::static_pair< ElementType, viennameta::static_pair<KeyType, ValueType> >    to_query;
       typedef typename container_from_config<ContainerConfig, to_query>::type                        container_type;
       typedef typename access_tag_from_config<ContainerConfig, to_query>::type                       access_tag;
