@@ -263,17 +263,17 @@ namespace viennadata
 
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
-  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename StorgeT>
-  typename result_of::accessor<StorgeT, KeyType, ValueType, ElementTypeOrTag>::type
-      make_accessor(StorgeT & storage_obj, KeyType const & key)
+  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename StorageT>
+  typename result_of::accessor<StorageT, KeyType, ValueType, ElementTypeOrTag>::type
+      make_accessor(StorageT & storage_obj, KeyType const & key)
   {
       return container<KeyType, ValueType, ElementTypeOrTag>(storage_obj, key);
   }
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
-  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename StorgeT>
-  typename result_of::accessor<const StorgeT, KeyType, ValueType, ElementTypeOrTag>::type
-      make_accessor(StorgeT const & storage_obj, KeyType const & key )
+  template<typename KeyType, typename ValueType, typename ElementTypeOrTag, typename StorageT>
+  typename result_of::accessor<const StorageT, KeyType, ValueType, ElementTypeOrTag>::type
+      make_accessor(StorageT const & storage_obj, KeyType const & key )
   {
       return container<KeyType, ValueType, ElementTypeOrTag>(storage_obj, key);
   }
@@ -281,19 +281,19 @@ namespace viennadata
 
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
-  template<typename StorgeT, typename KeyType>
-  storage_container_accessor_proxy< StorgeT, KeyType >
-      make_accessor(StorgeT & storage_obj, KeyType const & key)
+  template<typename StorageT, typename KeyType>
+  storage_container_accessor_proxy< StorageT, KeyType >
+      make_accessor(StorageT & storage_obj, KeyType const & key)
   {
-      return storage_container_accessor_proxy< StorgeT, KeyType >(storage_obj, key);
+      return storage_container_accessor_proxy< StorageT, KeyType >(storage_obj, key);
   }
 
   /** @brief returns an accessor for a combination of <key_type, value_type, element_type/tag> */
-  template<typename StorgeT, typename KeyType>
-  storage_container_accessor_proxy< const StorgeT, KeyType >
-      make_accessor(StorgeT const & storage_obj, KeyType const & key )
+  template<typename StorageT, typename KeyType>
+  storage_container_accessor_proxy< const StorageT, KeyType >
+      make_accessor(StorageT const & storage_obj, KeyType const & key )
   {
-      return storage_container_accessor_proxy< const StorgeT, KeyType >(storage_obj, key);
+      return storage_container_accessor_proxy< const StorageT, KeyType >(storage_obj, key);
   }
 
 
