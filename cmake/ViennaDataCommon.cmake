@@ -57,7 +57,9 @@ configure_file(cmake/ViennaDataConfig.cmake.in
 configure_file(cmake/ViennaDataConfigVersion.cmake.in
    ${PROJECT_BINARY_DIR}/ViennaDataConfigVersion.cmake @ONLY)
 
-export(PACKAGE ViennaData)
+if (CMAKE_MINOR_VERSION GREATER 6)  # export(PACKAGE ...) introduced with CMake 2.8.0
+  export(PACKAGE ViennaData)
+endif()
 
 # Install
 #########
